@@ -1,5 +1,6 @@
 import * as Keychain from 'react-native-keychain';
 import {jwtDecode} from 'jwt-decode';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const _StoreAccessToken = async token => {
   try {
     console.log('Token', token);
@@ -47,6 +48,7 @@ const _TokenValidation = async () => {
 const _ClearKeyChainData = async () => {
   try {
     await Keychain.resetGenericPassword();
+    AsyncStorage.clear();    
     console.log('Keychain data cleared successfully.');
   } catch (error) {
     console.error('Error clearing keychain data:', error);

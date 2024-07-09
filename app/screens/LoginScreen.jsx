@@ -19,9 +19,9 @@ const LoginScreen = () => {
     const checkToken = async () => {
       const isValid = await AccessTokenService._TokenValidation();
       if (isValid) {
-        navigation.navigate('home');
+        navigation.navigate('TabStack');
       } else {
-        navigation.navigate('login');
+        navigation.navigate('Login');
       }
     }
     checkToken();

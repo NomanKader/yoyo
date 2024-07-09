@@ -43,7 +43,7 @@ const HomeScreen = () => {
       <CardComponent title="Hotel" onPress={() => Alert.alert('Hotel')} />
       <CardComponent title="SPA" onPress={() => Alert.alert('SPA')} />
       <CardComponent title="KTV" onPress={() => Alert.alert('KTV')} />
-      <CardComponent title="Logout" onPress={()=>[AccessTokenService._ClearKeyChainData(),navigation.navigate('login')]}/>
+      <CardComponent title="Logout" onPress={()=>[AccessTokenService._ClearKeyChainData(),navigation.navigate('Login')]}/>
     </View>
   );
 };

@@ -13,10 +13,10 @@ const LoginService = async (postBody, navigation,setShowLoading) => {
     });
     console.log("Login Infos", res.data);
     if (res.data && res.data.access_token) {      
-      AccessTokenService._StoreAccessToken(res.data.access_token);      
-      Alert.alert("Info", "Welcome to YoYo");
+      await AccessTokenService._StoreAccessToken(res.data.access_token);      
+      Alert.alert("Info", "Welcome to");
       setShowLoading(false);
-      navigation.navigate('home');      
+      navigation.navigate('TabStack');      
     } else {
       setShowLoading(false);
       Alert.alert("Error", "Login failed, no access token received");
@@ -25,7 +25,7 @@ const LoginService = async (postBody, navigation,setShowLoading) => {
   } catch (err) {
     setShowLoading(false);
     Alert.alert("Error", "Login Error");
-    console.error("Error at login", err);
+    console.error("Error at Login", err);
   }
 };
 

@@ -15,7 +15,7 @@ const UnauthorizedScreen = ({navigation}) => {
   },[])
    
   const handleLoginNavigation = () => {
-    navigation.navigate('login');
+    navigation.navigate('AuthStack');
   };
 
   return (

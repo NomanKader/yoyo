@@ -7,7 +7,8 @@
       error:'#FF0000',
       success:'#28A745',
       textLight:'#fff',
-      textDark:'#000',   
+      textDark:'#000',
+      textGray:'#9d9ba4',   
       borderColor:"#ccc",
       inputBackgroundColor:"#f9f9f9",
       infoText:"#999"
