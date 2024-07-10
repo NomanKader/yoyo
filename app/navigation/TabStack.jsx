@@ -57,9 +57,9 @@ const BottomTabStack = () => {
         tabBarLabel: tabNames[route.name], // Set the label dynamically based on tabNames
       })}
     >
-      <Tab.Screen name="Dashboard" component={DashboardScreen} options={options} />
-      <Tab.Screen name="Room" component={RoomScreen} options={options}/>
       <Tab.Screen name="Booking" component={BookingScreen} options={options}/>
+      <Tab.Screen name="Dashboard" component={DashboardScreen} options={options} />
+      <Tab.Screen name="Room" component={RoomScreen} options={options}/>      
       <Tab.Screen name="Account" component={AccountScreen} options={options}/>
       <Tab.Screen name="Settings" component={SettingsScreen} options={options}/>
     </Tab.Navigator>

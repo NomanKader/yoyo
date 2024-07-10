@@ -24,7 +24,15 @@ const LoginService = async (postBody, navigation,setShowLoading) => {
     }
   } catch (err) {
     setShowLoading(false);
-    Alert.alert("Error", "Login Error");
+    if(err.response.status==503){
+      Alert.alert("Error", "Service Temporary Unavailable");
+    }
+    else if(err.response.status==401){
+      Alert.alert("Error", "Credentials are not correct.");
+    }
+    else{
+      Alert.alert("Error", "Unknown Error");
+    }
     console.error("Error at Login", err);
   }
 };
