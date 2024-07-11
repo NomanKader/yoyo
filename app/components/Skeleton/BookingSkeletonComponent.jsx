@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, Alert } from 'react-native';
-import backIcon from '../../assets/icons/image.png';
+import backIcon from '../../assets/icons/backIcon.png';
 import DividerComponent from '../Divider/DividerComponent';
 import CauroselSkeletonComponent from './CauroselSkeletonComponent';
 import ListSkeletonComponent from './ListSkeletonComponent';
@@ -15,9 +15,9 @@ const BookingSkeletonComponent = () => {
       <View style={CommonStyles.dividerView}>
       <DividerComponent/>
       </View>      
-      <View style={styles.textContainer}>
-        <Text style={styles.text}>Room Categories</Text>
-        <Text style={styles.seeAll}>See all</Text>
+      <View style={CommonStyles.textContainer}>
+        <Text style={CommonStyles.text}>Room Categories</Text>
+        <Text style={CommonStyles.seeAll}>See all</Text>
       </View>
       <ListSkeletonComponent />
       <View style={CommonStyles.dividerView}>
@@ -39,20 +39,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-  },
-  textContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  text: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  seeAll: {
-    fontSize: 16,
-    color: '#007BFF',
   },
   buttonView:{
     marginTop:10
