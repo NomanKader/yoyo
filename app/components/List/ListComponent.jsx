@@ -16,7 +16,7 @@ const ListComponent = ({ data }) => {
       </View>
       <View style={CommonStyles.list.details}>
         <Text style={CommonStyles.list.title}>{item.roomName}</Text>
-        <Text style={CommonStyles.list.subtitle}>{item.priceKyats+" Kyats"}</Text>
+        <Text style={CommonStyles.list.subtitle}>{parseInt(item.priceKyats).toLocaleString()+" Kyats"}</Text>
       </View>
     </View>
   );

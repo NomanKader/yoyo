@@ -7,7 +7,6 @@ import { LanguageProvider } from "./app/context/LanguageContext";
 import { ActivityIndicator, View, Text } from 'react-native';
 import AuthStack from "./app/navigation/AuthStack";
 import AppStack from "./app/navigation/AppStack";
-
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {

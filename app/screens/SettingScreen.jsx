@@ -1,27 +1,31 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import { LanguageContext } from '../context/LanguageContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CardComponent from '../components/Card/CardComponent';
 import AccessTokenService from '../helper/AccessTokenService';
+import { GetLanguageListAPI } from '../services/LanguageService';
+import constants from '../config/constants';
 
 const SettingsScreen = ({ navigation }) => {
   const { language, setLanguage } = useContext(LanguageContext);
   const [selectedLanguage, setSelectedLanguage] = useState(language);
+  const [languages, setLanguages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchLanguage = async () => {
+    GetLanguageListAPI(setLanguages, setLoading);
+    const fetchLanguagePreference = async () => {
       const storedLanguage = await AsyncStorage.getItem('language_preference');
       if (storedLanguage) {
         setSelectedLanguage(storedLanguage);
         setLanguage(storedLanguage);
       } else {
-        setSelectedLanguage('english'); // default to English
-        setLanguage('english');
+        setSelectedLanguage('en'); // default to English
+        setLanguage('en');
       }
     };
-
-    fetchLanguage();
+    fetchLanguagePreference();
   }, []);
 
   const changeLanguage = async (newLanguage) => {
@@ -32,23 +36,29 @@ const SettingsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Language</Text>
-      <View style={styles.radioContainer}>
-        <TouchableOpacity 
-          style={styles.radioButton} 
-          onPress={() => changeLanguage('english')}
-        >
-          <View style={selectedLanguage === 'english' ? styles.radioSelected : styles.radio} />
-          <Text style={styles.radioText}>English</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.radioButton} 
-          onPress={() => changeLanguage('myanmar')}
-        >
-          <View style={selectedLanguage === 'myanmar' ? styles.radioSelected : styles.radio} />
-          <Text style={styles.radioText}>Myanmar</Text>
-        </TouchableOpacity>
-      </View>
+      <Text style={styles.label}>Choose Language</Text>
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <View style={styles.radioContainer}>
+          {languages.map((lang) => (
+            <TouchableOpacity
+              key={lang.id}
+              style={styles.radioButton}
+              onPress={() => changeLanguage(lang.code)}
+            >
+              <View style={styles.iconContainer}>
+                <Image 
+                  source={{ uri: constants.languageIconUrl + lang.image }} 
+                  style={styles.icon}
+                />
+                <View style={selectedLanguage === lang.code ? styles.radioSelected : styles.radio} />
+                <Text style={styles.radioText}>{lang.name}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
       <View style={styles.bottom}>
         <CardComponent 
           title="Logout" 
@@ -60,7 +70,7 @@ const SettingsScreen = ({ navigation }) => {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -73,13 +83,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   radioContainer: {
-    flexDirection: 'row',
     marginBottom: 20,
   },
   radioButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 20,
+    marginBottom: 15,
   },
   radio: {
     height: 20,
@@ -100,6 +109,15 @@ const styles = StyleSheet.create({
   },
   radioText: {
     fontSize: 16,
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
   },
   bottom: {
     position: 'absolute',

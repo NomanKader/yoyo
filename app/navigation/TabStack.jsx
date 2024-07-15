@@ -19,11 +19,11 @@ const BottomTabStack = () => {
   console.log("Language",language);
   // Define tab names based on language
   const tabNames = {
-    Dashboard: language === 'myanmar' ? myanmarLanguage.Dashboard : englishLanuage.Dashboard,
-    Settings: language === 'myanmar' ? myanmarLanguage.Setting : englishLanuage.Setting,
-    Room: language === 'myanmar' ? myanmarLanguage.Room : englishLanuage.Room,
-    Booking: language === 'myanmar' ? myanmarLanguage.Booking : englishLanuage.Booking,
-    Account: language === 'myanmar' ? myanmarLanguage.Account : englishLanuage.Account,
+    Dashboard: language === 'mm' ? myanmarLanguage.Dashboard : englishLanuage.Dashboard,
+    Settings: language === 'mm' ? myanmarLanguage.Setting : englishLanuage.Setting,
+    Room: language === 'mm' ? myanmarLanguage.Room : englishLanuage.Room,
+    Booking: language === 'mm' ? myanmarLanguage.Booking : englishLanuage.Booking,
+    Account: language === 'mm' ? myanmarLanguage.Account : englishLanuage.Account,
   };
 
   return (
