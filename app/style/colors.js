@@ -11,8 +11,10 @@
       textGray:'#9d9ba4',   
       borderColor:"#ccc",
       inputBackgroundColor:"#f9f9f9",
-      infoText:"#999"
-      
+      infoText:"#999"      
+    },
+    icon:{
+      primary:'#001529'
     },
     textInputMaxLength: {
       maxLength: 11, // Set your desired maxLength value

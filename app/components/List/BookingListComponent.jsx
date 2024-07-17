@@ -4,7 +4,7 @@ import { CommonStyles } from '../../style/CommonStyles'; // Adjust the path as n
 import DefaultButtonComponent from '../Button/DefaultButtonComponent';
 import theme from '../../style/colors';
 
-const ListComponent = ({ data }) => {
+const BookingListComponent = ({ data }) => {
     console.log("Room Data",data);
   const renderItem = ({ item }) => (
     <View style={CommonStyles.list.card}>
@@ -33,4 +33,4 @@ const ListComponent = ({ data }) => {
   );
 };
 
-export default ListComponent;
+export default BookingListComponent;

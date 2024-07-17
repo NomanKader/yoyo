@@ -13,8 +13,7 @@ const LoginService = async (postBody, navigation,setShowLoading) => {
     });
     console.log("Login Infos", res.data);
     if (res.data && res.data.access_token) {      
-      await AccessTokenService._StoreAccessToken(res.data.access_token);      
-      Alert.alert("Info", "Welcome to");
+      await AccessTokenService._StoreAccessToken(res.data.access_token);            
       setShowLoading(false);
       navigation.navigate('TabStack');      
     } else {
