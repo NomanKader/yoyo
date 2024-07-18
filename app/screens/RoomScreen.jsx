@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Text, View, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, StyleSheet} from 'react-native';
 import ListSkeletonComponent from '../components/Skeleton/ListSkeletonComponent';
 import {CommonStyles} from '../style/CommonStyles';
 import theme from '../style/colors';
@@ -9,15 +8,14 @@ import DividerComponent from '../components/Divider/DividerComponent';
 import RoomService from '../services/RoomService';
 import RoomListComponent from '../components/List/RoomListComponent';
 import { LanguageContext } from '../context/LanguageContext';
-import myanmarLanguage from '../config/myanmar';
-import englishLanuage from '../config/english';
-
 export default function RoomScreen() {
   const [showLoading, setShowLoading] = useState(false);
   const [roomList,setRoomList]=useState([]);
-  const {language}=useContext(LanguageContext);
+  const {language}=useContext(LanguageContext);  
+  const {translate}=useContext(LanguageContext);
   useEffect(() => {
     console.log("Language",language);
+    console.log("Translate",translate);
     const fetchRoomList = async () => {
       setShowLoading(true);
       await RoomService.GetRoomList(setRoomList)
@@ -25,11 +23,10 @@ export default function RoomScreen() {
     };
     fetchRoomList();
   }, []);
-
   return (
     <>
       <View style={styles.container}>
-        <AppBarComponent title={language=='mm'?myanmarLanguage.room.Rooms:englishLanuage.room.Rooms} />
+        <AppBarComponent title={translate?.room?.Rooms} />
         <DividerComponent />
       {showLoading ? (
         <View style={CommonStyles.scrollViewContainer}>

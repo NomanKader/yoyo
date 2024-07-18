@@ -30,7 +30,7 @@ const SettingsScreen = ({ navigation }) => {
 
   const changeLanguage = async (newLanguage) => {
     setSelectedLanguage(newLanguage);
-    setLanguage(newLanguage);
+    setLanguage(newLanguage);        
     await AsyncStorage.setItem('language_preference', newLanguage);
   };
 

@@ -3,12 +3,9 @@ import { View, Text, FlatList, Image, StyleSheet, ScrollView } from 'react-nativ
 import DividerComponent from '../Divider/DividerComponent';
 import theme from '../../style/colors';
 import { LanguageContext } from '../../context/LanguageContext';
-import myanmarLanguage from '../../config/myanmar';
-import englishLanuage from '../../config/english';
 
-const RoomListComponent = ({ data }) => {
-  const {language}=useContext(LanguageContext);
-
+const RoomListComponent = ({ data }) => { 
+  const {translate}=useContext(LanguageContext);
   const renderItem = ({ item }) => {
     const statusStyles = [
       styles.status,
@@ -18,13 +15,7 @@ const RoomListComponent = ({ data }) => {
         ? styles.vacant
         : styles.defaultStatus,
     ];
-    const languageKey = language === 'mm' ? 'myanmarLanguage' : 'englishLanguage';
-    const roomStatusTranslations = {
-      Occupied: { myanmarLanguage: myanmarLanguage.room.Occupied, englishLanguage: englishLanuage.room.Occupied },
-      Vacant: { myanmarLanguage: myanmarLanguage.room.Vacant, englishLanguage: englishLanuage.room.Vacant }
-    };
-    
-    const roomStatus = roomStatusTranslations[item.roomStatus] ? roomStatusTranslations[item.roomStatus][languageKey] : item.roomStatus;
+    const roomStatus = translate.room[item.roomStatus] || item.roomStatus;
         return (
       <>
       <View style={styles.card}>

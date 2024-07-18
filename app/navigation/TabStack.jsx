@@ -8,22 +8,20 @@ import BookingScreen from '../screens/BookingScreen';
 import AccountScreen from '../screens/AccountScreen';
 import theme from '../style/colors';
 import { LanguageContext } from '../context/LanguageContext'; // Import LanguageContext
-import myanmarLanguage from '../config/myanmar';
-import englishLanuage from '../config/english';
 const Tab = createBottomTabNavigator();
 const options={
   headerShown:false
 }
 const BottomTabStack = () => {
-  const { language } = useContext(LanguageContext); // Access language state from LanguageContext
-  console.log("Language",language);
+  const {translate}=useContext(LanguageContext);
+  
   // Define tab names based on language
   const tabNames = {
-    Dashboard: language === 'mm' ? myanmarLanguage.navigation.Dashboard : englishLanuage.navigation.Dashboard,
-    Settings: language === 'mm' ? myanmarLanguage.navigation.Setting : englishLanuage.navigation.Setting,
-    Room: language === 'mm' ? myanmarLanguage.navigation.Room : englishLanuage.navigation.Room,
-    Booking: language === 'mm' ? myanmarLanguage.navigation.Booking : englishLanuage.navigation.Booking,
-    Account: language === 'mm' ? myanmarLanguage.navigation.Account : englishLanuage.navigation.Account,
+    Dashboard: translate?.navigation?.Dashboard,
+    Settings: translate?.navigation?.Setting,
+    Room: translate?.navigation?.Room,
+    Booking: translate?.navigation?.Booking,
+    Account: translate?.navigation?.Account,
   };
 
   return (

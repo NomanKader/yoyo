@@ -10,4 +10,16 @@ const GetLanguageListAPI = async (setLanguages,setLoading) => {
       setLoading(false);
     }
   };
-  export {GetLanguageListAPI};
+
+const TranslateAPI=async(language)=>{
+  try{
+     const response=await axios.get(constants.translateUrl+language+'/hotel_admin.json')
+     console.log("Translate Data",response.data);
+      return response.data;
+  }
+  catch(error){
+    console.error("Tranlate Error",error);
+  }
+}
+
+  export {GetLanguageListAPI,TranslateAPI};
