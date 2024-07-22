@@ -1,19 +1,26 @@
+// app/navigation/TabStack.jsx
 import React, { useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DashboardScreen from '../screens/DashboardScreen';
 import SettingsScreen from '../screens/SettingScreen';
-import RoomScreen from '../screens/RoomScreen';
+import RoomScreen from '../screens/room/RoomScreen';
 import BookingScreen from '../screens/BookingScreen';
 import AccountScreen from '../screens/AccountScreen';
 import theme from '../style/colors';
 import { LanguageContext } from '../context/LanguageContext'; // Import LanguageContext
+import AppStack from './AppStack';
+
 const Tab = createBottomTabNavigator();
-const options={
-  headerShown:false
-}
-const BottomTabStack = () => {
-  const {translate}=useContext(LanguageContext);
+const Stack = createNativeStackNavigator(); // Create a Stack Navigator
+
+const options = {
+  headerShown: false
+};
+
+const TabScreens = () => {
+  const { translate } = useContext(LanguageContext);
   
   // Define tab names based on language
   const tabNames = {
@@ -61,6 +68,15 @@ const BottomTabStack = () => {
       <Tab.Screen name="Account" component={AccountScreen} options={options}/>
       <Tab.Screen name="Settings" component={SettingsScreen} options={options}/>
     </Tab.Navigator>
+  );
+};
+
+const BottomTabStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="TabScreens" component={TabScreens} options={{ headerShown: false }} />
+      <Stack.Screen name="AppStack" component={AppStack} options={{ headerShown: false }} />
+    </Stack.Navigator>
   );
 };
 

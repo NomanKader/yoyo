@@ -11,12 +11,12 @@ export const CommonStyles = {
       backgroundColor: '#D3D3D3',
       width: '100%',
     },
-    backIcon:{
+    appBarIcon:{
       width:35,
       height:35,
       marginBottom:20,
       marginTop:30,
-      marginLeft:-5
+      marginLeft:-10,      
     },
     defaultButton: {
       alignItems: 'center',
@@ -45,6 +45,14 @@ export const CommonStyles = {
       justifyContent: 'space-between',
       alignItems: 'center',
       marginTop: 20,
+    },
+    header:{
+      fontSize: 25,
+      fontWeight: 'bold',
+    },
+    subHeader:{
+      fontSize: 18,
+      marginTop: 5,
     },
     text: {
       fontSize: 18,

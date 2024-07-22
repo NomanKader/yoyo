@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import DividerComponent from '../Divider/DividerComponent';
 import theme from '../../style/colors';
 import { LanguageContext } from '../../context/LanguageContext';
 
-const RoomListComponent = ({ data }) => { 
+const RoomListComponent = ({ data,navigation }) => { 
   const {translate}=useContext(LanguageContext);
   const renderItem = ({ item }) => {
     const statusStyles = [
@@ -17,7 +17,7 @@ const RoomListComponent = ({ data }) => {
     ];
     const roomStatus = translate.room[item.roomStatus] || item.roomStatus;
         return (
-      <>
+      <Pressable onPress={()=>navigation.navigate('AppStack', { screen: 'RoomDetail' })}>
       <View style={styles.card}>
         <View style={styles.thumbnail}>
           <Image
@@ -40,7 +40,7 @@ const RoomListComponent = ({ data }) => {
         </View>
       </View>
       <DividerComponent/>
-      </>
+      </Pressable>
     );
   };
 

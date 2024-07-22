@@ -10,7 +10,7 @@ import { CommonStyles } from '../../style/CommonStyles';
 const BookingSkeletonComponent = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Image source={backIcon} alt='backIcon' style={CommonStyles.backIcon}/>  
+      <Image source={backIcon} alt='backIcon' style={CommonStyles.appBarIcon}/>  
       <CauroselSkeletonComponent />
       <View style={CommonStyles.dividerView}>
       <DividerComponent/>

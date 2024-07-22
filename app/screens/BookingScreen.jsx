@@ -21,7 +21,7 @@ export default function BookingScreen() {
 
     return (
         <View style={CommonStyles.scrollViewContainer}>
-            <Image source={backIcon} alt='backIcon' style={CommonStyles.backIcon} />
+            <Image source={backIcon} alt='backIcon' style={CommonStyles.appBarIcon} />
             {data.length === 0 ?
                 <View>
                     <BookingSkeletonComponent />
@@ -31,8 +31,8 @@ export default function BookingScreen() {
                     <>
                         <View style={styles.headerView}>
                             <CauroselComponent data={data} setShowLoading={setShowLoading} />
-                            <Text style={styles.header}>A Hotels</Text>
-                            <Text style={styles.subHeader}>No.120, Baho Road, Hlaing, Yangon</Text>
+                            <Text style={CommonStyles.header}>A Hotels</Text>
+                            <Text style={CommonStyles.subHeader}>No.120, Baho Road, Hlaing, Yangon</Text>
                         </View>
                         <View style={CommonStyles.dividerView}>
                             <DividerComponent />

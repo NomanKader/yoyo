@@ -1,14 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
 import { View, StyleSheet} from 'react-native';
-import ListSkeletonComponent from '../components/Skeleton/ListSkeletonComponent';
-import {CommonStyles} from '../style/CommonStyles';
-import theme from '../style/colors';
-import AppBarComponent from '../components/AppBar/AppBarComponent';
-import DividerComponent from '../components/Divider/DividerComponent';
-import RoomService from '../services/RoomService';
-import RoomListComponent from '../components/List/RoomListComponent';
-import { LanguageContext } from '../context/LanguageContext';
-export default function RoomScreen() {
+import ListSkeletonComponent from '../../components/Skeleton/ListSkeletonComponent';
+import {CommonStyles} from '../../style/CommonStyles';
+import theme from '../../style/colors';
+import AppBarComponent from '../../components/AppBar/AppBarComponent';
+import DividerComponent from '../../components/Divider/DividerComponent';
+import RoomService from '../../services/RoomService';
+import RoomListComponent from '../../components/List/RoomListComponent';
+import { LanguageContext } from '../../context/LanguageContext';
+export default function RoomScreen({navigation}) {
   const [showLoading, setShowLoading] = useState(false);
   const [roomList,setRoomList]=useState([]);
   const {language}=useContext(LanguageContext);  
@@ -33,7 +33,7 @@ export default function RoomScreen() {
           <ListSkeletonComponent />
         </View>
       ) : (  
-        <RoomListComponent data={roomList}/>        
+        <RoomListComponent data={roomList} navigation={navigation}/>        
       )}
       </View>
     </>
