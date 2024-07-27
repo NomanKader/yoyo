@@ -49,10 +49,14 @@ export const CommonStyles = {
     header:{
       fontSize: 25,
       fontWeight: 'bold',
+      color:theme.colors.textDark,
+      marginTop:20
     },
     subHeader:{
-      fontSize: 18,
+      fontSize: 15,
       marginTop: 5,
+      color:theme.colors.iconTextColor,
+      lineHeight:21
     },
     text: {
       fontSize: 18,
@@ -61,6 +65,17 @@ export const CommonStyles = {
     seeAll: {
       fontSize: 16,
       color: '#007BFF',
+    },
+    infoContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: 20,
+    },
+    infoLabel: {
+      fontSize: 16,
+      color: theme.colors.textDark,
+      fontWeight: '500',
     },
     list:{
       card: {
@@ -92,6 +107,40 @@ export const CommonStyles = {
         marginTop: 6,
         fontSize: 14,
         color: '#666',
+      },
+    },
+    room:{
+      step: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingTop: 16,
+        paddingHorizontal: 16,
+      },
+      stepContainer: {
+        backgroundColor: theme.colors.iconBackgroundColor,
+        borderRadius: 100,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+      },
+      stepText: {
+        color: theme.colors.iconTextColor,
+        fontSize: 14,
+        fontWeight: 'bold',
+      },
+      inputContainer: {
+        marginTop: 10,
+      },
+      breakfastContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginTop: 10,
+      },
+      breakfastLabel: {
+        fontSize: 16,
+        color: theme.colors.textDark,
+        fontWeight: '500',
       },
     }
   };

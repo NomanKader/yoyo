@@ -26,7 +26,7 @@ export default function RoomScreen({navigation}) {
   return (
     <>
       <View style={styles.container}>
-        <AppBarComponent title={translate?.room?.Rooms} />
+        <AppBarComponent title={translate?.room?.Rooms} navigation={navigation} />
         <DividerComponent />
       {showLoading ? (
         <View style={CommonStyles.scrollViewContainer}>

@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import theme from '../../style/colors';
 
-const AppBarComponent = ({ title }) => {
+const AppBarComponent = ({ title,navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -13,7 +13,7 @@ const AppBarComponent = ({ title }) => {
           <TouchableOpacity style={styles.iconButton}>
             <Icon name="search" size={20} color={theme.icon.primary} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity style={styles.iconButton} onPress={()=>navigation.navigate('AppStack',{screen:'RoomCategoryCreate'})}>
             <Icon name="plus" size={20} color={theme.icon.primary} />
           </TouchableOpacity>
         </View>

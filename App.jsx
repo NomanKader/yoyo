@@ -6,7 +6,6 @@ import { AuthContext, AuthProvider } from "./app/context/AuthContext";
 import { LanguageProvider } from "./app/context/LanguageContext";
 import { ActivityIndicator, View, Text } from 'react-native';
 import AuthStack from "./app/navigation/AuthStack";
-import AppStack from "./app/navigation/AppStack";
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
@@ -25,8 +24,7 @@ const AppNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName={isAuthenticated ? "TabStack" : "AuthStack"}>
         <Stack.Screen name="AuthStack" component={AuthStack} options={{ headerShown: false }} />
-        <Stack.Screen name="TabStack" component={BottomTabStack} options={{ headerShown: false }} />
-        <Stack.Screen name="AppStack" component={AppStack} options={{ headerShown: false }} />
+        <Stack.Screen name="TabStack" component={BottomTabStack} options={{ headerShown: false }} />        
       </Stack.Navigator>
     </NavigationContainer>
   );

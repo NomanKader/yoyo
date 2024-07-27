@@ -20,8 +20,7 @@ const options = {
 };
 
 const TabScreens = () => {
-  const { translate } = useContext(LanguageContext);
-  
+  const { translate } = useContext(LanguageContext);  
   // Define tab names based on language
   const tabNames = {
     Dashboard: translate?.navigation?.Dashboard,

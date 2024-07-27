@@ -11,7 +11,9 @@
       textGray:'#9d9ba4',   
       borderColor:"#ccc",
       inputBackgroundColor:"#f9f9f9",
-      infoText:"#999"      
+      infoText:"#999",
+      iconBackgroundColor:'#F1F1F1',
+      iconTextColor:'#898C8F'  
     },
     icon:{
       primary:'#001529'
