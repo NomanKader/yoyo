@@ -13,7 +13,7 @@ const StepAppBarComponent = ({currentStep,navigation}) => {
         />
       </TouchableOpacity>      
       <View style={CommonStyles.room.stepContainer}>
-        <Text style={CommonStyles.room.stepText}>Step {currentStep} of 7</Text>
+        <Text style={CommonStyles.room.stepText}>Step {currentStep} of 8</Text>
       </View>
     </View>
   );

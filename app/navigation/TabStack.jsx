@@ -5,12 +5,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DashboardScreen from '../screens/DashboardScreen';
 import SettingsScreen from '../screens/SettingScreen';
-import RoomScreen from '../screens/room/RoomScreen';
 import BookingScreen from '../screens/BookingScreen';
 import AccountScreen from '../screens/AccountScreen';
 import theme from '../style/colors';
 import { LanguageContext } from '../context/LanguageContext'; // Import LanguageContext
 import AppStack from './AppStack';
+import RoomCategoryListScreen from '../screens/room/RoomCategoryListScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator(); // Create a Stack Navigator
@@ -63,7 +63,7 @@ const TabScreens = () => {
     >
       <Tab.Screen name="Booking" component={BookingScreen} options={options}/>
       <Tab.Screen name="Dashboard" component={DashboardScreen} options={options} />
-      <Tab.Screen name="Room" component={RoomScreen} options={options}/>      
+      <Tab.Screen name="Room" component={RoomCategoryListScreen} options={options}/>      
       <Tab.Screen name="Account" component={AccountScreen} options={options}/>
       <Tab.Screen name="Settings" component={SettingsScreen} options={options}/>
     </Tab.Navigator>

@@ -40,8 +40,7 @@ const RoomViewScreen = ({ navigation }) => {
           title="Proceed"
           backgroundColor={theme.colors.primary}
           onPress={() => {
-            const selectedRadioButton = radioButtons.find(button => button.id === selectedOptionId);
-            console.log('Selected Option:', selectedRadioButton?.value);
+            navigation.navigate('AppStack',{screen:'RoomRule'})
           }}
         />
       </View>

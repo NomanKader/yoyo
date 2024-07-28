@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Platform, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StepAppBarComponent from '../../../components/AppBar/StepAppBarComponent';
@@ -18,8 +18,13 @@ export default function RoomCategoryCreateScreen({ navigation }) {
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
       >
-        <ScrollView contentContainerStyle={CommonStyles.scrollViewContainer} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={CommonStyles.scrollViewContainer}
+          showsVerticalScrollIndicator={false}
+          style={styles.scrollView}
+        >
           <StepAppBarComponent title="Some Screen" currentStep="1" navigation={navigation} />
           <Text style={CommonStyles.header}>Create Room Category</Text>
           <Text style={CommonStyles.subHeader}>
@@ -31,7 +36,7 @@ export default function RoomCategoryCreateScreen({ navigation }) {
               value={categoryName}
               onChangeText={setCategoryName}
               label="Name of Category"
-              keyboardType='default'
+              keyboardType="default"
             />
           </View>
           <View style={CommonStyles.room.inputContainer}>
@@ -40,11 +45,11 @@ export default function RoomCategoryCreateScreen({ navigation }) {
               value={price}
               onChangeText={setPrice}
               label="Price of Room"
-              keyboardType='default'
+              keyboardType="numeric"
             />
           </View>
           <View style={CommonStyles.room.breakfastContainer}>
-            <Text style={CommonStyles.room.breakfastLabel}>Breakfast include</Text>
+            <Text style={CommonStyles.room.breakfastLabel}>Breakfast included</Text>
             <CheckBox
               tintColors={{ true: theme.colors.primary, false: theme.colors.textGray }}
               value={breakfastIncluded}
@@ -67,9 +72,14 @@ export default function RoomCategoryCreateScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: theme.colors.background, // Add background color if needed
+  },
+  scrollView: {
+    flexGrow: 1,
   },
   buttonContainer: {
-    padding: 20,
     backgroundColor: 'white',
+    paddingLeft:20,
+    paddingRight:20
   },
 });

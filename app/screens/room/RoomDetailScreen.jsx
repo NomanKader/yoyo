@@ -25,7 +25,7 @@ import DefaultButtonComponent from '../../components/Button/DefaultButtonCompone
 import theme from '../../style/colors';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
 
-export default function RoomDetailScreen() {
+export default function RoomDetailScreen({navigation}) {
   const [data, setData] = useState([]);
   const [showLoading, setShowLoading] = useState(false);
   const [roomCategory, setRoomCategory] = useState([]);
@@ -48,7 +48,7 @@ export default function RoomDetailScreen() {
             />
           </View>
         )}
-        <DetailAppBarComponent title={"Room Details"} onMorePress={()=>setIsBottomSheetVisible(true)}/>
+        <DetailAppBarComponent title={"Room Details"} onMorePress={()=>setIsBottomSheetVisible(true)} navigation={navigation}/>
 
         {data.length === 0 ? (
           <View>

@@ -9,6 +9,10 @@ import RoomFacilityCreateScreen from '../screens/room/create/RoomFacilityCreateS
 import RoomBasicFeatureScreen from '../screens/room/create/RoomBasicFeatureScreen';
 import RoomBedroomDetailScreen from '../screens/room/create/RoomBedRoomDetailScreen';
 import RoomViewScreen from '../screens/room/create/RoomViewScreen';
+import RoomRuleScreen from '../screens/room/create/RoomRuleScreen';
+import RoomPhotoScreen from '../screens/room/create/RoomPhotoScreen';
+import SuccessScreenComponent from '../components/screen/SuccessScreenComponent';
+import SearchScreen from '../components/screen/SearchScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +30,10 @@ const AppStack = () => {
       <Stack.Screen name='RoomBasicFeature' component={RoomBasicFeatureScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='RoomBedroomDetail' component={RoomBedroomDetailScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='RoomView' component={RoomViewScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='RoomRule' component={RoomRuleScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='RoomPhoto' component={RoomPhotoScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='SuccessScreen' component={SuccessScreenComponent} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='SearchScreen' component={SearchScreen} options={hiddenHeaderOptions}/>
     </Stack.Navigator>
   );
 };

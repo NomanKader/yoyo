@@ -4,13 +4,15 @@ import { CommonStyles } from '../../style/CommonStyles';
 import backIcon from '../../assets/icons/backIcon.png';
 import moreIcon from '../../assets/icons/moreIcon.png';
 
-const DetailAppBarComponent = ({ title, onMorePress }) => {
+const DetailAppBarComponent = ({ title, onMorePress, navigation }) => {
   return (
     <View style={styles.headerIcons}>
+      <TouchableOpacity onPress={()=>navigation.goBack()}>
       <Image
         source={backIcon} // Use appBarIcon for back icon
-        style={CommonStyles.appBarIcon}   // Style for both icons
+        style={CommonStyles.appBarIcon}   // Style for both icons        
       />
+      </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
       <TouchableOpacity onPress={onMorePress}>
         <Image

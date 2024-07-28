@@ -77,6 +77,9 @@ export const CommonStyles = {
       color: theme.colors.textDark,
       fontWeight: '500',
     },
+    component:{
+      marginTop:20
+    },
     list:{
       card: {
         flexDirection: 'row',

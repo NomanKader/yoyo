@@ -13,6 +13,7 @@ const GetLanguageListAPI = async (setLanguages,setLoading) => {
 
 const TranslateAPI=async(language)=>{
   try{
+     console.log(constants.translateUrl+language+'/hotel_admin.json');
      const response=await axios.get(constants.translateUrl+language+'/hotel_admin.json')
      console.log("Translate Data",response.data);
       return response.data;

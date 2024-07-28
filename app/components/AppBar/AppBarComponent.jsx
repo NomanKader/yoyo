@@ -4,16 +4,27 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import theme from '../../style/colors';
 
-const AppBarComponent = ({ title,navigation }) => {
+const AppBarComponent = ({ title, navigation, searchData, type }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>{title}</Text>
         <View style={styles.iconContainer}>
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() =>
+              navigation.navigate('AppStack', {
+                screen: 'SearchScreen',
+                params: { searchData: searchData, type: type },
+              })
+            }
+          >
             <Icon name="search" size={20} color={theme.icon.primary} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} onPress={()=>navigation.navigate('AppStack',{screen:'RoomCategoryCreate'})}>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => navigation.navigate('AppStack', { screen: 'RoomCategoryCreate' })}
+          >
             <Icon name="plus" size={20} color={theme.icon.primary} />
           </TouchableOpacity>
         </View>
@@ -34,7 +45,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    fontWeight:'500'
+    fontWeight: '500',
   },
   iconContainer: {
     flexDirection: 'row',
@@ -42,7 +53,7 @@ const styles = StyleSheet.create({
   iconButton: {
     marginLeft: 16,
     padding: 10,
-    backgroundColor:theme.colors.textLight, // Add background color for better visibility
+    backgroundColor: theme.colors.textLight, // Add background color for better visibility
     borderRadius: 50,
     elevation: 4, // Add shadow/elevation to the icons
   },
