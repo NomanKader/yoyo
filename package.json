@@ -18,7 +18,7 @@
     "@react-navigation/bottom-tabs": "^6.6.0",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
-    "axios": "^1.4.0",
+    "axios": "^1.4.0",    
     "jwt-decode": "^4.0.0",
     "react": "18.2.0",
     "react-i18next": "^14.1.2",
