@@ -1,36 +1,139 @@
-import React from 'react';
-import { View, Text, FlatList, Image, Alert, ScrollView } from 'react-native';
-import { CommonStyles } from '../../style/CommonStyles'; // Adjust the path as needed
-import DefaultButtonComponent from '../Button/DefaultButtonComponent';
+import React, { useContext } from 'react';
+import { View, Text, FlatList, Image, StyleSheet, Pressable } from 'react-native';
+import DividerComponent from '../Divider/DividerComponent';
 import theme from '../../style/colors';
+import { LanguageContext } from '../../context/LanguageContext';
 
-const BookingListComponent = ({ data }) => {
-    console.log("Room Data",data);
-  const renderItem = ({ item }) => (
-    <View style={CommonStyles.list.card}>
-      <View style={CommonStyles.list.thumbnail}>
-      <Image 
-        source={{ uri: item.roomPhoto }} 
-        style={{ width: '100%', height: '100%',objectFit:'cover' }} 
-      />
-      </View>
-      <View style={CommonStyles.list.details}>
-        <Text style={CommonStyles.list.title}>{item.roomName}</Text>
-        <Text style={CommonStyles.list.subtitle}>{parseInt(item.priceKyats).toLocaleString()+" Kyats"}</Text>
-      </View>
-    </View>
-  );
+const RoomListComponent = ({ data, navigation, type, onPress }) => {
+  const { translate } = useContext(LanguageContext);
 
-  return (    
-    <>
+  // Function to get status-specific styles
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case 'Unpaid':
+        return { color: theme.colors.error, backgroundColor: 'transparent' };
+      case 'Paid':
+        return { color: theme.colors.info, backgroundColor: 'transparent' };
+      default:
+        return {
+          color: 'white',
+          backgroundColor: status === 'Occupied'
+            ? '#EAFAF6'
+            : status === 'Vacant'
+            ? '#FFF4EC'
+            : 'grey',
+        };
+    }
+  };
+
+  const renderItem = ({ item }) => {
+    const isCategory = type === 'category';
+    const statusStyle = getStatusStyle(item.roomStatus);
+
+    const roomStatus = isCategory
+      ? `${item.numberOfRooms} ${translate.room.Rooms}`
+      : translate.room[item.roomStatus] || item.roomStatus;
+
+    return (
+      <Pressable onPress={() => onPress()}>
+        <View style={styles.card}>
+          <View style={styles.thumbnail}>
+            <Image
+              source={{ uri: item.roomPhoto }}
+              style={styles.image}
+            />
+          </View>
+          <View style={styles.details}>
+            <View>
+              {isCategory ? (
+                <>
+                  <Text style={styles.title}>{item.roomName}</Text>
+                  <Text style={styles.subtitle}>{`${item.priceKyats.toLocaleString()} Kyats`}</Text>
+                </>
+              ) : (
+                <>
+                  <Text style={styles.title}>{item.roomNumber}</Text>
+                  <Text style={styles.subtitle}>{item.roomCategory}</Text>
+                </>
+              )}
+            </View>
+            <View style={styles.statusContainer}>
+              <View style={[styles.status, { backgroundColor: statusStyle.backgroundColor }]}>
+                <Text style={{ color: statusStyle.color }}>
+                  {roomStatus}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <DividerComponent />
+      </Pressable>
+    );
+  };
+
+  return (
     <FlatList
+      style={styles.container}
       data={data}
       renderItem={renderItem}
       keyExtractor={(item) => item.id.toString()}
     />
-    <DefaultButtonComponent title={"Booking"} backgroundColor={theme.colors.primary} onPress={()=>Alert.alert("Info","Booking")}/>
-    </>     
   );
 };
 
-export default BookingListComponent;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.textLight,
+  },
+  card: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    margin: 10,
+    overflow: 'hidden',
+    paddingTop: 20,
+    paddingRight: 20,
+    paddingBottom: 20,
+  },
+  thumbnail: {
+    width: 65,
+    height: 55,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: 55, // Use the smaller dimension for width to match height
+    height: 55, // Ensure width and height are equal
+    borderRadius: 27.5, // Half of the height (55 / 2)
+  },
+  details: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  title: {
+    width: 180,
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 18,
+    color: 'grey',
+  },
+  statusContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  status: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+});
+
+export default RoomListComponent;

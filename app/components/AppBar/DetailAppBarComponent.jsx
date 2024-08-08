@@ -3,26 +3,29 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { CommonStyles } from '../../style/CommonStyles';
 import backIcon from '../../assets/icons/backIcon.png';
 import moreIcon from '../../assets/icons/moreIcon.png';
+import theme from '../../style/colors';
 
-const DetailAppBarComponent = ({ title, onMorePress, navigation }) => {
-  return (
-    <View style={styles.headerIcons}>
-      <TouchableOpacity onPress={()=>navigation.goBack()}>
+const DetailAppBarComponent = ({ title, onMorePress, navigation }) => (
+  <View style={styles.headerIcons}>
+    <TouchableOpacity onPress={navigation.goBack}>
       <Image
-        source={backIcon} // Use appBarIcon for back icon
-        style={CommonStyles.appBarIcon}   // Style for both icons        
+        source={backIcon}
+        style={CommonStyles.appBarIcon} 
       />
-      </TouchableOpacity>
-      <Text style={styles.title}>{title}</Text>
+    </TouchableOpacity>
+    <Text style={styles.title}>{title}</Text>
+    {onMorePress ? (
       <TouchableOpacity onPress={onMorePress}>
         <Image
-          source={moreIcon} // Use appBarIcon for more icon
-          style={CommonStyles.appBarIcon}   // Style for both icons
+          source={moreIcon}
+          style={CommonStyles.appBarIcon}
         />
       </TouchableOpacity>
-    </View>
-  );
-};
+    ) : (
+      <View style={styles.placeholder} />
+    )}
+  </View>
+);
 
 const styles = StyleSheet.create({
   headerIcons: {
@@ -34,8 +37,11 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: '900',
     fontSize: 18,
-    alignSelf: 'center',
-    marginTop: 10,
+    color: theme.colors.textDark,
+    marginTop:10
+  },
+  placeholder: {
+    width: 30,  // To maintain spacing consistency
   },
 });
 

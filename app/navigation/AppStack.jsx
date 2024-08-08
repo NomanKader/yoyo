@@ -13,6 +13,8 @@ import RoomRuleScreen from '../screens/room/create/RoomRuleScreen';
 import RoomPhotoScreen from '../screens/room/create/RoomPhotoScreen';
 import SuccessScreenComponent from '../components/screen/SuccessScreenComponent';
 import SearchScreen from '../components/screen/SearchScreen';
+import BookingDetailScreen from '../screens/booking/BookingDetailScreen';
+import PaymentScreen from '../screens/PaymentScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,8 +34,12 @@ const AppStack = () => {
       <Stack.Screen name='RoomView' component={RoomViewScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='RoomRule' component={RoomRuleScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='RoomPhoto' component={RoomPhotoScreen} options={hiddenHeaderOptions}/>
+      {/* Booking */}
+      <Stack.Screen name='BookingDetail' component={BookingDetailScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='SuccessScreen' component={SuccessScreenComponent} options={hiddenHeaderOptions}/>
       <Stack.Screen name='SearchScreen' component={SearchScreen} options={hiddenHeaderOptions}/>
+      {/* Payment */}
+      <Stack.Screen name='PaymentScreen' component={PaymentScreen} options={hiddenHeaderOptions}/>
     </Stack.Navigator>
   );
 };

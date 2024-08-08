@@ -5,7 +5,7 @@ import { TranslateAPI } from '../services/LanguageService';
 export const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState('en'); // Default to English
+  const [language, setLanguage] = useState('eng'); // Default to English
   const [translate, setTranslate] = useState(null); // Initialize translate state
 
   useEffect(() => {

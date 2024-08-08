@@ -7,18 +7,28 @@ import { LanguageContext } from '../../context/LanguageContext';
 const RoomListComponent = ({ data, navigation, type, onPress }) => {
   const { translate } = useContext(LanguageContext);
 
+  // Function to get status-specific styles
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case 'Unpaid':
+        return { color: theme.colors.error, backgroundColor: 'transparent' };
+      case 'Paid':
+        return { color: theme.colors.info, backgroundColor: 'transparent' };
+      default:
+        return {
+          color: status==='Occupied'?'#19B791':status==='Vacant'?'#FF8B33':theme.colors.textDark,
+          backgroundColor: status === 'Occupied'
+            ? '#EAFAF6'
+            : status === 'Vacant'
+            ? '#FFF4EC'
+            : theme.status.backgroundColor,
+        };
+    }
+  };
+
   const renderItem = ({ item }) => {
     const isCategory = type === 'category';
-    const statusStyles = [
-      styles.status,
-      isCategory
-        ? { ...styles.categoryStatus, backgroundColor: '#F7F7F7', color: theme.colors.textDark }
-        : item.roomStatus === 'Occupied'
-        ? styles.occupied
-        : item.roomStatus === 'Vacant'
-        ? styles.vacant
-        : styles.defaultStatus,
-    ];
+    const statusStyle = getStatusStyle(item.roomStatus);
 
     const roomStatus = isCategory
       ? `${item.numberOfRooms} ${translate.room.Rooms}`
@@ -48,8 +58,8 @@ const RoomListComponent = ({ data, navigation, type, onPress }) => {
               )}
             </View>
             <View style={styles.statusContainer}>
-              <View style={statusStyles}>
-                <Text style={isCategory ? styles.categoryText : item.roomStatus === 'Occupied' ? styles.occupiedText : styles.vacantText}>
+              <View style={[styles.status, { backgroundColor: statusStyle.backgroundColor }]}>
+                <Text style={{ color: statusStyle.color }}>
                   {roomStatus}
                 </Text>
               </View>
@@ -82,9 +92,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     margin: 10,
     overflow: 'hidden',
-    paddingTop:20,
-    paddingRight:20,
-    paddingBottom:20
+    paddingTop: 20,
+    paddingRight: 20,
+    paddingBottom: 20,
   },
   thumbnail: {
     width: 65,
@@ -93,7 +103,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: 55,  // Use the smaller dimension for width to match height
+    width: 55, // Use the smaller dimension for width to match height
     height: 55, // Ensure width and height are equal
     borderRadius: 27.5, // Half of the height (55 / 2)
   },
@@ -105,10 +115,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   title: {
-    width:180,
+    width: 180,
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom:5
+    marginBottom: 5,
   },
   subtitle: {
     fontSize: 18,
@@ -124,31 +134,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginRight: 10,
   },
-  occupied: {
-    backgroundColor: '#EAFAF6',
-    color: '#19B791',
-  },
-  vacant: {
-    backgroundColor: '#FFF4EC',
-    color: '#FF8B33',
-  },
-  defaultStatus: {
-    backgroundColor: 'grey',
-    color: 'white',
-  },
-  categoryStatus: {
-    backgroundColor: '#F7F7F7',
-  },
-  categoryText: {
-    color: theme.colors.textDark,
-  },
-  occupiedText: {
-    color: '#19B791',
-  },
-  vacantText: {
-    color: '#FF8B33',
-  },
 });
-
 
 export default RoomListComponent;

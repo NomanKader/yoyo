@@ -47,7 +47,7 @@ export const CommonStyles = {
       marginTop: 20,
     },
     header:{
-      fontSize: 25,
+      fontSize: 20,
       fontWeight: 'bold',
       color:theme.colors.textDark,
       marginTop:20
@@ -76,6 +76,7 @@ export const CommonStyles = {
       fontSize: 16,
       color: theme.colors.textDark,
       fontWeight: '500',
+      marginBottom:10
     },
     component:{
       marginTop:20
@@ -144,6 +145,54 @@ export const CommonStyles = {
         fontSize: 16,
         color: theme.colors.textDark,
         fontWeight: '500',
+      },
+    },
+    bottomSheet:{
+      contentContainer: {
+        flex: 1,
+        padding: 16,
+        height: 300 
+      },
+      bottomSheetContent: {
+        padding: 20,
+      },
+      bottomSheet: {
+        zIndex: 2, // Ensure BottomSheet appears above the overlay
+      },
+      bottomSheetHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16,
+      },
+      bottomSheetTitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        marginLeft: 10,
+        marginBottom: 5,
+        color:theme.colors.textDark
+      },
+      icon: {
+        width: 30,
+        height: 30,
+        marginBottom: 5
+      },
+      arrowIcon: {
+        width: 7,
+        height: 12,
+        marginLeft: 'auto',
+      },
+      bottomSheetItem: {
+        paddingVertical: 16,
+      },
+      itemContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',    
+      },
+      bottomSheetItemText: {
+        fontSize: 16,
+        marginLeft: 10, 
+        marginBottom: 5   
       },
     }
   };

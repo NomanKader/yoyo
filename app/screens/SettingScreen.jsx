@@ -21,8 +21,8 @@ const SettingsScreen = ({ navigation }) => {
         setSelectedLanguage(storedLanguage);
         setLanguage(storedLanguage);
       } else {
-        setSelectedLanguage('en'); // default to English
-        setLanguage('en');
+        setSelectedLanguage('eng'); // default to English
+        setLanguage('eng');
       }
     };
     fetchLanguagePreference();

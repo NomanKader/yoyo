@@ -1,27 +1,31 @@
-// app/navigation/TabStack.jsx
 import React, { useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { Image } from 'react-native'; // Import Image component
+import Icon from 'react-native-vector-icons/Ionicons'; // Import Ionicons
 import DashboardScreen from '../screens/DashboardScreen';
 import SettingsScreen from '../screens/SettingScreen';
-import BookingScreen from '../screens/BookingScreen';
+import BookingScreen from '../screens/booking/BookingScreen';
 import AccountScreen from '../screens/AccountScreen';
 import theme from '../style/colors';
 import { LanguageContext } from '../context/LanguageContext'; // Import LanguageContext
 import AppStack from './AppStack';
 import RoomCategoryListScreen from '../screens/room/RoomCategoryListScreen';
+import dashboardTabIcon from '../assets/icons/tab/dashboardTabIcon.png';
+import bookingTabIcon from '../assets/icons/tab/bookingTabIcon.png';
+import roomTabIcon from '../assets/icons/tab/roomTabIcon.png';
+import accountTabIcon from '../assets/icons/tab/profileTabIcon.png';
 
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator(); // Create a Stack Navigator
+const Stack = createNativeStackNavigator();
 
 const options = {
-  headerShown: false
+  headerShown: false,
 };
 
 const TabScreens = () => {
-  const { translate } = useContext(LanguageContext);  
-  // Define tab names based on language
+  const { translate } = useContext(LanguageContext);
+
   const tabNames = {
     Dashboard: translate?.navigation?.Dashboard,
     Settings: translate?.navigation?.Setting,
@@ -31,7 +35,7 @@ const TabScreens = () => {
   };
 
   return (
-    <Tab.Navigator    
+    <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.textGray,
@@ -42,30 +46,68 @@ const TabScreens = () => {
           fontSize: 12,
         },
         tabBarIcon: ({ color, size }) => {
-          let iconName;
-          if (route.name === 'Dashboard') {
-            iconName = 'apps';
-          } else if (route.name === 'Settings') {
-            iconName = 'cog-outline';
-          } else if (route.name === 'Room') {
-            iconName = 'bed';
-          } else if (route.name === 'Booking') {
-            iconName = 'calendar';
-          } else if (route.name === 'Account') {
-            iconName = 'person';
+          let iconComponent;
+
+          switch (route.name) {
+            case 'Dashboard':
+              iconComponent = (
+                <Image
+                  source={dashboardTabIcon}
+                  style={{ width: size, height: size, tintColor: color }}
+                  resizeMode="contain"
+                />
+              );
+              break;
+            case 'Booking':
+              iconComponent = (
+                <Image
+                  source={bookingTabIcon}
+                  style={{ width: size, height: size, tintColor: color }}
+                  resizeMode="contain"
+                />
+              );
+              break;
+            case 'Room':
+              iconComponent = (
+                <Image
+                  source={roomTabIcon}
+                  style={{ width: size, height: size, tintColor: color }}
+                  resizeMode="contain"
+                />
+              );
+              break;
+            case 'Account':
+              iconComponent = (
+                <Image
+                  source={accountTabIcon}
+                  style={{ width: size, height: size, tintColor: color }}
+                  resizeMode="contain"
+                />
+              );
+              break;
+            case 'Settings':
+              iconComponent = (
+                <Icon
+                  name="cog-outline"
+                  size={size}
+                  color={color}
+                />
+              );
+              break;
+            default:
+              iconComponent = null;
           }
 
-          // Return the icon component with the correct label based on language
-          return <Icon name={iconName} size={size} color={color} />;
+          return iconComponent;
         },
-        tabBarLabel: tabNames[route.name], // Set the label dynamically based on tabNames
+        tabBarLabel: tabNames[route.name],
       })}
     >
-      <Tab.Screen name="Booking" component={BookingScreen} options={options}/>
+      <Tab.Screen name="Booking" component={BookingScreen} options={options} />
       <Tab.Screen name="Dashboard" component={DashboardScreen} options={options} />
-      <Tab.Screen name="Room" component={RoomCategoryListScreen} options={options}/>      
-      <Tab.Screen name="Account" component={AccountScreen} options={options}/>
-      <Tab.Screen name="Settings" component={SettingsScreen} options={options}/>
+      <Tab.Screen name="Room" component={RoomCategoryListScreen} options={options} />
+      <Tab.Screen name="Account" component={AccountScreen} options={options} />
+      <Tab.Screen name="Settings" component={SettingsScreen} options={options} />
     </Tab.Navigator>
   );
 };

@@ -11,7 +11,7 @@ import backIcon from '../../assets/icons/backIcon.png';
 import moreIcon from '../../assets/icons/moreIcon.png'; // Add your moreIcon image
 import BookingSkeletonComponent from '../../components/Skeleton/BookingSkeletonComponent';
 import CauroselComponent from '../../components/Caurosel/CauroselComponent';
-import GetBookingAPI from '../../services/BookingService';
+import { GetBookingAPI } from '../../services/BookingService';
 import CarouselSkeletonComponent from '../../components/Skeleton/CauroselSkeletonComponent';
 import {CommonStyles} from '../../style/CommonStyles';
 import BookingListComponent from '../../components/List/BookingListComponent';
