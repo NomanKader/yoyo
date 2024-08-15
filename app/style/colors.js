@@ -15,7 +15,8 @@
       inputBackgroundColor:"#f9f9f9",
       infoText:"#999",
       iconBackgroundColor:'#F1F1F1',
-      iconTextColor:'#898C8F'
+      iconTextColor:'#898C8F',
+      textInputColor:'#B7B8BA'
     },
     status:{
       backgroundColor:'#F7F7F7'
@@ -24,7 +25,8 @@
       primary:'#001529'
     },
     textInputMaxLength: {
-      maxLength: 11, // Set your desired maxLength value
+      maxLength: 11,
+       // Set your desired maxLength value
     },
     textInputMode:{
       contained:"contained",

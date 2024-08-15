@@ -18,6 +18,12 @@ export const CommonStyles = {
       marginTop:30,
       marginLeft:-10,      
     },
+    defaultButtonContainer:{
+      position:'absolute',
+      bottom:10,
+      right:30,
+      left:30
+    },
     defaultButton: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -100,6 +106,11 @@ export const CommonStyles = {
         borderRadius: 10,
         backgroundColor: '#ccc',
       },
+      qrCode:{
+        width:200,
+        height:200,
+        marginTop:20
+      },
       details: {
         marginLeft: 20,
       },
@@ -114,6 +125,10 @@ export const CommonStyles = {
       },
     },
     room:{
+      container:{
+        flex:1,
+        backgroundColor:theme.colors.textLight
+      },
       step: {
         flexDirection: 'row',
         justifyContent: 'space-between',

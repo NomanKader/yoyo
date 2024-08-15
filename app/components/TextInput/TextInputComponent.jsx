@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
+import theme from '../../style/colors';
 
 const TextInputComponent = ({ label, placeholder, value, onChangeText,keyboardType}) => {
   return (
@@ -11,7 +12,7 @@ const TextInputComponent = ({ label, placeholder, value, onChangeText,keyboardTy
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
-        placeholderTextColor="#B7B8BA"
+        placeholderTextColor={theme.colors.textInputColor}
         autoCapitalize="none"
       />
     </View>

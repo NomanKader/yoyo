@@ -32,6 +32,7 @@ export const GetRoomCategory = (setData) => {
     }
   ];
   setData(roomData);
+  return roomData;
 };
 
 export const GetRoomList = (setData) => {
@@ -66,6 +67,7 @@ export const GetRoomList = (setData) => {
     }
   ];
   setData(roomData);
+  return roomData;
 };
 
 const RoomService = { GetRoomCategory, GetRoomList };

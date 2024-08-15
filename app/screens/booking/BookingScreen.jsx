@@ -1,26 +1,21 @@
-import React, {useContext, useEffect, useState} from 'react';
-import { View, StyleSheet, BackHandler } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, StyleSheet, BackHandler, Alert } from 'react-native';
 import ListSkeletonComponent from '../../components/Skeleton/ListSkeletonComponent';
-import {CommonStyles} from '../../style/CommonStyles';
+import { CommonStyles } from '../../style/CommonStyles';
 import theme from '../../style/colors';
 import AppBarComponent from '../../components/AppBar/AppBarComponent';
 import DividerComponent from '../../components/Divider/DividerComponent';
-import RoomService from '../../services/RoomService';
-import RoomListComponent from '../../components/List/RoomListComponent';
-import { LanguageContext } from '../../context/LanguageContext';
-import _handleListService from '../../helper/HandleListService';
-import SelectTabComponent from '../../components/Tab/SelectTabComponent';
-import RoomDetailScreen from '../room/RoomDetailScreen';
-import roomInfoData from '../../config/roomInfoData';
-import InfoCardComponent from '../../components/Card/InfoCardComponent';
-import { GetBookingListAPI } from '../../services/BookingService';
 import BookingListComponent from '../../components/List/BookingListComponent';
-export default function BookingScreen({navigation}) {
+import SelectTabComponent from '../../components/Tab/SelectTabComponent';
+import { LanguageContext } from '../../context/LanguageContext';
+import { GetBookingListAPI } from '../../services/BookingService';
+
+export default function BookingScreen({ navigation }) {
   const [showLoading, setShowLoading] = useState(false);
   const [roomData, setRoomData] = useState([]);
   const [type, setType] = useState('');
   const { language } = useContext(LanguageContext);  
-  const { translate } = useContext(LanguageContext);  
+  const { translate } = useContext(LanguageContext);
 
   useEffect(() => {
     console.log("Language", language);
@@ -41,13 +36,25 @@ export default function BookingScreen({navigation}) {
     };
   }, []);
 
-  const handleBackPress = async() => {   
-    await RoomService.GetRoomCategory(setRoomData);
-    setType('category')    
-    return true; // Return true to prevent default back button behavior
+  const handleBackPress = () => {
+    Alert.alert(
+      'Exit App',
+      'Do you want to exit the app?',
+      [
+        {
+          text: 'No',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => BackHandler.exitApp(),
+        },
+      ],
+      { cancelable: false }
+    );
+    return true; // Prevent default behavior
   };
-
-
 
   return (
     <>
@@ -58,13 +65,18 @@ export default function BookingScreen({navigation}) {
           <View style={CommonStyles.scrollViewContainer}>
             <ListSkeletonComponent />
             <ListSkeletonComponent />
-          </View>            
-        ) : (            
+          </View>
+        ) : (
           <>
-            <View style={{padding:20}}>
-            <SelectTabComponent/>
+            <View style={{ padding: 20 }}>
+              <SelectTabComponent />
             </View>
-          <BookingListComponent data={roomData} navigation={navigation} type={'list'} onPress={()=>navigation.navigate('AppStack',{screen:"BookingDetail"})}/>
+            <BookingListComponent 
+              data={roomData} 
+              navigation={navigation} 
+              type={'list'} 
+              onPress={() => navigation.navigate('AppStack', { screen: "BookingDetailScreen" })}
+            />
           </>
         )}
       </View>

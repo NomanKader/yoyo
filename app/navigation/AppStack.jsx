@@ -15,6 +15,10 @@ import SuccessScreenComponent from '../components/screen/SuccessScreenComponent'
 import SearchScreen from '../components/screen/SearchScreen';
 import BookingDetailScreen from '../screens/booking/BookingDetailScreen';
 import PaymentScreen from '../screens/PaymentScreen';
+import CheckInStatusScreen from '../screens/CheckInStatusScreen';
+import BookingRoomCategoryScreen from '../screens/booking/BookingRoomCategoryScreen';
+import BookingRoomListScreen from '../screens/booking/BookingRoomListScreen';
+import CreateBookingScreen from '../screens/booking/CreateBookingScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,20 +30,25 @@ const AppStack = () => {
     <Stack.Navigator>
       <Stack.Screen name='Home' component={HomeScreen} options={{ headerTitle: 'Welcome To YoYo' }} />
       <Stack.Screen name='Unauthorized' component={UnauthorizedScreen} options={hiddenHeaderOptions} />
-      <Stack.Screen name="RoomDetail" component={RoomDetailScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomCategoryCreate' component={RoomCategoryCreateScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomFacilityCreate' component={RoomFacilityCreateScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomBasicFeature' component={RoomBasicFeatureScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomBedroomDetail' component={RoomBedroomDetailScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomView' component={RoomViewScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomRule' component={RoomRuleScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomPhoto' component={RoomPhotoScreen} options={hiddenHeaderOptions}/>
+      {/* Room */}
+      <Stack.Screen name="RoomDetailScreen" component={RoomDetailScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='RoomCategoryCreateScreen' component={RoomCategoryCreateScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='RoomFacilityCreateScreen' component={RoomFacilityCreateScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='RoomBasicFeatureScreen' component={RoomBasicFeatureScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='RoomBedroomDetailScreen' component={RoomBedroomDetailScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='RoomViewScreen' component={RoomViewScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='RoomRuleScreen' component={RoomRuleScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='RoomPhotoScreen' component={RoomPhotoScreen} options={hiddenHeaderOptions}/>
       {/* Booking */}
-      <Stack.Screen name='BookingDetail' component={BookingDetailScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='BookingDetailScreen' component={BookingDetailScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='SuccessScreen' component={SuccessScreenComponent} options={hiddenHeaderOptions}/>
       <Stack.Screen name='SearchScreen' component={SearchScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='BookingRoomCategoryScreen' component={BookingRoomCategoryScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='BookingRoomListScreen' component={BookingRoomListScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='CreateBookingScreen' component={CreateBookingScreen} options={hiddenHeaderOptions}/>
       {/* Payment */}
       <Stack.Screen name='PaymentScreen' component={PaymentScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='CheckInStatusScreen' component={CheckInStatusScreen} options={hiddenHeaderOptions}/>
     </Stack.Navigator>
   );
 };

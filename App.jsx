@@ -6,6 +6,7 @@ import { AuthContext, AuthProvider } from "./app/context/AuthContext";
 import { LanguageProvider } from "./app/context/LanguageContext";
 import { ActivityIndicator, View, Text, StatusBar } from 'react-native';
 import AuthStack from "./app/navigation/AuthStack";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,7 @@ const AppNavigator = () => {
 
 export default function App() {
   return (
+    <GestureHandlerRootView>
     <AuthProvider>
       <LanguageProvider>
         <StatusBar
@@ -42,5 +44,6 @@ export default function App() {
         <AppNavigator />
       </LanguageProvider>
     </AuthProvider>
+    </GestureHandlerRootView>
   );
 }

@@ -5,10 +5,12 @@ import theme from '../../style/colors';
 import { LanguageContext } from '../../context/LanguageContext';
 
 const RoomListComponent = ({ data, navigation, type, onPress }) => {
+  console.log("Typ",type);
   const { translate } = useContext(LanguageContext);
 
   // Function to get status-specific styles
   const getStatusStyle = (status) => {
+    console.log("Status",status);
     switch (status) {
       case 'Unpaid':
         return { color: theme.colors.error, backgroundColor: 'transparent' };
@@ -16,7 +18,7 @@ const RoomListComponent = ({ data, navigation, type, onPress }) => {
         return { color: theme.colors.info, backgroundColor: 'transparent' };
       default:
         return {
-          color: 'white',
+          color: status === 'Occupied'?"#19B791":status=="Vacant"?"#FF8B33":"white",
           backgroundColor: status === 'Occupied'
             ? '#EAFAF6'
             : status === 'Vacant'

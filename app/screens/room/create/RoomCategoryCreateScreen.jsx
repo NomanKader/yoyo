@@ -61,7 +61,7 @@ export default function RoomCategoryCreateScreen({ navigation }) {
           <DefaultButtonComponent
             title="Proceed"
             backgroundColor={theme.colors.primary}
-            onPress={() => navigation.navigate('RoomFacilityCreate', { breakfastIncluded })}
+            onPress={() => navigation.navigate('RoomFacilityCreateScreen', { breakfastIncluded })}
           />
         </View>
       </KeyboardAvoidingView>

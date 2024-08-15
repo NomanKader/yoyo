@@ -31,7 +31,7 @@ const AppBarComponent = ({ title, navigation, searchData, type }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={() => navigation.navigate('AppStack', { screen: 'RoomCategoryCreate' })}
+            onPress={() => navigation.navigate('AppStack', { screen: title==='Bookings'?'BookingRoomCategoryScreen':'RoomCategoryCreateScreen' })}
           >
             <Icon name="plus" size={15} color={theme.icon.primary} />
           </TouchableOpacity>

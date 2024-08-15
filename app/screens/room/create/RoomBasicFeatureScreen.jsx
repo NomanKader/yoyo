@@ -61,7 +61,7 @@ export default function RoomBasicFeatureScreen({ navigation }) {
           <DefaultButtonComponent
             title="Proceed"
             backgroundColor={theme.colors.primary}
-            onPress={() => navigation.navigate('AppStack',{screen:'RoomBedroomDetail'})}
+            onPress={() => navigation.navigate('AppStack',{screen:'RoomBedroomDetailScreen'})}
           />
         </View>
       </KeyboardAvoidingView>

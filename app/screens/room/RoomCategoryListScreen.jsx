@@ -1,8 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
-import { View, StyleSheet, BackHandler } from 'react-native';
+import { View, BackHandler } from 'react-native';
 import ListSkeletonComponent from '../../components/Skeleton/ListSkeletonComponent';
 import {CommonStyles} from '../../style/CommonStyles';
-import theme from '../../style/colors';
 import AppBarComponent from '../../components/AppBar/AppBarComponent';
 import DividerComponent from '../../components/Divider/DividerComponent';
 import RoomService from '../../services/RoomService';
@@ -45,7 +44,7 @@ export default function RoomCategoryListScreen({navigation}) {
 
   return (
     <>
-      <View style={styles.container}>
+      <View style={CommonStyles.room.container}>
         <AppBarComponent title={translate?.room?.Rooms} navigation={navigation} searchData={roomData} type={type} />
         <DividerComponent />
         {showLoading ? (
@@ -54,42 +53,9 @@ export default function RoomCategoryListScreen({navigation}) {
             <ListSkeletonComponent />
           </View>            
         ) : (  
-          <RoomListComponent data={roomData} navigation={navigation} type={type} onPress={()=>_handleListService(type,setType,navigation,RoomService,setRoomData)}/>        
+          <RoomListComponent data={roomData} navigation={navigation} type={type} onPress={()=>_handleListService(type,setType,navigation,RoomService,setRoomData,() => navigation.navigate('AppStack', { screen: 'RoomDetailScreen' }))}/>        
         )}
       </View>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.textLight,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-  },
-  headerText: {
-    fontSize: 20,
-    color: theme.colors.textDark,
-  },
-  iconContainer: {
-    flexDirection: 'row',
-  },
-  iconButton: {
-    marginLeft: 16,
-    padding: 10,
-    backgroundColor: '#fff', // Add background color for better visibility
-    borderRadius: 50,
-    color: 'black',
-    elevation: 4, // Add shadow/elevation to the icons
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

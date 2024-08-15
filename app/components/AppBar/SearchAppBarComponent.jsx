@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: theme.status.backgroundColor,
     borderRadius: 30,
     paddingHorizontal: 10,
   },

@@ -31,7 +31,7 @@ const RoomRuleScreen = ({ navigation }) => {
             title="Proceed"
             backgroundColor={theme.colors.primary}
             onPress={() => {
-              navigation.navigate('AppStack',{screen:'RoomPhoto'})
+              navigation.navigate('AppStack',{screen:'RoomPhotoScreen'})
             }}
           />
         </View>

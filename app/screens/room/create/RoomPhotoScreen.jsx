@@ -49,7 +49,7 @@ const RoomPhotoScreen = ({navigation}) => {
               header: 'Category Created',
               subheader: 'Your Subheader Text',
               nextScreen: 'AppStack', // Pass the screen name as a string
-              nextScreenParams: { screen: 'RoomCategoryCreate' },
+              nextScreenParams: { screen: 'RoomCategoryCreateScreen' },
               navigation:navigation
             });
           }}

@@ -117,7 +117,7 @@ export default function RoomFacilityCreateScreen({ route, navigation }) {
             title="Proceed"
             backgroundColor={theme.colors.primary}
             onPress={() =>
-              navigation.navigate('AppStack', { screen: 'RoomBasicFeature' })
+              navigation.navigate('AppStack', { screen: 'RoomBasicFeatureScreen' })
             }
           />
         </View>

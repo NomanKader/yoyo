@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import theme from '../../style/colors';
 
 const InfoCardComponent = ({ title,value }) => {
   return (
@@ -14,7 +15,7 @@ const styles = StyleSheet.create({
   statusContainer: {
     width: 340,
     height: 60,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: theme.status.backgroundColor,
     borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',
