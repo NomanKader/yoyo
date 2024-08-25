@@ -4,9 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image } from 'react-native'; // Import Image component
 import Icon from 'react-native-vector-icons/Ionicons'; // Import Ionicons
 import DashboardScreen from '../screens/DashboardScreen';
-import SettingsScreen from '../screens/SettingScreen';
 import BookingScreen from '../screens/booking/BookingScreen';
-import AccountScreen from '../screens/AccountScreen';
+import AccountScreen from '../screens/account/AccountScreen';
 import theme from '../style/colors';
 import { LanguageContext } from '../context/LanguageContext'; // Import LanguageContext
 import AppStack from './AppStack';
@@ -107,7 +106,7 @@ const TabScreens = () => {
       <Tab.Screen name="Dashboard" component={DashboardScreen} options={options} />
       <Tab.Screen name="Room" component={RoomCategoryListScreen} options={options} />
       <Tab.Screen name="Account" component={AccountScreen} options={options} />
-      <Tab.Screen name="Settings" component={SettingsScreen} options={options} />
+      {/* <Tab.Screen name="Settings" component={SettingScreen} options={options} /> */}
     </Tab.Navigator>
   );
 };

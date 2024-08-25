@@ -209,6 +209,21 @@ export const CommonStyles = {
         marginLeft: 10, 
         marginBottom: 5   
       },
+    },
+    picker:{      
+        input: {
+          fontSize: 16,
+          paddingVertical: 12,
+          paddingHorizontal: 10,
+          borderWidth: 1,
+          borderColor: '#ccc',
+          borderRadius: 4,
+          color: 'black',
+          marginBottom: 20,
+        },
+        dropdown: {
+          borderColor: '#ccc',
+        },      
     }
   };
   

@@ -19,6 +19,8 @@ import CheckInStatusScreen from '../screens/CheckInStatusScreen';
 import BookingRoomCategoryScreen from '../screens/booking/BookingRoomCategoryScreen';
 import BookingRoomListScreen from '../screens/booking/BookingRoomListScreen';
 import CreateBookingScreen from '../screens/booking/CreateBookingScreen';
+import LanguageSettingsScreen from '../screens/account/LanguageSettingScreen';
+import FacilitySettingScreen from '../screens/account/FacilitySettingScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -49,6 +51,9 @@ const AppStack = () => {
       {/* Payment */}
       <Stack.Screen name='PaymentScreen' component={PaymentScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='CheckInStatusScreen' component={CheckInStatusScreen} options={hiddenHeaderOptions}/>
+      {/* Account */}
+      <Stack.Screen name='LanguageSettingScreen' component={LanguageSettingsScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='FacilitySettingScreen' component={FacilitySettingScreen} options={hiddenHeaderOptions}/>
     </Stack.Navigator>
   );
 };
