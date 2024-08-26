@@ -21,6 +21,8 @@ import BookingRoomListScreen from '../screens/booking/BookingRoomListScreen';
 import CreateBookingScreen from '../screens/booking/CreateBookingScreen';
 import LanguageSettingsScreen from '../screens/account/LanguageSettingScreen';
 import FacilitySettingScreen from '../screens/account/FacilitySettingScreen';
+import ManageRoleScreen from '../screens/account/ManageRoleScreen';
+import AddUserScreen from '../screens/account/AddUserScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +56,8 @@ const AppStack = () => {
       {/* Account */}
       <Stack.Screen name='LanguageSettingScreen' component={LanguageSettingsScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='FacilitySettingScreen' component={FacilitySettingScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='ManageRoleScreen' component={ManageRoleScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='AddUserScreen' component={AddUserScreen} options={hiddenHeaderOptions}/>
     </Stack.Navigator>
   );
 };

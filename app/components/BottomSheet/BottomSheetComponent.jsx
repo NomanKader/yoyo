@@ -10,9 +10,11 @@ import DividerComponent from '../Divider/DividerComponent';
 import cancelIcon from '../../assets/icons/cancelIcon.png';
 import { CommonStyles } from '../../style/CommonStyles';
 
-const BottomSheetComponent = ({ isVisible, onClose, title, children }) => {
+const BottomSheetComponent = ({ isVisible, onClose, title, children, snapPoints: customSnapPoints }) => {
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = useMemo(() => ['40%', '60%'], []);
+
+  // Set default snap points to ['40%', '60%'] if none are provided
+  const snapPoints = useMemo(() => customSnapPoints || ['40%', '60%'], [customSnapPoints]);
 
   const handleSheetChanges = useCallback((index) => {
     console.log('handleSheetChanges', index);
@@ -59,4 +61,5 @@ const BottomSheetComponent = ({ isVisible, onClose, title, children }) => {
     </BottomSheetModalProvider>
   );
 };
+
 export default BottomSheetComponent;

@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import rightArrowIcon from '../../assets/icons/rightArrowIcon.png'
+import DividerComponent from '../Divider/DividerComponent';
 
-
-const AccountSettingListComponent = ({ icon, header, subheader, onPress }) => {
+const AccountSettingListComponent = ({ icon, header, subheader, onPress, rightArrowIcon }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.leftIconContainer}>
@@ -13,9 +12,11 @@ const AccountSettingListComponent = ({ icon, header, subheader, onPress }) => {
         <Text style={styles.header}>{header}</Text>
         {subheader && <Text style={styles.subheader}>{subheader}</Text>}
       </View>
-      <View style={styles.rightIconContainer}>
-        <Image source={rightArrowIcon} style={styles.rightIcon} />
-      </View>
+      {rightArrowIcon && (
+        <View style={styles.rightIconContainer}>
+          <Image source={rightArrowIcon} style={styles.rightIcon} />
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
@@ -27,8 +28,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
     backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
   },
   leftIconContainer: {
     marginRight: 15,

@@ -1,30 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Modal, ActivityIndicator } from 'react-native';
 import theme from '../../style/colors';
-
-const PhoneInputComponent = ({ label, value, onChangeText }) => {
+import countryList from '../../config/countryList.json'
+const PhoneInputComponent = memo(({ label, value, onChangeText }) => {
   const [selectedCountryCode, setSelectedCountryCode] = useState('+1'); // Default to US code
   const [modalVisible, setModalVisible] = useState(false);
   const [countryData, setCountryData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCountryData = async () => {
-      try {
-        const response = await fetch('https://country-code-au6g.vercel.app/Country.json');
-        const data = await response.json();
-        setCountryData(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching country data:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchCountryData();
+    console.log("fetching country list")
+    setCountryData(countryList);
+    setLoading(false);
   }, []);
 
-  const renderCountryCodeItem = ({ item }) => (
+  const renderCountryCodeItem = useCallback(({ item }) => (
     <TouchableOpacity
       style={styles.countryCodeItem}
       onPress={() => {
@@ -34,7 +24,10 @@ const PhoneInputComponent = ({ label, value, onChangeText }) => {
     >
       <Text style={styles.countryCodeText}>{item.emoji} {item.name} ({item.dial_code})</Text>
     </TouchableOpacity>
-  );
+  ), []);
+
+  // Memoize the chunked data for better performance
+  const flatListData = useMemo(() => countryData.flat(), [countryData]);
 
   return (
     <View style={styles.container}>
@@ -70,16 +63,19 @@ const PhoneInputComponent = ({ label, value, onChangeText }) => {
             <ActivityIndicator size="large" color="#0000ff" />
           ) : (
             <FlatList
-              data={countryData}
+              data={flatListData} // Use flattened chunked data
               keyExtractor={(item) => item.code}
               renderItem={renderCountryCodeItem}
+              initialNumToRender={20} // Customize based on your performance needs
+              windowSize={5} // Customize to control memory usage
+              removeClippedSubviews={true} // Improve performance
             />
           )}
         </View>
       </Modal>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
