@@ -13,6 +13,7 @@ import StepAppBarComponent from '../../../components/AppBar/StepAppBarComponent'
 import {CommonStyles} from '../../../style/CommonStyles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IconButtonComponent from '../../../components/Button/IconButtonComponent';
+import createIcon from '../../../assets/icons/createIcon.png';
 
 const RoomPhotoScreen = ({navigation}) => {
   return (
@@ -50,7 +51,8 @@ const RoomPhotoScreen = ({navigation}) => {
               subheader: 'Your Subheader Text',
               nextScreen: 'AppStack', // Pass the screen name as a string
               nextScreenParams: { screen: 'RoomCategoryCreateScreen' },
-              navigation:navigation
+              navigation:navigation,
+              icon:createIcon
             });
           }}
         />

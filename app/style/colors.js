@@ -16,7 +16,10 @@
       infoText:"#999",
       iconBackgroundColor:'#F1F1F1',
       iconTextColor:'#898C8F',
-      textInputColor:'#B7B8BA'
+      textInputColor:'#B7B8BA',
+      gridColor:'#f0f0f0',
+      walletCardColor:'#0071FE',
+      typoInfoColor:'#F5F5F5'
     },
     status:{
       backgroundColor:'#F7F7F7'

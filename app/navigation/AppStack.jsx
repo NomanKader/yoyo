@@ -23,6 +23,16 @@ import LanguageSettingsScreen from '../screens/account/LanguageSettingScreen';
 import FacilitySettingScreen from '../screens/account/FacilitySettingScreen';
 import ManageRoleScreen from '../screens/account/ManageRoleScreen';
 import AddUserScreen from '../screens/account/AddUserScreen';
+import EditUserScreen from '../screens/account/EditUserScreen';
+import UpdatePasswordScreen from '../screens/account/UpdatePasswordScreen';
+import BasicDetailScreen from '../screens/account/BasicDetailScreen';
+import UploadPictureScreen from '../screens/account/UploadPictureScreen';
+import WalletScreen from '../screens/account/WalletScreen';
+import AddBankAccountScreen from '../screens/account/AddBankAccountScreen';
+import WithdrawScreen from '../screens/account/WithdrawScreen';
+import OTPScreen from '../screens/account/OTPScreen';
+import WithdrawSuccessScreen from '../screens/account/WithdrawSuccessScreen';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -58,6 +68,15 @@ const AppStack = () => {
       <Stack.Screen name='FacilitySettingScreen' component={FacilitySettingScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='ManageRoleScreen' component={ManageRoleScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='AddUserScreen' component={AddUserScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='EditUserScreen' component={EditUserScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='UpdatePasswordScreen' component={UpdatePasswordScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='BasicDetailScreen' component={BasicDetailScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='UploadPictureScreen' component={UploadPictureScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='WalletScreen' component={WalletScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='AddBankAccountScreen' component={AddBankAccountScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='WithdrawScreen' component={WithdrawScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='OTPScreen' component={OTPScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='WithdrawSuccessScreen' component={WithdrawSuccessScreen} options={hiddenHeaderOptions}/>
     </Stack.Navigator>
   );
 };

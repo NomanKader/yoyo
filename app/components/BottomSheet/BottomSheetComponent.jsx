@@ -9,6 +9,7 @@ import {
 import DividerComponent from '../Divider/DividerComponent';
 import cancelIcon from '../../assets/icons/cancelIcon.png';
 import { CommonStyles } from '../../style/CommonStyles';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const BottomSheetComponent = ({ isVisible, onClose, title, children, snapPoints: customSnapPoints }) => {
   const bottomSheetModalRef = useRef(null);
@@ -53,9 +54,11 @@ const BottomSheetComponent = ({ isVisible, onClose, title, children, snapPoints:
             </TouchableOpacity>
           </View>
           <DividerComponent />
+          <TouchableWithoutFeedback onPress={()=>onClose()}>
           <View style={CommonStyles.bottomSheet.bottomSheetItem}>
             {children}
           </View>
+          </TouchableWithoutFeedback>
         </BottomSheetView>
       </BottomSheetModal>
     </BottomSheetModalProvider>

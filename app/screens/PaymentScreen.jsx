@@ -8,6 +8,8 @@ import paymentIcon from '../assets/icons/paymentIcon.png';
 import DefaultButtonComponent from '../components/Button/DefaultButtonComponent';
 import theme from '../style/colors';
 import base64Data from '../config/base64Data';
+import paymentSuccessIcon from '../assets/icons/paymentSuccessIcon.png';
+
 export default function PaymentScreen({navigation}) {
   const paymentMethods = [
     {id: 1, header: 'Cash', subheader: 'Pay instantly for the check-in'},
@@ -70,6 +72,7 @@ export default function PaymentScreen({navigation}) {
               nextScreen: 'AppStack', // Pass the screen name as a string
               nextScreenParams: {screen: 'RoomCategoryCreateScreen'},
               navigation: navigation,
+              icon:paymentSuccessIcon
             });
           }}
         />

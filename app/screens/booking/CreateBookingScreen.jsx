@@ -10,6 +10,7 @@ import DatePickerComponent from '../../components/DatePicker/DatePickerComponent
 import {ScrollView} from 'react-native-gesture-handler';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import theme from '../../style/colors';
+import createIcon from '../../assets/icons/createIcon.png';
 
 export default function CreateBookingScreen({navigation}) {
   const [name, setName] = useState('');
@@ -140,6 +141,7 @@ export default function CreateBookingScreen({navigation}) {
                 nextScreenParams: {
                   /* any parameters you want to pass to the next screen */
                 },
+                icon:createIcon
               },
             })
           }

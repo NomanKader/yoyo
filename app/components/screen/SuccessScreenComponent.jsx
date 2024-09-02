@@ -1,59 +1,70 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, TouchableNativeFeedback } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions  
+} from 'react-native';
 import theme from '../../style/colors';
 import RoundButtonComponent from '../Button/RoundButtonComponent';
-import createIcon from '../../assets/icons/createIcon.png';
-import paymentSuccessIcon from "../../assets/icons/paymentSuccessIcon.png";
-import paymentIllustration from "../../assets/images/paymentIllustration.png";
-import confirmpaymentIllustration from "../../assets/images/confirmpaymentillustration.png";
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import successIllustration from '../../assets/images/successIllustration.png';
+import DefaultButtonComponent from '../Button/DefaultButtonComponent';
 
 // Get the screen width
-const { width: screenWidth } = Dimensions.get('window');
+const {width: screenWidth} = Dimensions.get('window');
 
-const SuccessScreenComponent = ({ route, navigation }) => {  
+const SuccessScreenComponent = ({route,navigation}) => {
   // Extract parameters from route.params
-  const { header, subheader, nextScreen, nextScreenParams } = route.params;
-
-  // Check if the header includes the word "Payment"
-  const isPaymentRelated = header.includes('Payment') || header.includes('Reservation');
+  const {header, subheader, nextScreen, nextScreenParams, icon,isShowingIllustration, buttonText,color} = route.params;
 
   return (
-    <View style={[styles.container, isPaymentRelated && { backgroundColor: theme.colors.info }]}>
-      <Image 
-        source={isPaymentRelated ? paymentSuccessIcon : createIcon} 
-        style={styles.icon} 
-      />
-      <Text style={[styles.header, isPaymentRelated && { color: theme.colors.textLight }]}>
+    <View
+      style={[
+        styles.container,
+        isShowingIllustration && {backgroundColor: theme.colors.info},
+      ]}>
+      <Image source={icon} style={styles.icon} />
+      <Text
+        style={[
+          styles.header,
+          isShowingIllustration && {color: theme.colors.textLight},
+        ]}>
         {header}
       </Text>
-      <Text style={[styles.subHeader, isPaymentRelated && { color: theme.colors.textLight }]}>
+      <Text
+        style={[
+          styles.subHeader,
+          isShowingIllustration && {color: theme.colors.textLight},
+        ]}>
         {subheader}
       </Text>
 
-      {(isPaymentRelated && header.includes('Payment')) && (
-        <TouchableNativeFeedback onPress={()=>navigation.navigate("AppStack",{screen:"CheckInStatusScreen"})}>
-        <Image 
-          source={paymentIllustration} 
-          style={styles.illustration} 
-          resizeMode="contain" 
+      {isShowingIllustration ? (       
+        <>
+          <Image
+            source={successIllustration}
+            style={styles.illustration}
+            resizeMode="contain"
+          />
+        </>
+      ) : (
+        <RoundButtonComponent
+          label="Add Room"
+          onPress={() => navigation.navigate(nextScreen, nextScreenParams)}
         />
-        </TouchableNativeFeedback>
       )}
-      {(isPaymentRelated && header.includes('Reservation')) && (
-        <TouchableNativeFeedback onPress={()=>navigation.navigate("AppStack",{screen:"PaymentScreen"})}>
-        <Image 
-          source={confirmpaymentIllustration} 
-          style={styles.illustration} 
-          resizeMode="contain" 
-        />
-        </TouchableNativeFeedback>
-      )}
-      {!isPaymentRelated && (
-        <RoundButtonComponent 
-          label="Add Room" 
-          onPress={() => navigation.navigate(nextScreen, nextScreenParams)} 
-        />
+
+      {/* DefaultButtonComponent placed at the bottom */}
+      {isShowingIllustration && (
+          <View style={styles.buttonContainer}>
+            <DefaultButtonComponent
+              title={buttonText}
+              backgroundColor={theme.colors.textLight}
+              color={color}
+              onPress={() =>buttonText=='Back to home'?navigation.goBack():navigation.navigate(nextScreen,nextScreenParams)}
+            />
+          </View>
       )}
     </View>
   );
@@ -78,7 +89,7 @@ const styles = StyleSheet.create({
     color: theme.colors.textDark, // Default color
     marginBottom: 10,
   },
-  subHeader: {  
+  subHeader: {
     width: 270,
     fontSize: 14,
     fontWeight: '400',
@@ -91,6 +102,14 @@ const styles = StyleSheet.create({
     height: 250, // Adjust height as needed
     position: 'absolute', // Position at the bottom
     bottom: 0,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 20, // Adjust the bottom space as needed
+    left: 0,
+    right: 0,
+    paddingHorizontal:20
+        
   },
 });
 

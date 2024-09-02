@@ -35,6 +35,7 @@ const TabScreens = () => {
 
   return (
     <Tab.Navigator
+      initialRouteName='Booking'
       screenOptions={({ route }) => ({
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.textGray,
@@ -113,8 +114,8 @@ const TabScreens = () => {
 
 const BottomTabStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="TabScreens" component={TabScreens} options={{ headerShown: false }} />
+    <Stack.Navigator initialRouteName='TabScreen'>
+      <Stack.Screen name="TabScreen" component={TabScreens} options={{ headerShown: false }} />
       <Stack.Screen name="AppStack" component={AppStack} options={{ headerShown: false }} />
     </Stack.Navigator>
   );

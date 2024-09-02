@@ -53,7 +53,7 @@ export const CommonStyles = {
       marginTop: 20,
     },
     header:{
-      fontSize: 20,
+      fontSize: 25,
       fontWeight: 'bold',
       color:theme.colors.textDark,
       marginTop:20
@@ -84,8 +84,13 @@ export const CommonStyles = {
       fontWeight: '500',
       marginBottom:10
     },
+    
     component:{
       marginTop:20
+    },
+    container:{
+      flexGrow:1,
+      backgroundColor:theme.colors.textLight
     },
     list:{
       card: {

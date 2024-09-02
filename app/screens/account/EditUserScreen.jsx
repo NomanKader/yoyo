@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
-import DividerComponent from '../../components/Divider/DividerComponent';
 import TextInputComponent from '../../components/TextInput/TextInputComponent';
 import DropdownPickerComponent from '../../components/Dropdown/DropdownPickerComponent';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
@@ -10,30 +9,35 @@ import theme from '../../style/colors';
 import PhoneInputComponent from '../../components/TextInput/PhoneInputComponent';
 import roleItems from '../../config/roles';
 
-export default function AddUserScreen({ navigation }) {
-  // State hooks for managing form inputs
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [pin, setPin] = useState('');
+export default function EditUserScreen({ navigation, route }) {
+  // Destructure route.params to get the email, phoneNumber, pin, and role
+  const { email: initialEmail, phoneNumber: initialPhoneNumber, pin: initialPin, role: initialRole } = route?.params;
+
+  // Initialize state using the values from route.params
+  const [email, setEmail] = useState(initialEmail || '');
+  const [phoneNumber, setPhoneNumber] = useState(initialPhoneNumber || '');
+  const [role, setRole] = useState(initialRole || '');
   const [roleOpen, setRoleOpen] = useState(false);
-  const [role, setRole] = useState('');
+  const [pin, setPin] = useState(initialPin || '');
 
-
-  // Handle form submission
-  const handleCreateUser = () => {
-    console.log('Creating user...');
-    // Add your form submission logic here
-  };
+  useEffect(() => {
+    // Update states in case route.params change
+    if (route.params) {
+      setEmail(route.params.email || '');
+      setPhoneNumber(route.params.phoneNumber || '');
+      setPin(route.params.pin || '');
+      setRole(route.params.role || '');
+    }
+  }, [route.params]);
 
   return (
-    <ScrollView style={CommonStyles.room.container}>
+    <ScrollView style={{ flexGrow: 1, backgroundColor: theme.colors.textLight }}>
       <View style={CommonStyles.scrollViewContainer}>
-        <DetailAppBarComponent title="" navigation={navigation} />
-        <Text style={CommonStyles.header}>Add New User</Text>
+        <DetailAppBarComponent title={''} navigation={navigation} />
+        <Text style={CommonStyles.header}>Edit User</Text>
         <Text style={CommonStyles.subHeader}>
-          Create a new user to manage and access tracman services.
+          Update account details by updating the forms below.
         </Text>
-
         <View style={CommonStyles.dividerView}>
           <TextInputComponent
             label="Email address"
@@ -45,9 +49,9 @@ export default function AddUserScreen({ navigation }) {
 
         <View style={CommonStyles.dividerView}>
           <PhoneInputComponent
-          label={'Phone Number'}
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
+            label={'Phone Number'}
+            value={phoneNumber}
+            onChangeText={setPhoneNumber}
           />
         </View>
 
@@ -73,10 +77,9 @@ export default function AddUserScreen({ navigation }) {
             multiple={false}
           />
         </View>
-
         <DefaultButtonComponent
-          title="Create User"
-          onPress={handleCreateUser}
+          title="Proceed"
+          onPress={() => navigation.navigate('AppStack',{screen:'UpdatePasswordScreen'})}
           backgroundColor={theme.colors.primary}
         />
       </View>
