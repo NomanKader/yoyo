@@ -32,6 +32,8 @@ import AddBankAccountScreen from '../screens/account/AddBankAccountScreen';
 import WithdrawScreen from '../screens/account/WithdrawScreen';
 import OTPScreen from '../screens/account/OTPScreen';
 import WithdrawSuccessScreen from '../screens/account/WithdrawSuccessScreen';
+import ManageDiscountScreen from '../screens/account/ManageDiscountScreen';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -77,6 +79,7 @@ const AppStack = () => {
       <Stack.Screen name='WithdrawScreen' component={WithdrawScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='OTPScreen' component={OTPScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='WithdrawSuccessScreen' component={WithdrawSuccessScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='ManageDiscountScreen' component={ManageDiscountScreen} options={hiddenHeaderOptions}/>
     </Stack.Navigator>
   );
 };

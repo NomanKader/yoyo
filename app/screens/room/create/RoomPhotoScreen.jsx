@@ -48,7 +48,7 @@ const RoomPhotoScreen = ({navigation}) => {
           onPress={() => {
             navigation.navigate('SuccessScreen', {
               header: 'Category Created',
-              subheader: 'Your Subheader Text',
+              // subheader: 'Your Subheader Text',
               nextScreen: 'AppStack', // Pass the screen name as a string
               nextScreenParams: { screen: 'RoomCategoryCreateScreen' },
               navigation:navigation,

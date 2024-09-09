@@ -90,7 +90,7 @@ export default function UploadPictureScreen({ navigation, route }) {
       {/* DefaultButtonComponent placed outside the ScrollView, pinned at the bottom */}
       <View style={styles.buttonContainer}>
         <DefaultButtonComponent 
-          title={"Updated"} 
+          title={"Update"} 
           backgroundColor={theme.colors.primary} 
           onPress={() => {
             navigation.navigate('SuccessScreen', {

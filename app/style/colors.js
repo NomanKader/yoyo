@@ -19,7 +19,9 @@
       textInputColor:'#B7B8BA',
       gridColor:'#f0f0f0',
       walletCardColor:'#0071FE',
-      typoInfoColor:'#F5F5F5'
+      typoInfoColor:'#F5F5F5',
+      borderColor:'#202020',
+      chipBackgroundColor:'#7FE1F8'
     },
     status:{
       backgroundColor:'#F7F7F7'
