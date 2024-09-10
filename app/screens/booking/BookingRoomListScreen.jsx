@@ -7,6 +7,7 @@ import RoomListComponent from "../../components/List/BookingListComponent";
 export default function BookingRoomListScreen({ navigation, route }) {
   // Get the title from route.params
   const { title } = route.params;
+  console.log("Title is ",title);
 
   return (
     <View style={CommonStyles.scrollViewContainer}>

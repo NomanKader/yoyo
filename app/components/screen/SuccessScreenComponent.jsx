@@ -10,12 +10,14 @@ import theme from '../../style/colors';
 import RoundButtonComponent from '../Button/RoundButtonComponent';
 import successIllustration from '../../assets/images/successIllustration.png';
 import DefaultButtonComponent from '../Button/DefaultButtonComponent';
+import { useNavigation } from '@react-navigation/native';
 
 // Get the screen width
 const {width: screenWidth} = Dimensions.get('window');
 
-const SuccessScreenComponent = ({route,navigation}) => {
+const SuccessScreenComponent = ({route}) => {
   // Extract parameters from route.params
+  const navigation=useNavigation();
   const {header, subheader, nextScreen, nextScreenParams, icon,isShowingIllustration, buttonText,color} = route.params;
 
   return (
@@ -62,7 +64,7 @@ const SuccessScreenComponent = ({route,navigation}) => {
               title={buttonText}
               backgroundColor={theme.colors.textLight}
               color={color}
-              onPress={() =>buttonText=='Back to home'?navigation.goBack():navigation.navigate(nextScreen,nextScreenParams)}
+              onPress={() =>buttonText=='Back to home'?navigation.navigate('TabScreen'):navigation.navigate(nextScreen,nextScreenParams)}
             />
           </View>
       )}

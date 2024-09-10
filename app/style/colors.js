@@ -36,6 +36,11 @@
     textInputMode:{
       contained:"contained",
       flat:"flat"
+    },
+    checkboxContainer:{
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
     }
   };
   export default theme;

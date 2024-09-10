@@ -17,6 +17,7 @@ import ProfileBottomSheetComponent from './ProfileBottomSheetComponent';
 import BottomSheetComponent from './BottomSheetComponent';
 import DropdownPickerComponent from '../Dropdown/DropdownPickerComponent';
 import DefaultButtonComponent from '../Button/DefaultButtonComponent';
+import { useNavigation } from '@react-navigation/native';
 
 const BookingDetailBottomSheetComponent = ({ isVisible, onClose, style }) => {
   const bottomSheetModalRef = useRef(null);
@@ -24,6 +25,7 @@ const BookingDetailBottomSheetComponent = ({ isVisible, onClose, style }) => {
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [isStatusVisible, setIsStatusVisible] = useState(false); // State to manage Booking Status BottomSheet visibility
   const snapPoints = useMemo(() => ['40%', '60%'], []);
+  const navigation=useNavigation();
 
   const handleSheetChanges = useCallback((index) => {
     console.log('handleSheetChanges', index);
@@ -184,8 +186,10 @@ const BookingDetailBottomSheetComponent = ({ isVisible, onClose, style }) => {
       {/* Render the Change Status BottomSheet */}
       <BottomSheetComponent
         isVisible={isStatusVisible}
-        onClose={handleStatusClose}
+        onClose={()=>handleStatusClose}
         title="Change Booking Status"
+        snapPoints={["60%","60%"]}
+        backdropComponent={() => null}
         children={
           <View>
             <Text style={CommonStyles.infoLabel}>Booking Status</Text>
@@ -202,9 +206,8 @@ const BookingDetailBottomSheetComponent = ({ isVisible, onClose, style }) => {
               title="Proceed"
               backgroundColor={theme.colors.primary}
               onPress={() => {
-                console.log('Proceed with status:', statusValue);
-                handleStatusClose();
-              }}
+                statusValue === 'Cancel' && (handleStatusClose(), navigation.navigate('AppStack', { screen: 'BookingCancelScreen' }));
+              }}              
             />
           </View>
         }

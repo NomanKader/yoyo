@@ -1,12 +1,25 @@
-import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, Pressable } from 'react-native';
 import theme from '../../style/colors';
 
 export default function ChipComponent({ label }) {
+  // State to track whether the chip is pressed or not
+  const [isPressed, setIsPressed] = useState(false);
+
   return (
-    <View style={styles.chipContainer}>
+    <Pressable
+      onPress={() => setIsPressed(!isPressed)} // Toggle the pressed state
+      style={[
+        styles.chipContainer,
+        {
+          backgroundColor: isPressed
+            ? theme.colors.chipBackgroundColor // Pressed state background color
+            : theme.colors.textLight,          // Default background color
+        },
+      ]}
+    >
       <Text style={styles.chipLabel}>{label}</Text>
-    </View>
+    </Pressable>
   );
 }
 
@@ -25,13 +38,11 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 0,
     borderColor: theme.colors.borderColor,
     borderWidth: 1, // only top border will appear due to the width settings
-    borderRightWidth: 0,
-    borderBottomWidth: 0,
-    backgroundColor:theme.colors.chipBackgroundColor,
     opacity: 1, // ensure opacity is set to fully visible
   },
   chipLabel: {
     fontSize: 16,
     color: theme.colors.borderColor,
+    fontWeight: 'bold',
   },
 });

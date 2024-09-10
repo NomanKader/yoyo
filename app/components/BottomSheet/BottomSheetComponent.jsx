@@ -42,7 +42,7 @@ const BottomSheetComponent = ({ isVisible, onClose, title, children, snapPoints:
             {...props}
             disappearsOnIndex={-1}
             appearsOnIndex={0}
-            pressBehavior="close"
+            pressBehavior="none"
           />
         )}
       >
