@@ -186,7 +186,7 @@ const BookingDetailBottomSheetComponent = ({ isVisible, onClose, style }) => {
       {/* Render the Change Status BottomSheet */}
       <BottomSheetComponent
         isVisible={isStatusVisible}
-        onClose={()=>handleStatusClose}
+        onClose={()=>handleStatusClose()}
         title="Change Booking Status"
         snapPoints={["60%","60%"]}
         backdropComponent={() => null}

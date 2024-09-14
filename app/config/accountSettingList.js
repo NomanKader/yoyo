@@ -15,7 +15,7 @@ const accountSettings = [
       icon: profileIcon,
       header: 'Profile Settings',
       subheader: 'Edit your profile',
-      navigateTo: null,
+      navigateTo:null,
     }, // Set navigateTo to null
     {
       icon: walletIcon,
@@ -42,7 +42,7 @@ const accountSettings = [
       icon: roomIcon,
       header: 'Manage Rooms',
       subheader: 'Manage your rooms',
-      navigateTo: {name: 'AppStack', params: {screen: 'ManageRoomsScreen'}},
+      navigateTo: {name: 'TabScreen', params: {screen: 'Room'}},
     },
     {
       icon: bookingCancelIcon,
@@ -71,7 +71,7 @@ const accountSettings = [
       subheader: 'Manage add-on prices',
       navigateTo: {
         name: 'AppStack',
-        params: {screen: 'AddOnPriceFeaturesScreen'},
+        params: {screen: 'AddOnPriceFeatureSettingScreen'},
       },
     },
     {

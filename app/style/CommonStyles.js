@@ -212,7 +212,8 @@ export const CommonStyles = {
       bottomSheetItemText: {
         fontSize: 16,
         marginLeft: 10, 
-        marginBottom: 5   
+        marginBottom: 5,
+        color:'#000'
       },
     },
     picker:{      

@@ -34,6 +34,8 @@ import OTPScreen from '../screens/account/OTPScreen';
 import WithdrawSuccessScreen from '../screens/account/WithdrawSuccessScreen';
 import ManageDiscountScreen from '../screens/account/ManageDiscountScreen';
 import BookingCancelScreen from '../screens/booking/BookingCancelScreen';
+import BookingCancelSettingScreen from '../screens/account/BookingCancelSettingScreen';
+import AddOnPriceFeatureSettingScreen from '../screens/account/AddOnPriceFeatureSettingScreen';
 
 
 
@@ -82,6 +84,8 @@ const AppStack = () => {
       <Stack.Screen name='OTPScreen' component={OTPScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='WithdrawSuccessScreen' component={WithdrawSuccessScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='ManageDiscountScreen' component={ManageDiscountScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='BookingCancelSettingScreen' component={BookingCancelSettingScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='AddOnPriceFeatureSettingScreen' component={AddOnPriceFeatureSettingScreen} options={hiddenHeaderOptions}/>
     </Stack.Navigator>
   );
 };

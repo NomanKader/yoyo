@@ -1,4 +1,4 @@
-import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
 import {CommonStyles} from '../../style/CommonStyles';
 import {useEffect, useState} from 'react';

@@ -92,7 +92,7 @@ export default function ManageRoleScreen({navigation}) {
         <BottomSheetComponent
           isVisible={isBottomSheetVisible}
           onClose={() => setIsBottomSheetVisible(false)}
-          role={selectedRole}
+          // role={selectedRole}
           snapPoints={['50%', '80%']}>
           <View style={{marginLeft: -25}}>
             <AccountSettingListComponent
