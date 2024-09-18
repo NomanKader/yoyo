@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 18,
     color: 'grey',
+    width:200
   },
   statusContainer: {
     justifyContent: 'center',

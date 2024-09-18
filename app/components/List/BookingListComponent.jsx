@@ -85,7 +85,7 @@ const RoomListComponent = ({ data, navigation, type, onPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: theme.colors.textLight,
   },
   card: {
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     borderRadius: 27.5, // Half of the height (55 / 2)
   },
   details: {
-    flex: 1,
+    flex: 1,    
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -120,11 +120,12 @@ const styles = StyleSheet.create({
     width: 180,
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 5,    
   },
   subtitle: {
     fontSize: 18,
-    color: 'grey',
+    color: 'grey',  
+    width:200     
   },
   statusContainer: {
     justifyContent: 'center',

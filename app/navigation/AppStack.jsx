@@ -36,6 +36,7 @@ import ManageDiscountScreen from '../screens/account/ManageDiscountScreen';
 import BookingCancelScreen from '../screens/booking/BookingCancelScreen';
 import BookingCancelSettingScreen from '../screens/account/BookingCancelSettingScreen';
 import AddOnPriceFeatureSettingScreen from '../screens/account/AddOnPriceFeatureSettingScreen';
+import HistoryScreen from '../screens/account/HistoryScreen';
 
 
 
@@ -86,6 +87,7 @@ const AppStack = () => {
       <Stack.Screen name='ManageDiscountScreen' component={ManageDiscountScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='BookingCancelSettingScreen' component={BookingCancelSettingScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='AddOnPriceFeatureSettingScreen' component={AddOnPriceFeatureSettingScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='HistoryScreen' component={HistoryScreen} options={hiddenHeaderOptions}/>
     </Stack.Navigator>
   );
 };
