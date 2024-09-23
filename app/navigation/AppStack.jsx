@@ -37,6 +37,7 @@ import BookingCancelScreen from '../screens/booking/BookingCancelScreen';
 import BookingCancelSettingScreen from '../screens/account/BookingCancelSettingScreen';
 import AddOnPriceFeatureSettingScreen from '../screens/account/AddOnPriceFeatureSettingScreen';
 import HistoryScreen from '../screens/account/HistoryScreen';
+import QRScanScreen from '../screens/booking/QRScanScreen';
 
 
 
@@ -67,6 +68,7 @@ const AppStack = () => {
       <Stack.Screen name='BookingRoomListScreen' component={BookingRoomListScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='CreateBookingScreen' component={CreateBookingScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='BookingCancelScreen' component={BookingCancelScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='QRScanScreen' component={QRScanScreen} options={hiddenHeaderOptions}/>
       {/* Payment */}
       <Stack.Screen name='PaymentScreen' component={PaymentScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='CheckInStatusScreen' component={CheckInStatusScreen} options={hiddenHeaderOptions}/>

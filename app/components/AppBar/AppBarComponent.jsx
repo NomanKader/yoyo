@@ -13,7 +13,7 @@ const AppBarComponent = ({ title, navigation, searchData, type }) => {
           {title === 'Bookings' && (
             <TouchableOpacity
               style={styles.iconButton}
-              onPress={() => Alert.alert('Coming Soon..','QR Scanning feature is under building.')}
+              onPress={() => navigation.navigate('AppStack',{screen:'QRScanScreen'})}
             >
               <Image source={qrCode} style={styles.iconImage} />
             </TouchableOpacity>
