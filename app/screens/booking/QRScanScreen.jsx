@@ -3,19 +3,22 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  Text
+  Alert,
+  Text,
 } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Slider from '@react-native-community/slider';
 import { RNCamera } from 'react-native-camera';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { launchImageLibrary } from 'react-native-image-picker';
+import RNQRGenerator from 'rn-qr-generator'; // Import the library for QR scanning from images
 
 export default function QRScanScreen() {
   const [zoom, setZoom] = useState(0);
   const [flash, setFlash] = useState(RNCamera.Constants.FlashMode.off);
 
   const onSuccess = (event) => {
-    console.log("QR Code Data: ", event.data);
+    Alert.alert('QR Code Data', event.data);
   };
 
   const toggleFlash = () => {
@@ -24,6 +27,36 @@ export default function QRScanScreen() {
         ? RNCamera.Constants.FlashMode.torch
         : RNCamera.Constants.FlashMode.off
     );
+  };
+
+  // Updated handleImagePicker function with rn-qr-generator
+  const handleImagePicker = async () => {
+    const options = {
+      mediaType: 'photo',
+    };
+
+    const result = await launchImageLibrary(options);
+
+    if (!result.didCancel && result.assets && result.assets.length > 0) {
+      const selectedImage = result.assets[0].uri; // Get the URI of the selected image
+
+      // Use RNQRGenerator to extract QR code from the selected image
+      RNQRGenerator.detect({
+        uri: selectedImage, // Pass the selected image URI
+      })
+        .then((response) => {
+          const { values } = response;
+          if (values.length > 0) {
+            Alert.alert('QR Code Data from Gallery', values[0]); // Show detected QR code
+          } else {
+            Alert.alert('No QR code found', 'Please select a valid image containing a QR code.');
+          }
+        })
+        .catch((error) => {
+          console.error('Cannot detect QR code in image', error);
+          Alert.alert('Error', 'Failed to scan QR code from the image.');
+        });
+    }
   };
 
   return (
@@ -75,6 +108,13 @@ export default function QRScanScreen() {
         />
         <Text style={{ color: '#fff' }}>+</Text>
       </View>
+
+      {/* Upload from Gallery Icon */}
+      <TouchableOpacity style={styles.galleryToggle} onPress={handleImagePicker}>
+        <View style={styles.galleryIconContainer}>
+          <Icon name="images-outline" size={30} color="#fff" />
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -132,7 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   flashIconContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Semi-transparent background
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     borderRadius: 30,
     padding: 10,
   },
@@ -148,5 +188,17 @@ const styles = StyleSheet.create({
   slider: {
     width: '80%',
     height: 40,
+  },
+  galleryToggle: {
+    position: 'absolute',
+    bottom: 100,
+    right: 20,
+    padding: 10,
+    backgroundColor: 'transparent',
+  },
+  galleryIconContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    borderRadius: 30,
+    padding: 10,
   },
 });
