@@ -25,12 +25,11 @@ const RoomCategory = ({navigation}) => {
 
   if(showLoading){
     return(
-      <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={[CommonStyles.scrollViewContainer]}>
           <CarouselSkeletonComponent />
-          <ListSkeletonComponent />
+          {/* <ListSkeletonComponent /> */}
       </View>
-      </GestureHandlerRootView>
+      
     )
   }
 
@@ -39,9 +38,9 @@ const RoomCategory = ({navigation}) => {
   const data2 = DummyData.data2;
 
 
-  if(showLoading){
-    return(<BookingSkeletonComponent />)
-  }
+  // if(showLoading){
+  //   return(<BookingSkeletonComponent />)
+  // }
 
   return (
 
