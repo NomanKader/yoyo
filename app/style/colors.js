@@ -13,7 +13,7 @@
       textLightGray:'#EEEEEE',   
       borderColor:"#ccc",
       inputBackgroundColor:"#f9f9f9",
-      infoText:"#999",
+      infoText:"#555",
       iconBackgroundColor:'#F1F1F1',
       iconTextColor:'#898C8F',
       textInputColor:'#B7B8BA',
@@ -21,7 +21,8 @@
       walletCardColor:'#0071FE',
       typoInfoColor:'#F5F5F5',
       borderColor:'#202020',
-      chipBackgroundColor:'#7FE1F8'
+      chipBackgroundColor:'#7FE1F8',
+      labelColor: '#001529'
     },
     status:{
       backgroundColor:'#F7F7F7'

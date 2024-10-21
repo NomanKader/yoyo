@@ -7,16 +7,16 @@ import ListSkeletonComponent from './ListSkeletonComponent';
 import DefaultButtonComponent from '../Button/DefaultButtonComponent';
 import theme from '../../style/colors';
 import { CommonStyles } from '../../style/CommonStyles';
-const BookingSkeletonComponent = () => {
+const BookingSkeletonComponent = ({type='Room Categories'}) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Image source={backIcon} alt='backIcon' style={CommonStyles.appBarIcon}/>  
+      {/* <Image source={backIcon} alt='backIcon' style={CommonStyles.appBarIcon}/>   */}
       <CauroselSkeletonComponent />
       <View style={CommonStyles.dividerView}>
       <DividerComponent/>
       </View>      
       <View style={CommonStyles.textContainer}>
-        <Text style={CommonStyles.text}>Room Categories</Text>
+        <Text style={CommonStyles.text}>{type}</Text>
         <Text style={CommonStyles.seeAll}>See all</Text>
       </View>
       <ListSkeletonComponent />
@@ -24,7 +24,7 @@ const BookingSkeletonComponent = () => {
       <DividerComponent/>
       </View>
       <View style={styles.buttonView}>
-      <DefaultButtonComponent title={'Book a Room'} backgroundColor={theme.colors.primary} onPress={()=>Alert.alert("Info","Booking Press")}/>      
+      {/* <DefaultButtonComponent title={'Book a Room'} backgroundColor={theme.colors.primary} onPress={()=>Alert.alert("Info","Booking Press")}/>       */}
       </View>
     </ScrollView>
   );

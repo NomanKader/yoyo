@@ -1,174 +1,163 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Alert, ActivityIndicator, Image, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import LoginService from '../services/LoginService';
-import { useNavigation } from '@react-navigation/native';
-import AccessTokenService from '../helper/AccessTokenService';
-import Logo from '../assets/icons/yoyologo.png';
-import theme from '../style/colors';
+import { useState,useEffect } from 'react';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native'
+import React from 'react'
+import theme from "../style/colors";
+import loginImg from '../assets/images/login.png'
+import googleIcon from '../assets/icons/googleIcon.png'
+import fbIcon from '../assets/icons/facebookIcon.png'
+import appleIcon from '../assets/icons/appleIcon.png'
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView } from 'react-native-gesture-handler';
+import TextInputComponent from '../components/TextInput/TextInputComponent';
+import DetailAppBarComponent from '../components/AppBar/DetailAppBarComponent';
+import DividerComponent from '../components/Divider/DividerComponent';
+import { CommonStyles } from '../style/CommonStyles';
+import DefaultButtonComponent from '../components/Button/DefaultButtonComponent';
+import SocialLoginButtonComponent from '../components/Button/SocialLoginButtonComponent';
 
-const LoginScreen = () => {
-  const [username, setUsername] = useState('coffeshop');
-  const [password, setPassword] = useState('Password@1');
-  const [showLoading, setShowLoading] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const navigation = useNavigation();
-
-  // Check token valid
-  useEffect(() => {
-    const checkToken = async () => {
-      const isValid = await AccessTokenService._TokenValidation();
-      if (isValid) {
-        navigation.navigate('TabStack');
-      } else {
-        navigation.navigate('Login');
+const LoginScreen = ({navigation}) => {
+    const [email, setEmail] = useState('test1@gmail.com');
+    const [password, setPassword] = useState(1214);
+    const [showLoading, setShowLoading] = useState(false);
+  
+    useEffect(() => {
+      const checkToken = async () => {
+        const isValid = await AccessTokenService._TokenValidation();
+        if (isValid) {
+          navigation.navigate('TabStack');
+        } else {
+          navigation.navigate('Login');
+        }
       }
-    }
-    checkToken();
-  }, []);
+      // checkToken();
+    }, []);
 
-  const handleLogin = () => {
-    setShowLoading(true);
-    // Basic validation
-    if (username === '' || password === '') {
-      Alert.alert('Error', 'Please enter both username and password.');
-      setShowLoading(false);
-      return;
-    }
-    LoginService({ username, password }, navigation, setShowLoading);
+    const handleLogin = () => {
+      setShowLoading(true);
+      // Basic validation
+      if (email === '' || password === '') {
+        Alert.alert('Error', 'Please enter both email and password.');
+        setShowLoading(false);
+        return;
+      }
+      LoginService({ email, password }, navigation, setShowLoading);
+    };
+  
+    const isButtonDisabled = email === '' || password === '';
+  
+    return (
+      <SafeAreaView style={{flex:1}}>
+        <ScrollView style={CommonStyles.container} >
+
+          <DetailAppBarComponent 
+            title='Login'
+            navigation={navigation} 
+          />
+          <DividerComponent />
+
+          <View style={CommonStyles.scrollViewContainer}>
+            <Image source={loginImg} resizeMode="cover" style={{width:'100%',height:223}} alt="Login image" />
+            <View >
+              
+
+              <TextInputComponent 
+                label='Email Address' 
+                placeholder='Email address...' 
+                value={email} 
+                onChangeText={setEmail} 
+                keyboardType='email-address'
+                isSecure={false}
+              />
+
+
+              <TextInputComponent 
+                label='Pin' 
+                placeholder='Enter 4 digit pin...' 
+                value={password} 
+                onChangeText={setPassword} 
+                keyboardType='numeric'
+                isSecure={true}
+              />
+
+              <TouchableOpacity style={{alignSelf: 'flex-end',marginBottom:20}}
+                onPress={() => navigation.navigate('ForgetPasswordScreen')}
+              >
+                <Text style={styles.forgetPasswordText}>Forgot Pin</Text>
+              </TouchableOpacity>
+              
+              <DefaultButtonComponent 
+                title='Login'
+                backgroundColor={theme.colors.primary}
+                onPress={() => {navigation.navigate('OtpVerificationScreen')}}
+                color={theme.colors.textLight}
+                otherStyle={{width:370,height:60}}
+                otherTextStyle={{fontSize:22}}
+                disable={isButtonDisabled || showLoading}
+              />
+              {showLoading && <ActivityIndicator size='large' />}
+              
+              <Text style={styles.createAccountText}>
+                Dont have an account?
+                <TouchableOpacity 
+                  onPress={() => navigation.navigate('RegisterScreen')}
+                >
+                  <Text style={styles.signUpText}>Sign Up</Text>
+                </TouchableOpacity>
+              </Text>
+
+
+              <Text style={[styles.createAccountText, {color : theme.colors.textDark,marginBottom: 15,marginTop: 20}]}>
+                  Or sign up with
+              </Text>
+              <View style={[CommonStyles.scrollViewContainer,{flexDirection:'row',alignItems:'center',justifyContent:'center'}]}>
+                
+                <SocialLoginButtonComponent 
+                  onPress={()=>{}}
+                  image={googleIcon}
+                />
+
+                <SocialLoginButtonComponent 
+                  onPress={()=>{}}
+                  image={fbIcon}
+                />
+
+                <SocialLoginButtonComponent 
+                  onPress={()=>{}}
+                  image={appleIcon}
+                  width={40}
+                  height={40}
+                  marginRight={0}
+                />
+                
+              </View>
+
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
   };
-
-  const isButtonDisabled = username === '' || password === '';
-
-  return (
-    <View style={styles.container}>
-      <Image source={Logo} style={styles.logo} />
-      <View style={styles.card}>
-        <View style={styles.inputContainer}>
-          <Icon name="user" size={20} color="#000" style={styles.icon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Login Name"
-            value={username}
-            onChangeText={setUsername}
-            placeholderTextColor="#999"
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Icon name="lock" size={20} color="#000" style={styles.icon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!isPasswordVisible}
-            placeholderTextColor="#999"
-          />
-          <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-            <Icon
-              name={isPasswordVisible ? "eye" : "eye-slash"}
-              size={20}
-              color="#000"
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          disabled={isButtonDisabled || showLoading}
-          style={[styles.button, (isButtonDisabled || showLoading) && styles.buttonDisabled]}
-          onPress={handleLogin}
-        >
-          <Text style={styles.buttonText}>Sign In</Text>
-        </TouchableOpacity>
-        {showLoading && <ActivityIndicator size='large' />}
-        <TouchableOpacity>
-          <Text style={styles.forgetPasswordText}>Forget Password</Text>
-        </TouchableOpacity>
-        <Text style={styles.createAccountText}>
-          If you don't have a partner account, Please create now!
-        </Text>
-        <TouchableOpacity>
-          <Text style={styles.signUpText}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
-  logo: {
-    marginBottom: 24,
-  },
-  card: {
-    marginTop: -40,
-    width: '100%',
-    padding: 30,
-    borderRadius: 8,
-    backgroundColor: theme.colors.textLight,
-    shadowColor: theme.colors.textDark,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: theme.colors.borderColor,
-    borderWidth: 1,
-    borderRadius: 4,
-    marginBottom: 16,
-    paddingHorizontal: 8,
-    backgroundColor: theme.colors.inputBackgroundColor,
-  },
-  icon: {
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    height: 50, // Increase the height of the TextInput
-    color: theme.colors.textDark,
-  },
-  button: {
-    backgroundColor: theme.colors.primary,
-    paddingVertical: 15, // Increase the vertical padding
-    paddingHorizontal: 25, // Increase the horizontal padding
-    borderRadius: 30, // Increase the border radius
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonDisabled: {
-    backgroundColor: theme.colors.borderColor,
-  },
-  buttonText: {
-    color: theme.colors.textLight,
-    fontSize: 18, // Increase the font size
-  },
-  forgetPasswordText: {
-    color: theme.colors.primary,
-    textDecorationLine: 'underline',
-    textAlign: 'center',
-    marginTop: 10,
-    fontWeight:'bold'
-  },
-  createAccountText: {
-    color: theme.colors.infoText,
-    textAlign: 'center',
-    marginTop: 10,
-  },
-  signUpText: {
-    color:theme.colors.primary,
-    textDecorationLine: 'underline',
-    textAlign: 'center',
-    marginTop: 5,
-    fontWeight:'bold'
-  },
-});
-
-export default LoginScreen;
+  const styles = StyleSheet.create({
+    forgetPasswordText: {
+      color: theme.colors.primary,
+      textDecorationLine: 'underline',
+      textAlign: 'center',
+      marginTop: 10,
+      fontWeight:'bold'
+    },
+    createAccountText: {
+      color: theme.colors.infoText,
+      textAlign: 'center',
+      marginTop: 10,
+    },
+    signUpText: {
+      color:theme.colors.primary,
+      textDecorationLine: 'underline',
+      textAlign: 'center',
+      marginTop: 5,
+      fontWeight:'bold'
+    },
+  });
+  
+  
+  export default LoginScreen;

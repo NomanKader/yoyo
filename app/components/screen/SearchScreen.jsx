@@ -42,10 +42,10 @@ const SearchScreen = ({ navigation, route }) => {
         />
         </View>
         {searchQuery === '' ? (
-          <RoomListComponent data={searchData} navigation={navigation} type={type} onPress={()=>_handleListService(type,setType,navigation,RoomService,setSearchData,() => navigation.navigate('AppStack', { screen: 'RoomDetailScreen' }))} />
+          <RoomListComponent data={searchData} navigation={navigation} type={type} onPress={()=>_handleListService(type,setType,navigation,RoomService,setSearchData,() => navigation.navigate('AppStack', { screen: 'RoomListScreen' }))} />
         ) : (
           filteredData.length > 0 ? (
-            <RoomListComponent data={filteredData} navigation={navigation} type={type} onPress={()=>_handleListService(type,setType,navigation,RoomService,setSearchData,() => navigation.navigate('AppStack', { screen: 'RoomDetailScreen' }))}/>
+            <RoomListComponent data={filteredData} navigation={navigation} type={type} onPress={()=>_handleListService(type,setType,navigation,RoomService,setSearchData,() => navigation.navigate('AppStack', { screen: 'RoomListScreen' }))}/>
           ) : (
             <View style={styles.noDataContainer}>
               <Image source={noDataImage} style={styles.noDataImage} />

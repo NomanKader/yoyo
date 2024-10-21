@@ -1,0 +1,86 @@
+{
+    "data" : [
+        {
+          "id" : 0,
+          "url" : "https://img.freepik.com/free-photo/type-entertainment-complex-popular-resort-with-pools-water-parks-turkey-with-more-than-5-million-visitors-year-amara-dolce-vita-luxury-hotel-resort-tekirova-kemer_146671-18728.jpg?semt=ais_hybrid",
+          "link": ""
+        },
+        {
+          "id":1,
+          "url" : "https://img.freepik.com/free-photo/luxury-classic-modern-bedroom-suite-hotel_105762-1787.jpg?semt=ais_hybrid",
+          "link": ""
+        },
+        {
+          "id":2,
+          "url":"https://img.freepik.com/free-photo/type-entertainment-complex-popular-resort-with-pools-water-parks-turkey-with-more-than-5-million-visitors-year-amara-dolce-vita-luxury-hotel-resort-tekirova-kemer_146671-18727.jpg?semt=ais_hybrid",
+          "link": ""
+        }
+    ],
+    "data2":[
+        {
+          "id" : 0,
+          "numberOfRooms" : 3,
+          "roomStatus" : "available",
+          "roomPhoto" : "https://img.freepik.com/free-photo/type-entertainment-complex-popular-resort-with-pools-water-parks-turkey-with-more-than-5-million-visitors-year-amara-dolce-vita-luxury-hotel-resort-tekirova-kemer_146671-18728.jpg?semt=ais_hybrid",
+          "roomName": "Standard Room",
+          "priceKyats" : 30000,
+          "roomNumber": 204,
+          "roomCategory": "Budget",
+          "link": ""
+        },
+        {
+            "id" : 1,
+            "numberOfRooms" : 7,
+            "roomStatus" : "available",
+            "roomPhoto" : "https://img.freepik.com/free-photo/luxury-classic-modern-bedroom-suite-hotel_105762-1787.jpg?semt=ais_hybrid",
+            "roomName": "Standard Room",
+            "priceKyats" : 30000,
+            "roomNumber": 205,
+            "roomCategory": "Budget",
+            "link": ""
+        },
+        {
+            "id" : 2,
+            "numberOfRooms" : 5,
+            "roomStatus" : "available",
+            "roomPhoto" : "https://img.freepik.com/free-photo/type-entertainment-complex-popular-resort-with-pools-water-parks-turkey-with-more-than-5-million-visitors-year-amara-dolce-vita-luxury-hotel-resort-tekirova-kemer_146671-18727.jpg?semt=ais_hybrid",
+            "roomName": "Standard Room",
+            "priceKyats" : 30000,
+            "roomNumber": 206,
+            "roomCategory": "Budget",
+            "link": ""
+        }
+      ],
+      "hotels":[
+        {
+          "id" : 0,
+          "image" : "https://img.freepik.com/free-photo/type-entertainment-complex-popular-resort-with-pools-water-parks-turkey-with-more-than-5-million-visitors-year-amara-dolce-vita-luxury-hotel-resort-tekirova-kemer_146671-18728.jpg?semt=ais_hybrid",
+          "name": "1st Hotel",
+          "location": ""
+        },
+        {
+        "id" : 1,
+        "image" : "https://img.freepik.com/free-photo/luxury-classic-modern-bedroom-suite-hotel_105762-1787.jpg?semt=ais_hybrid",
+        "name": "2nd Hotel",
+        "location": ""
+        },
+        {
+        "id" : 2,
+        "image" : "https://img.freepik.com/free-photo/type-entertainment-complex-popular-resort-with-pools-water-parks-turkey-with-more-than-5-million-visitors-year-amara-dolce-vita-luxury-hotel-resort-tekirova-kemer_146671-18727.jpg?semt=ais_hybrid",
+        "name": "3rd Hotel",
+        "location": ""
+        },
+        {
+        "id" : 3,
+        "image" : "https://img.freepik.com/free-photo/type-entertainment-complex-popular-resort-with-pools-water-parks-turkey-with-more-than-5-million-visitors-year-amara-dolce-vita-luxury-hotel-resort-tekirova-kemer_146671-18728.jpg?semt=ais_hybrid",
+        "name": "4th Hotel",
+        "location": ""
+        },
+        {
+        "id" : 4,
+        "image" : "https://img.freepik.com/free-photo/luxury-classic-modern-bedroom-suite-hotel_105762-1787.jpg?semt=ais_hybrid",
+        "name": "5th Hotel",
+        "location": ""
+        }
+    ]
+}

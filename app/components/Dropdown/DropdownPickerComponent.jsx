@@ -11,6 +11,7 @@ const DropdownPickerComponent = ({
   setItems,
   placeholder,
   multiple = false,
+  containerStyle={zIndex: 5000}
 }) => {
   return (
     <DropDownPicker
@@ -24,7 +25,7 @@ const DropdownPickerComponent = ({
       placeholder={placeholder}
       style={styles.input}
       dropDownContainerStyle={styles.dropdown}
-      containerStyle={{ zIndex: 5000 }} // Ensure dropdown is above other elements
+      containerStyle={containerStyle} // Ensure dropdown is above other elements
     />
   );
 };

@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F4F4', // Container background color
     borderRadius: 8,
     padding: 4, // Padding around the tabs
+    backgroundColor:'red'
   },
   tab: {
     flex: 1,
