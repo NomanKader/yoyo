@@ -11,6 +11,7 @@ import BookingSkeletonComponent from '../../../components/Skeleton/BookingSkelet
 import DummyData from '../../../config/DummyData.json'
 
 
+
 const RoomCategory = ({navigation}) => {
   const [showLoading, setShowLoading] = useState(true);
 

@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, Pressable } from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet, Pressable, Dimensions } from 'react-native';
 import DividerComponent from '../Divider/DividerComponent';
 import theme from '../../style/colors';
 import { LanguageContext } from '../../context/LanguageContext';
+
+const {width,height} = Dimensions.get('window')
 
 const RommCategoryListComponent = ({ data, navigation, type, onPress }) => {
   const { translate } = useContext(LanguageContext);
@@ -44,7 +46,7 @@ const RommCategoryListComponent = ({ data, navigation, type, onPress }) => {
             />
           </View>
           <View style={styles.details}>
-            <View>
+            <View >
               {isCategory ? (
                 <>
                   <Text style={styles.title}>{item.roomName}</Text>
@@ -54,6 +56,7 @@ const RommCategoryListComponent = ({ data, navigation, type, onPress }) => {
                 <>
                   <Text style={styles.title}>{item.roomNumber}</Text>
                   <Text style={styles.subtitle}>{item.roomCategory}</Text>
+                  
                 </>
               )}
             </View>
@@ -113,22 +116,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 10,
+    
   },
   title: {
-    width: 180,
+    width: width*0.37,
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
+    
   },
   subtitle: {
     fontSize: 18,
     color: 'grey',
-    width:200
+    width:width*0.4,
   },
   statusContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexGrow:1
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    
   },
   status: {
     paddingHorizontal: 15,

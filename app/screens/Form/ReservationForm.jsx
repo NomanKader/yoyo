@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View,TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View,Dimensions } from 'react-native'
 import {useState} from 'react'
 import theme from "../../style/colors";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import TextInputComponent from '../../components/TextInput/TextInputComponent';
 import PhoneInputComponent from '../../components/TextInput/PhoneInputComponent';
 import DateInputComponent from '../../components/TextInput/DateInputComponent';
@@ -11,6 +11,8 @@ import DividerComponent from '../../components/Divider/DividerComponent';
 import DefaultButtonComponent from "../../components/Button/DefaultButtonComponent";
 import DropdownPickerComponent from '../../components/Dropdown/DropdownPickerComponent';
 import { CommonStyles } from '../../style/CommonStyles';
+
+const {width,height} = Dimensions.get('window')
 
 const ReservationForm = ({navigation}) => {
   const [name, setName] = useState('');
@@ -122,8 +124,8 @@ const ReservationForm = ({navigation}) => {
                     onPress={() => {navigation.navigate('AppStack', { screen: 'ReserveMethodScreen' })}}
                     // onPress={() => Alert.alert('hi')}
                     color={theme.colors.textLight}
-                    otherStyle={{width:370,height:60,marginBottom:20,marginTop:30}}
-                    otherTextStyle={{fontSize:22}}
+                    otherStyle={{width:width*0.9,height:height*0.07,alignSelf:'center'}}
+                    otherTextStyle={{fontSize:16}}
                     // disable={isButtonDisabled || showLoading}
                   />
 
