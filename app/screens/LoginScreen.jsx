@@ -1,5 +1,5 @@
 import { useState,useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, Alert } from 'react-native'
 import React from 'react'
 import theme from "../style/colors";
 import loginImg from '../assets/images/login.png'
@@ -14,6 +14,8 @@ import DividerComponent from '../components/Divider/DividerComponent';
 import { CommonStyles } from '../style/CommonStyles';
 import DefaultButtonComponent from '../components/Button/DefaultButtonComponent';
 import SocialLoginButtonComponent from '../components/Button/SocialLoginButtonComponent';
+
+const {width,height} = Dimensions.get('window')
 
 const LoginScreen = ({navigation}) => {
     const [email, setEmail] = useState('test1@gmail.com');
@@ -90,8 +92,8 @@ const LoginScreen = ({navigation}) => {
                 backgroundColor={theme.colors.primary}
                 onPress={() => {navigation.navigate('OtpVerificationScreen')}}
                 color={theme.colors.textLight}
-                otherStyle={{width:370,height:60}}
-                otherTextStyle={{fontSize:22}}
+                otherStyle={{width:width*0.9,height:height*0.07,alignSelf:'center'}}
+                otherTextStyle={{fontSize:16}}
                 disable={isButtonDisabled || showLoading}
               />
               {showLoading && <ActivityIndicator size='large' />}
@@ -155,7 +157,8 @@ const LoginScreen = ({navigation}) => {
       textDecorationLine: 'underline',
       textAlign: 'center',
       marginTop: 5,
-      fontWeight:'bold'
+      fontWeight:'bold',
+      fontSize:11
     },
   });
   

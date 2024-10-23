@@ -14,20 +14,16 @@ import DummyData from '../../config/DummyData.json'
 
 
 const Hotel = ({navigation}) => {
-  const [showLoading, setShowLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(true);
 
   useEffect(()=>{
-    // const timer = setTimeout(() => setShowLoading(false), 2000);
+    const timer = setTimeout(() => setShowLoading(false), 2000);
 
     // Cleanup timer on unmount
-    // return () => clearTimeout(timer);
+    return () => clearTimeout(timer);
   })
 
-  if(showLoading){
-    return(<>
-      <CarouselSkeletonComponent />
-    </>)
-  }
+  
 
   const data = DummyData.data;
 
@@ -36,23 +32,31 @@ const Hotel = ({navigation}) => {
 
 
   if(showLoading){
-    return(<BookingSkeletonComponent />)
+    return(<BookingSkeletonComponent type='Hotels Nearby' />)
   } 
 
   return (
 
     <SafeAreaView style={{flex:1}}>
       <View style={[CommonStyles.scrollViewContainer,{flexGrow:1}]}>
-          <Text style={[CommonStyles.subTitle,{marginTop:0}]}>Top Hotels</Text>
-          <CarouselComponent data={data} setShowLoading={setShowLoading} navigation={navigation} carouselType='home' />
-          <SeeMoreComponent title='Hotels Nearby' onPress={()=> {}} />
-          <FlatList
-            data={hotels}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => <HotelCard hotel={item} onPress={() => navigation.navigate('AppStack', { screen: 'RoomCategoryScreen' })} />}
-            numColumns={2}
-            contentContainerStyle={{marginTop:20}}
-          />
+      <FlatList 
+        
+        ListHeaderComponent={
+          <>
+            <Text style={[CommonStyles.subTitle,{marginTop:0}]}>Top Hotels</Text>
+            <CarouselComponent data={data} setShowLoading={setShowLoading} navigation={navigation} carouselType='home' />
+            <SeeMoreComponent title='Hotels Nearby' onPress={()=> {}} />
+            <FlatList
+              data={hotels}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => <HotelCard hotel={item} onPress={() => navigation.navigate('AppStack', { screen: 'RoomCategoryScreen' })} />}
+              numColumns={2}
+              contentContainerStyle={{marginTop:20}}
+            />
+          </>
+        }
+      />
+          
            
       </View>
     </SafeAreaView>

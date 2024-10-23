@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '500',
     marginBottom: 5,
     color: '#01070F',

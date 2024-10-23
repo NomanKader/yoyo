@@ -11,9 +11,7 @@ import Accordion from '../../../components/accordion/Accordion'
 import AccordionText from '../../../components/accordion/AccordionText'
 import AccordionIcons from '../../../components/accordion/AccordionIcons'
 import SeeMoreComponent from '../../../components/screen/SeeMoreComponent'
-import CarouselSkeletonComponent from '../../../components/Skeleton/CauroselSkeletonComponent'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import ListSkeletonComponent from '../../../components/Skeleton/ListSkeletonComponent'
+import BookingSkeletonComponent from '../../../components/Skeleton/BookingSkeletonComponent'
 import BottomSheetComponent from '../../../components/BottomSheet/BottomSheetComponent'
 import DefaultButtonComponent from '../../../components/Button/DefaultButtonComponent'
 import discountIcon from '../../../assets/icons/discountIcon.png'
@@ -33,14 +31,11 @@ const RoomDetail = ({navigation}) => {
 
   if(showLoading){
     return(
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <View style={[CommonStyles.scrollViewContainer]}>
-          <CarouselSkeletonComponent />
-          <ListSkeletonComponent />
-        </View>
-      </GestureHandlerRootView>
-    )
-  }
+    <>
+      <DetailAppBarComponent title='' navigation={navigation}  />
+      <BookingSkeletonComponent type ='Standard Rooms' />
+    </>)
+  } 
 
   const data = DummyData.data
 

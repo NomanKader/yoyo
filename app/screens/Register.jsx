@@ -1,5 +1,5 @@
 import { useState,useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Dimensions } from 'react-native'
 import React from 'react'
 import theme from "../style/colors";
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,6 +10,8 @@ import DetailAppBarComponent from '../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../components/Divider/DividerComponent';
 import DefaultButtonComponent from "../components/Button/DefaultButtonComponent";
 import { CommonStyles } from '../style/CommonStyles';
+
+const {width,height} = Dimensions.get('window')
 
 const Register = ({navigation}) => {
     const [username, setUsername] = useState('');
@@ -116,8 +118,8 @@ const Register = ({navigation}) => {
                 backgroundColor={theme.colors.primary}
                 onPress={() => {navigation.navigate('OtpVerificationScreen')}}
                 color={theme.colors.textLight}
-                otherStyle={{width:370,height:60,marginBottom:20}}
-                otherTextStyle={{fontSize:22}}
+                otherStyle={{width:width*0.9,height:height*0.07,alignSelf:'center'}}
+                otherTextStyle={{fontSize:16}}
                 disable={isButtonDisabled || showLoading}
               />
 
@@ -144,7 +146,8 @@ const Register = ({navigation}) => {
       textDecorationLine: 'underline',
       textAlign: 'center',
       marginTop: 5,
-      fontWeight:'bold'
+      fontWeight:'bold',
+      fontSize:11
     },
   })
   

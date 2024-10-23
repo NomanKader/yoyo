@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {  Text, View, Alert } from 'react-native'
+import {  Text, View, Alert, Dimensions } from 'react-native'
 import React from 'react'
 import theme from "../style/colors";
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,6 +9,8 @@ import DetailAppBarComponent from '../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../components/Divider/DividerComponent';
 import DefaultButtonComponent from "../components/Button/DefaultButtonComponent";
 import { CommonStyles } from '../style/CommonStyles';
+
+const {width,height} = Dimensions.get('window');
 
 const ForgetPassword = ({navigation}) => {
     const [email, setEmail] = useState('');
@@ -41,7 +43,7 @@ const ForgetPassword = ({navigation}) => {
             
             <View >
               <Text style={[theme.colors.textDark,{fontWeight:'bold',fontSize:18}]}>Please enter your email address to reset your pincode</Text>
-              <View style={{marginBottom: '140%'}}>
+              <View style={{marginBottom: height*0.63}}>
                 <TextInputComponent
                   label=''
                   placeholder='Enter email address...'
@@ -65,8 +67,8 @@ const ForgetPassword = ({navigation}) => {
                   backgroundColor={theme.colors.primary}
                   onPress={() => {navigation.navigate('OtpVerificationScreen')}}
                   color={theme.colors.textLight}
-                  otherStyle={{width:370,height:60}}
-                  otherTextStyle={{fontSize:22}}
+                  otherStyle={{width:width*0.9,height:height*0.07}}
+                  otherTextStyle={{fontSize:14}}
                   disable={ showLoading}
                 />
 

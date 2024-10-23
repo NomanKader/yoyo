@@ -7,9 +7,7 @@ import DetailAppBarComponent from '../../../components/AppBar/DetailAppBarCompon
 import RoomCategoryListComponent from '../../../components/List/RoomCategoryListComponent'
 import DividerComponent from '../../../components/Divider/DividerComponent'
 import SeeMoreComponent from '../../../components/screen/SeeMoreComponent'
-import CarouselSkeletonComponent from '../../../components/Skeleton/CauroselSkeletonComponent'
-import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
-import ListSkeletonComponent from '../../../components/Skeleton/ListSkeletonComponent'
+import BookingSkeletonComponent from '../../../components/Skeleton/BookingSkeletonComponent'
 import DummyData from '../../../config/DummyData.json'
 
 
@@ -23,31 +21,24 @@ const RoomCategory = ({navigation}) => {
     return () => clearTimeout(timer);
   })
 
-  if(showLoading){
-    return(
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <View style={[CommonStyles.scrollViewContainer]}>
-          <CarouselSkeletonComponent />
-          <ListSkeletonComponent />
-      </View>
-      </GestureHandlerRootView>
-    )
-  }
-
   const data = DummyData.data;
 
   const data2 = DummyData.data2;
 
 
   if(showLoading){
-    return(<BookingSkeletonComponent />)
-  }
+    return(
+    <>
+      <DetailAppBarComponent title='' navigation={navigation}  />
+      <BookingSkeletonComponent  />
+    </>)
+  } 
 
   return (
 
     <SafeAreaView style={{flex:1}}>
       <View style={[CommonStyles.scrollViewContainer,{flexGrow:1}]}>
-          <DetailAppBarComponent title='' navigation={navigation}  />
+        <DetailAppBarComponent title='' navigation={navigation}  />
           <DividerComponent />
             <View>
               <CarouselComponent data={data} setShowLoading={setShowLoading} navigation={navigation} carouselType='roomList' />

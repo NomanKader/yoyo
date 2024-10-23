@@ -1,4 +1,4 @@
-import { ScrollView, Text, View, Image } from "react-native";
+import { ScrollView, Text, View, Image, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect } from "react";
 import { CommonStyles } from "../style/CommonStyles";
@@ -6,9 +6,10 @@ import theme from "../style/colors";
 import heroImg from '../assets/images/hero1.png'
 import DefaultButtonComponent from "../components/Button/DefaultButtonComponent";
 
-
+const {width,height} = Dimensions.get('window');
 
 export default function WelcomeScreen({navigation}) {
+    
 
     // useEffect(() => {
     //     const checkAccessToken = async () => {
@@ -34,36 +35,38 @@ export default function WelcomeScreen({navigation}) {
 
     return (
         <SafeAreaView style={{flex : 1}}>
-            <Image source={heroImg} resizeMode="cover" style={{width:'100%',height:433}} alt="Hotel hero image" />
+            
             <ScrollView 
                 contentContainerStyle={{ flexGrow: 1 }} 
-                style={CommonStyles.scrollViewContainer}
+                style={CommonStyles.container}
             >
-                
-                <View style={{ flex: 1, alignItems: 'center' }}>
-                    <Text style={{fontSize: 35,
-                        fontWeight: 'bold',
-                        color:theme.colors.textDark,
-                        marginTop:30,
-                        textAlign: 'center'
-                        }}>
-                        Find your best comfortable hotel.
-                    </Text>
-                    <Text style={[CommonStyles.text,{marginTop:30,textAlign:'center',lineHeight:30}]}>Express Your Creativity With Using Our App Using Our Primitive </Text>
+                <Image source={heroImg} resizeMode="cover" style={{width:width*1,height:height*0.55}} alt="Hotel hero image" />
+                <View style={CommonStyles.scrollViewContainer}>
+                    <View style={{ flex: 1, alignItems: 'center' }}>
+                        <Text style={{fontSize: 35,
+                            fontWeight: 'bold',
+                            color:theme.colors.textDark,
+                            marginTop:30,
+                            textAlign: 'center'
+                            }}>
+                            Find your best comfortable hotel.
+                        </Text>
+                        <Text style={[CommonStyles.text,{marginTop:30,textAlign:'center',lineHeight:30}]}>Express Your Creativity With Using Our App Using Our Primitive </Text>
+                        
+                    </View>
                     
-                </View>
-                
 
-                <View style={{flex:1,alignItems:'center',marginTop:10}}>
-                    
-                    <DefaultButtonComponent 
-                        title='Access Marketplace'
-                        backgroundColor={theme.colors.primary}
-                        onPress={() => {navigation.navigate('LoginScreen')}}
-                        color={theme.colors.textLight}
-                        otherStyle={{width:370,height:60,borderRadius:37}}
-                        otherTextStyle={{fontSize:22}}
-                    />
+                    <View style={{flex:1,alignItems:'center',marginTop:10}}>
+                        
+                        <DefaultButtonComponent 
+                            title='Access Marketplace'
+                            backgroundColor={theme.colors.primary}
+                            onPress={() => {navigation.navigate('LoginScreen')}}
+                            color={theme.colors.textLight}
+                            otherStyle={{width:width*0.9,height:height*0.08,borderRadius:37}}
+                            otherTextStyle={{fontSize:14}}
+                        />
+                    </View>
                 </View>
             </ScrollView>
             

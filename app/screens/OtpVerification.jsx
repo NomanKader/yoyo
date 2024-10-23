@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Alert, Dimensions } from 'react-native'
 import React from 'react'
 import theme from "../style/colors";
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,6 +9,8 @@ import DetailAppBarComponent from '../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../components/Divider/DividerComponent';
 import DefaultButtonComponent from "../components/Button/DefaultButtonComponent";
 import { CommonStyles } from '../style/CommonStyles';
+
+const {width,height} = Dimensions.get('window');
 
 const OtpVerification = ({navigation}) => {
     const [otp, setOtp] = useState('');
@@ -40,7 +42,7 @@ const OtpVerification = ({navigation}) => {
             
             <View style={{width:'100%'}}>
 
-              <View style={{marginBottom: '125%'}}>
+              <View style={{marginBottom: height*0.57}}>
                 <TextInputComponent
                   label='OTP Code'
                   placeholder='Enter 6 digit otp code...'
@@ -71,8 +73,8 @@ const OtpVerification = ({navigation}) => {
                   backgroundColor={theme.colors.primary}
                   onPress={() => {navigation.replace('TabStack')}}
                   color={theme.colors.textLight}
-                  otherStyle={{width:370,height:60}}
-                  otherTextStyle={{fontSize:22}}
+                  otherStyle={{width:width*0.9,height:height*0.07}}
+                  otherTextStyle={{fontSize:14}}
                   disable={ showLoading}
                 />
 
