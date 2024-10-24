@@ -49,8 +49,8 @@ const LoginScreen = ({navigation}) => {
   
     return (
       <SafeAreaView style={{flex:1}}>
-        <ScrollView style={CommonStyles.container} >
-
+        <ScrollView style={[CommonStyles.container]} >
+          
           <DetailAppBarComponent 
             title='Login'
             navigation={navigation} 

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View,TouchableOpacity,Dimensions } from 'react-native'
 import React from 'react'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Hotel from './Hotel';
@@ -6,6 +6,7 @@ import Apartment from './Apartment';
 import AppBarComponent from '../../components/AppBar/AppBarComponent'
 import theme from '../../style/colors';
 
+const {width,height} = Dimensions.get('window')
 
 const CustomTabBar = ({ state, descriptors, navigation }) => {
     return (
@@ -94,9 +95,9 @@ const styles = StyleSheet.create({
     //   borderBottomColor: '#ddd',
     },
     tabButton: {
-      paddingVertical: 20,
-      paddingHorizontal: 40,
-      width:160,
+      paddingVertical: height*0.025,
+      paddingHorizontal: width*0.025,
+      width: width*0.39,
       alignItems:'center',
       
       backgroundColor:theme.colors.textLightGray,

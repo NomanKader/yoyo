@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import {useEffect,useState} from 'react'
-import RommCategoryListComponent from '../../../components/List/RoomCategoryListComponent'
+import RommCategoryListComponent from '../../components/List/RoomCategoryListComponent'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import DetailAppBarComponent from '../../../components/AppBar/DetailAppBarComponent'
-import DividerComponent from '../../../components/Divider/DividerComponent'
-import { CommonStyles } from '../../../style/CommonStyles'
-import CarouselSkeletonComponent from '../../../components/Skeleton/CauroselSkeletonComponent'
+import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent'
+import DividerComponent from '../../components/Divider/DividerComponent'
+import { CommonStyles } from '../../style/CommonStyles'
+import CarouselSkeletonComponent from '../../components/Skeleton/CauroselSkeletonComponent'
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
-import ListSkeletonComponent from '../../../components/Skeleton/ListSkeletonComponent'
-import DummyData from '../../../config/DummyData.json'
+import ListSkeletonComponent from '../../components/Skeleton/ListSkeletonComponent'
+import DummyData from '../../config/DummyData.json'
 
 const RoomCategoryAll = ({navigation}) => {
   const [showLoading, setShowLoading] = useState(true);

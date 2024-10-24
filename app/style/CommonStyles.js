@@ -7,7 +7,7 @@ export const CommonStyles = {
       marginTop: 20,
     },
     subTitle : {
-      fontSize: 20,
+      fontSize: 15,
       fontWeight:'bold',
       color:theme.colors.textDark,
       marginTop:20
@@ -21,7 +21,7 @@ export const CommonStyles = {
       width:35,
       height:35,
       marginBottom:20,
-      marginTop:30,
+      marginTop:20,
       marginLeft:-10,      
     },
     defaultButtonContainer:{

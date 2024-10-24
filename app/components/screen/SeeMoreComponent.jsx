@@ -8,7 +8,7 @@ const SeeMoreComponent = ({title,onPress}) => {
     <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
         <Text style={CommonStyles.subTitle}>{title}</Text>
         <TouchableOpacity onPress={onPress}>
-            <Text style={{color:'blue',fontSize:18,marginTop:5}}>See more</Text>
+            <Text style={{color:'blue',fontSize:13,marginTop:10}}>Show all</Text>
         </TouchableOpacity>
     </View>
   )

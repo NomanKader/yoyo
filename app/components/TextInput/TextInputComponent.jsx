@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity,Dimensions } from 'react-native';
 import theme from '../../style/colors';
 import Icon from 'react-native-vector-icons/Ionicons'; // Make sure to install this or use any icon library of your choice
+
+const {width,height} = Dimensions.get('window')
 
 const TextInputComponent = ({ label, placeholder, value, onChangeText, keyboardType, isSecure }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(!isSecure); // State to toggle password visibility
@@ -58,6 +60,7 @@ const styles = StyleSheet.create({
   },
   input: {
     // flex: 1,
+    width: width*0.65,
     height: 48,
     paddingHorizontal: 10,
     backgroundColor: '#F1F1F1',

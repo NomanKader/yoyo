@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'white',
     borderRadius: 5,
-    margin: 10,
+    // margin: 10,
     overflow: 'hidden',
     paddingTop: 20,
     paddingRight: 20,
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
-    marginRight: 10,
+    // marginRight: 5
   },
 });
 

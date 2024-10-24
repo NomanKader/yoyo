@@ -33,15 +33,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 16,
+    // paddingTop: 16,
     paddingLeft:20,
-    paddingRight:20
+    paddingRight:20,
+    
   },
   title: {
     fontWeight: '900',
     fontSize: 18,
     color: theme.colors.textDark,
-    marginTop: 10,
+    // marginTop: 10,
     textAlign: 'center',
   },
   placeholder: {

@@ -49,6 +49,38 @@
             "roomNumber": 206,
             "roomCategory": "Budget",
             "link": ""
+          },
+          {
+            "id" : 3,
+            "numberOfRooms" : 5,
+            "roomStatus" : "available",
+            "roomPhoto" : "https://img.freepik.com/free-photo/type-entertainment-complex-popular-resort-with-pools-water-parks-turkey-with-more-than-5-million-visitors-year-amara-dolce-vita-luxury-hotel-resort-tekirova-kemer_146671-18727.jpg?semt=ais_hybrid",
+            "roomName": "Standard Room",
+            "priceKyats" : 30000,
+            "roomNumber": 206,
+            "roomCategory": "Budget",
+            "link": ""
+        },
+        {
+          "id" : 4,
+          "numberOfRooms" : 5,
+          "roomStatus" : "available",
+          "roomPhoto" : "https://img.freepik.com/free-photo/type-entertainment-complex-popular-resort-with-pools-water-parks-turkey-with-more-than-5-million-visitors-year-amara-dolce-vita-luxury-hotel-resort-tekirova-kemer_146671-18727.jpg?semt=ais_hybrid",
+          "roomName": "Standard Room",
+          "priceKyats" : 30000,
+          "roomNumber": 206,
+          "roomCategory": "Budget",
+          "link": ""
+        },{
+            "id" : 5,
+            "numberOfRooms" : 5,
+            "roomStatus" : "available",
+            "roomPhoto" : "https://img.freepik.com/free-photo/type-entertainment-complex-popular-resort-with-pools-water-parks-turkey-with-more-than-5-million-visitors-year-amara-dolce-vita-luxury-hotel-resort-tekirova-kemer_146671-18727.jpg?semt=ais_hybrid",
+            "roomName": "Standard Room",
+            "priceKyats" : 30000,
+            "roomNumber": 206,
+            "roomCategory": "Budget",
+            "link": ""
         }
       ],
       "hotels":[
@@ -82,5 +114,51 @@
         "name": "5th Hotel",
         "location": "Calabar"
         }
+    ],
+    "checkInDetail":[
+      {
+        "label":"Status",
+        "value":"Completed"
+      },
+      {
+        "label":"Booking ID",
+        "value":"CLA723928"
+      },
+      {
+        "label":"Room no",
+        "value":"406"
+      },
+      {
+        "label":"Reservation type",
+        "value":"Pay with debit card"
+      },
+      {
+        "label":"Payment status",
+        "value":"Paid"
+      },
+      {
+        "label":"Customer Name",
+        "value":"Tun Tun"
+      },
+      {
+        "label":"Phone No",
+        "value":"0987654323"
+      },
+      {
+        "label":"Email Address",
+        "value":"tuntun@gmail.com"
+      },
+      {
+        "label":"Number of days",
+        "value":1
+      },
+      {
+        "label":"Date of arrival",
+        "value":"13-09-2024"
+      },
+      {
+        "label":"Last checkout",
+        "value":"14-09 09:20 AM"
+      }
     ]
 }

@@ -5,7 +5,7 @@ import buildingImg from '../../assets/images/buildings.png'
 import theme from '../../style/colors';
 import { CommonStyles } from '../../style/CommonStyles';
 
-const ReservationComplete = () => {
+const ReservationComplete = ({navigation}) => {
   return (
     <View style={CommonStyles.container}>
       <ImageBackground 
@@ -23,7 +23,7 @@ const ReservationComplete = () => {
             ID is <Text style={styles.boldText}>CAL7396748</Text>
           </Text>
         </View>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AppStack', { screen: 'CheckInDetailScreen' })}>
           <Text style={styles.buttonText}>Confirm Payment</Text>
         </TouchableOpacity>
       </ImageBackground>

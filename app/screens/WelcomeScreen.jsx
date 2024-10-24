@@ -43,20 +43,22 @@ export default function WelcomeScreen({navigation}) {
                 <Image source={heroImg} resizeMode="cover" style={{width:width*1,height:height*0.55}} alt="Hotel hero image" />
                 <View style={CommonStyles.scrollViewContainer}>
                     <View style={{ flex: 1, alignItems: 'center' }}>
-                        <Text style={{fontSize: 35,
+                        <Text style={{fontSize: 25,
+                            lineHeight:30,
                             fontWeight: 'bold',
                             color:theme.colors.textDark,
                             marginTop:30,
                             textAlign: 'center'
                             }}>
-                            Find your best comfortable hotel.
+                            Find your best {'\n'}
+                            comfortable hotel.
                         </Text>
-                        <Text style={[CommonStyles.text,{marginTop:30,textAlign:'center',lineHeight:30}]}>Express Your Creativity With Using Our App Using Our Primitive </Text>
+                        <Text style={[CommonStyles.text,{marginTop:30,textAlign:'center',fontSize:15,lineHeight:25}]}>Express Your Creativity With Using Our {'\n'} App, Using Our Primitive </Text>
                         
                     </View>
                     
 
-                    <View style={{flex:1,alignItems:'center',marginTop:10}}>
+                    <View style={{flex:1,alignItems:'center',marginTop:height*0.03}}>
                         
                         <DefaultButtonComponent 
                             title='Access Marketplace'

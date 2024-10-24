@@ -124,7 +124,7 @@ const ReservationForm = ({navigation}) => {
                     onPress={() => {navigation.navigate('AppStack', { screen: 'ReserveMethodScreen' })}}
                     // onPress={() => Alert.alert('hi')}
                     color={theme.colors.textLight}
-                    otherStyle={{width:width*0.9,height:height*0.07,alignSelf:'center'}}
+                    otherStyle={{width:width*0.9,height:height*0.07,alignSelf:'center',marginTop:25}}
                     otherTextStyle={{fontSize:16}}
                     // disable={isButtonDisabled || showLoading}
                   />
