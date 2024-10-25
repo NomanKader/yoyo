@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Dimensions,ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../../components/Divider/DividerComponent';
@@ -8,6 +8,8 @@ import DefaultButtonComponent from '../../components/Button/DefaultButtonCompone
 import theme from '../../style/colors';
 import LeftRightText from '../../components/ConfirmPage/LeftRightText';
 import BottomSheetComponent from '../../components/BottomSheet/BottomSheetComponent';
+
+const {width,height} = Dimensions.get('window');
 
 const ReserveConfirm = ({navigation}) => {
 
@@ -53,18 +55,21 @@ const ReserveConfirm = ({navigation}) => {
         onClose={() => setVisible(false)}
         snapPoints={['30%','40%']}
       >
-        <Text style={CommonStyles.formLabel}>
-          Use your credit card to complete you reservation. Your payment will be visible to Tracman.
-        </Text>
-        <DefaultButtonComponent 
-          title='Pay 0.00 Kyats'
-          icon='wallet'
-          backgroundColor={theme.colors.primary}
-          color={theme.colors.textLight}
-          otherStyle={{ marginVertical:20}}
-          onPress={() => {navigation.navigate('AppStack', { screen: 'PaymentFormScreen' })}}
-          
-        />
+        <View >
+          <Text style={CommonStyles.formLabel}>
+            Use your credit card to complete you reservation. Your payment will be visible to Tracman.
+          </Text>
+          <DefaultButtonComponent 
+            title='Pay 0.00 Kyats'
+            icon='wallet'
+            backgroundColor={theme.colors.primary}
+            color={theme.colors.textLight}
+            otherStyle={{width:width*0.9,height:height*0.07,alignSelf:'center'}}
+            otherTextStyle={{fontSize:16}}
+            onPress={() => {navigation.navigate('AppStack', { screen: 'PaymentFormScreen' })}}
+            
+          />
+        </View>
       </BottomSheetComponent>
     </ScrollView>
   );

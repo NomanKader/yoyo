@@ -14,6 +14,7 @@ import ReserveConfirm from '../screens/FormConfirmPages/ReserveConfirm';
 import PaymentForm from '../screens/Form/PaymentForm';
 import ReserveComplete from '../screens/FormConfirmPages/ReserveComplete';
 import CheckInDetail from '../screens/Room/CheckInDetail';
+import RefundForm from '../screens/Form/RefundForm';
 
 
 const Stack = createNativeStackNavigator();
@@ -41,6 +42,7 @@ const AppStack = () => {
       <Stack.Screen name='PaymentFormScreen' component={PaymentForm} options={hiddenHeaderOptions}/>
       <Stack.Screen name='ReserveCompleteScreen' component={ReserveComplete} options={hiddenHeaderOptions}/>
       <Stack.Screen name='CheckInDetailScreen' component={CheckInDetail} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='RefundFormScreen' component={RefundForm} options={hiddenHeaderOptions}/>
     </Stack.Navigator>
   );
 };
