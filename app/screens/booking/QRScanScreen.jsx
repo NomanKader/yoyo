@@ -11,11 +11,14 @@ import Slider from '@react-native-community/slider';
 import { RNCamera } from 'react-native-camera';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { launchImageLibrary } from 'react-native-image-picker';
-import RNQRGenerator from 'rn-qr-generator'; // Import the library for QR scanning from images
+import RNQRGenerator from 'rn-qr-generator';
+import { useNavigation } from '@react-navigation/native';
 
 export default function QRScanScreen() {
   const [zoom, setZoom] = useState(0);
   const [flash, setFlash] = useState(RNCamera.Constants.FlashMode.off);
+  const [cameraRef, setCameraRef] = useState(null);
+  const navigation = useNavigation();
 
   const onSuccess = (event) => {
     Alert.alert('QR Code Data', event.data);
@@ -29,7 +32,6 @@ export default function QRScanScreen() {
     );
   };
 
-  // Updated handleImagePicker function with rn-qr-generator
   const handleImagePicker = async () => {
     const options = {
       mediaType: 'photo',
@@ -38,16 +40,15 @@ export default function QRScanScreen() {
     const result = await launchImageLibrary(options);
 
     if (!result.didCancel && result.assets && result.assets.length > 0) {
-      const selectedImage = result.assets[0].uri; // Get the URI of the selected image
+      const selectedImage = result.assets[0].uri;
 
-      // Use RNQRGenerator to extract QR code from the selected image
       RNQRGenerator.detect({
-        uri: selectedImage, // Pass the selected image URI
+        uri: selectedImage,
       })
         .then((response) => {
           const { values } = response;
           if (values.length > 0) {
-            Alert.alert('QR Code Data from Gallery', values[0]); // Show detected QR code
+            Alert.alert('QR Code Data from Gallery', values[0]);
           } else {
             Alert.alert('No QR code found', 'Please select a valid image containing a QR code.');
           }
@@ -58,10 +59,25 @@ export default function QRScanScreen() {
         });
     }
   };
-
+  const handleGoBack = () => {
+    console.log("Handle go back is calling");
+    if (cameraRef) {
+      cameraRef.current.pausePreview(); // Pause camera preview before going back
+    }
+    navigation.goBack(); // Navigate back after stopping the camera
+  };
   return (
     <View style={styles.container}>
+      {/* Close icon */}
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={()=>handleGoBack()}
+      >
+        <Icon name="close" size={30} color="#fff" />
+      </TouchableOpacity>
+
       <QRCodeScanner
+        ref={cameraRef}
         onRead={onSuccess}
         reactivate={true}
         reactivateTimeout={500}
@@ -81,7 +97,6 @@ export default function QRScanScreen() {
         }}
       />
 
-      {/* Flash toggle icon with circular background */}
       <TouchableOpacity style={styles.flashToggle} onPress={toggleFlash}>
         <View style={styles.flashIconContainer}>
           <Icon
@@ -92,7 +107,6 @@ export default function QRScanScreen() {
         </View>
       </TouchableOpacity>
 
-      {/* Slider for zoom control */}
       <View style={styles.sliderContainer}>
         <Text style={{ color: '#fff' }}>-</Text>
         <Slider
@@ -109,7 +123,6 @@ export default function QRScanScreen() {
         <Text style={{ color: '#fff' }}>+</Text>
       </View>
 
-      {/* Upload from Gallery Icon */}
       <TouchableOpacity style={styles.galleryToggle} onPress={handleImagePicker}>
         <View style={styles.galleryIconContainer}>
           <Icon name="images-outline" size={30} color="#fff" />
@@ -122,8 +135,16 @@ export default function QRScanScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: -40,
     backgroundColor: '#000',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 60, // Adjusted for better placement
+    left: 20,
+    zIndex: 10, // Ensures the button stays above other elements
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    borderRadius: 30,
   },
   customMarker: {
     width: 250,

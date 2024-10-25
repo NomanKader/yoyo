@@ -12,6 +12,8 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('Password@1');
   const [showLoading, setShowLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const navigation = useNavigation();
 
   // Check token valid
@@ -23,18 +25,31 @@ const LoginScreen = () => {
       } else {
         navigation.navigate('Login');
       }
-    }
+    };
     checkToken();
   }, []);
 
   const handleLogin = () => {
-    setShowLoading(true);
+    // Reset error messages
+    setUsernameError('');
+    setPasswordError('');
+
     // Basic validation
-    if (username === '' || password === '') {
-      Alert.alert('Error', 'Please enter both username and password.');
+    let hasError = false;
+    if (username === '') {
+      setUsernameError('Please enter login name');
+      hasError = true;
+    }
+    if (password === '') {
+      setPasswordError('Please enter password');
+      hasError = true;
+    }
+    if (hasError) {
       setShowLoading(false);
       return;
     }
+
+    setShowLoading(true);
     LoginService({ username, password }, navigation, setShowLoading);
   };
 
@@ -45,7 +60,7 @@ const LoginScreen = () => {
       <Image source={Logo} style={styles.logo} />
       <View style={styles.card}>
         <View style={styles.inputContainer}>
-          <Icon name="user" size={20} color="#000" style={styles.icon} />
+          <Icon name="user" size={20} color="#727272" style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Login Name"
@@ -54,8 +69,10 @@ const LoginScreen = () => {
             placeholderTextColor="#999"
           />
         </View>
+        {usernameError ? <Text style={styles.errorText}>{usernameError}</Text> : null}
+
         <View style={styles.inputContainer}>
-          <Icon name="lock" size={20} color="#000" style={styles.icon} />
+          <Icon name="lock" size={20} color="#727272" style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Password"
@@ -66,13 +83,15 @@ const LoginScreen = () => {
           />
           <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
             <Icon
-              name={isPasswordVisible ? "eye" : "eye-slash"}
+              name={isPasswordVisible ? 'eye' : 'eye-slash'}
               size={20}
-              color="#000"
+              color="#727272"
               style={styles.icon}
             />
           </TouchableOpacity>
         </View>
+        {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+
         <TouchableOpacity
           disabled={isButtonDisabled || showLoading}
           style={[styles.button, (isButtonDisabled || showLoading) && styles.buttonDisabled]}
@@ -80,14 +99,18 @@ const LoginScreen = () => {
         >
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
-        {showLoading && <ActivityIndicator size='large' />}
-        <TouchableOpacity>
+
+        {showLoading && <ActivityIndicator size="large" />}
+
+        <TouchableOpacity onPress={()=>navigation.navigate('AuthStack',{screen:'ForgetPassword'})}>
           <Text style={styles.forgetPasswordText}>Forget Password</Text>
         </TouchableOpacity>
+
         <Text style={styles.createAccountText}>
           If you don't have a partner account, Please create now!
         </Text>
-        <TouchableOpacity>
+
+        <TouchableOpacity onPress={()=>navigation.navigate('AuthStack',{screen:'Register'})}>
           <Text style={styles.signUpText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
@@ -101,6 +124,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    backgroundColor:'#A0CAF4'
   },
   logo: {
     marginBottom: 24,
@@ -132,14 +156,14 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 50, // Increase the height of the TextInput
+    height: 50,
     color: theme.colors.textDark,
   },
   button: {
     backgroundColor: theme.colors.primary,
-    paddingVertical: 15, // Increase the vertical padding
-    paddingHorizontal: 25, // Increase the horizontal padding
-    borderRadius: 30, // Increase the border radius
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -148,14 +172,14 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: theme.colors.textLight,
-    fontSize: 18, // Increase the font size
+    fontSize: 18,
   },
   forgetPasswordText: {
     color: theme.colors.primary,
     textDecorationLine: 'underline',
     textAlign: 'center',
     marginTop: 10,
-    fontWeight:'bold'
+    fontWeight: 'bold',
   },
   createAccountText: {
     color: theme.colors.infoText,
@@ -163,11 +187,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   signUpText: {
-    color:theme.colors.primary,
+    color: theme.colors.primary,
     textDecorationLine: 'underline',
     textAlign: 'center',
     marginTop: 5,
-    fontWeight:'bold'
+    fontWeight: 'bold',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginBottom: 8,
+    marginLeft: 8,
   },
 });
 

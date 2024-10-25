@@ -64,6 +64,12 @@ export const CommonStyles = {
       color:theme.colors.iconTextColor,
       lineHeight:21
     },
+    countDown:{
+      fontSize: 15,
+      marginTop: 5,
+      color:theme.colors.error,
+      lineHeight:21
+    },
     text: {
       fontSize: 18,
       fontWeight: 'bold',
