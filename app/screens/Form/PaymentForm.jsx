@@ -102,7 +102,7 @@ const PaymentForm = ({navigation}) => {
             <DefaultButtonComponent 
                 title='Continue'
                 backgroundColor={theme.colors.primary}
-                onPress={() => {navigation.navigate('AppStack', { screen: 'ReserveCompleteScreen' })}}
+                onPress={() => {navigation.navigate('AppStack', { screen: 'PaymentCompleteScreen' })}}
                 
                 color={theme.colors.textLight}
                 otherStyle={{width:width*0.9,height:height*0.07,alignSelf:'center'}}

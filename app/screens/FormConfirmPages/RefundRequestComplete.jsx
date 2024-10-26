@@ -5,7 +5,7 @@ import buildingImg from '../../assets/images/buildings.png'
 import theme from '../../style/colors';
 import { CommonStyles } from '../../style/CommonStyles';
 
-const ReservationComplete = ({navigation}) => {
+const RefundRequestComplete = ({navigation}) => {
   return (
     <View style={CommonStyles.container}>
       <ImageBackground 
@@ -20,15 +20,13 @@ const ReservationComplete = ({navigation}) => {
           <View style={styles.checkmarkContainer}>
             <Icon name="check-circle" size={50} color="#fff" />
           </View>
-          <Text style={styles.title}>Reservation Successful</Text>
+          <Text style={styles.title}>Requested Successful</Text>
           <Text style={styles.subtitle}>
-            Reservation for <Text style={styles.boldText}>Room 406</Text> is successful and the {' '}
+            Your refund request from <Text style={styles.boldText}>Room 406</Text> is successful and the {' '}
             ID is <Text style={styles.boldText}>CAL7396748</Text>
           </Text>
         </View>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AppStack', { screen: 'CheckInDetailScreen' })}>
-          <Text style={styles.buttonText}>Confirm Payment</Text>
-        </TouchableOpacity>
+        
       </ImageBackground>
     </View>
   );
@@ -88,4 +86,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ReservationComplete;
+export default RefundRequestComplete;
