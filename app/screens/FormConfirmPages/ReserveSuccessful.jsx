@@ -26,7 +26,14 @@ const ReservationComplete = ({navigation}) => {
             ID is <Text style={styles.boldText}>CAL7396748</Text>
           </Text>
         </View>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AppStack', { screen: 'CheckInDetailScreen' })}>
+        <TouchableOpacity style={styles.button} onPress={() => {
+          // navigation.goBack();
+          navigation.push('AppStack', { 
+            screen: 'ReserveConfirmScreen', 
+            params : {showBottomTab:true} 
+          });
+          console.log("Button Pressed");
+        }}>
           <Text style={styles.buttonText}>Confirm Payment</Text>
         </TouchableOpacity>
       </ImageBackground>

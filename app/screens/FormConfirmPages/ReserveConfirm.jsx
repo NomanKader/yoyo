@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,useEffect} from 'react';
 import { View, Text, StyleSheet, Dimensions,ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
@@ -8,70 +8,83 @@ import DefaultButtonComponent from '../../components/Button/DefaultButtonCompone
 import theme from '../../style/colors';
 import LeftRightText from '../../components/ConfirmPage/LeftRightText';
 import BottomSheetComponent from '../../components/BottomSheet/BottomSheetComponent';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const {width,height} = Dimensions.get('window');
 
-const ReserveConfirm = ({navigation}) => {
+const ReserveConfirm = ({navigation,route}) => {
+  const [visible,setVisible] = useState(true)
+  const {showBottomTab = false} = route.params || {};
 
-  const [visible,setVisible] = useState(false)
+  useEffect(()=>{
+    setVisible(showBottomTab);
+    console.log("Value is "+showBottomTab)
+  },[showBottomTab])
+
+  
+
+  
 
   return (
-    <ScrollView style={CommonStyles.scrollViewContainer}>
-      {/* Header */}
-      <DetailAppBarComponent title='Confirm Reservation' navigation={navigation} />
-      <DividerComponent />
-      {/* Amount */}
-      <Text style={styles.amountLabel}>Payable Amount</Text>
-      <Text style={styles.amount}>0.00 Kyats</Text>
+    <SafeAreaView style={{flex:1}}>
+      <ScrollView style={CommonStyles.scrollViewContainer}>
+        {/* Header */}
+        <DetailAppBarComponent title='Confirm Reservation' navigation={navigation} />
+        <DividerComponent />
+        {/* Amount */}
+        <Text style={styles.amountLabel}>Payable Amount</Text>
+        <Text style={styles.amount}>0.00 Kyats</Text>
 
-      {/* Hotel Info */}
-      <View style={styles.hotelInfo}>
-        <View style={styles.row}>
-          <Icon name='wallet' size={30} color={theme.colors.info} />
-          <Text style={styles.hotelBadge}>Hotel</Text>
+        {/* Hotel Info */}
+        <View style={styles.hotelInfo}>
+          <View style={styles.row}>
+            <Icon name='wallet' size={30} color={theme.colors.info} />
+            <Text style={styles.hotelBadge}>Hotel</Text>
+          </View>
+          <Text style={styles.hotelName}>A Hotels</Text>
         </View>
-        <Text style={styles.hotelName}>A Hotels</Text>
-      </View>
 
-      {/* Reservation Details */}
-      <View style={styles.reservationDetails}>
-        <LeftRightText label='method' value='Pay with debit card' />
-        <LeftRightText label='Room type' value='Standard Rooms' />
-        <LeftRightText label='Room number' value='Room 406' />
-        <LeftRightText label='Number of days' value='1' />
-        <LeftRightText label='Date of arrival' value='13-09-2024' />
-        <LeftRightText label='Name' value='Tun Tun' />
-        <LeftRightText label='Phone number' value='0909008008' />
-        <LeftRightText label='Email address' value='tuntun@gmail.com' />
+        {/* Reservation Details */}
+        <View style={styles.reservationDetails}>
+          <LeftRightText label='method' value='Pay with debit card' />
+          <LeftRightText label='Room type' value='Standard Rooms' />
+          <LeftRightText label='Room number' value='Room 406' />
+          <LeftRightText label='Number of days' value='1' />
+          <LeftRightText label='Date of arrival' value='13-09-2024' />
+          <LeftRightText label='Name' value='Tun Tun' />
+          <LeftRightText label='Phone number' value='0909008008' />
+          <LeftRightText label='Email address' value='tuntun@gmail.com' />
 
-      </View>
+        </View>
 
-      {/* Confirm Button */}
-      <DefaultButtonComponent title='Confirm' onPress={()=> setVisible(true)} backgroundColor={theme.colors.info} />
-      
+        {/* Confirm Button */}
+        <DefaultButtonComponent title='Confirm' onPress={() => {navigation.navigate('AppStack', { screen: 'ReserveSuccessfulScreen' })}} backgroundColor={theme.colors.info} />
+        
+        
+      </ScrollView>
       <BottomSheetComponent 
-        title='Pay with Debit Card'
-        isVisible={visible}
-        onClose={() => setVisible(false)}
-        snapPoints={['30%','40%']}
-      >
-        <View >
-          <Text style={CommonStyles.formLabel}>
-            Use your credit card to complete you reservation. Your payment will be visible to Tracman.
-          </Text>
-          <DefaultButtonComponent 
-            title='Pay 0.00 Kyats'
-            icon='wallet'
-            backgroundColor={theme.colors.primary}
-            color={theme.colors.textLight}
-            otherStyle={{width:width*0.9,height:height*0.07,alignSelf:'center'}}
-            otherTextStyle={{fontSize:16}}
-            onPress={() => {navigation.navigate('AppStack', { screen: 'PaymentFormScreen' })}}
-            
-          />
-        </View>
-      </BottomSheetComponent>
-    </ScrollView>
+          title='Pay with Debit Card'
+          isVisible={visible}
+          onClose={() => setVisible(false)}
+          snapPoints={['30%','40%']}
+        >
+          <View >
+            <Text style={CommonStyles.formLabel}>
+              Use your credit card to complete you reservation. Your payment will be visible to Tracman.
+            </Text>
+            <DefaultButtonComponent 
+              title='Pay 0.00 Kyats'
+              icon='wallet'
+              backgroundColor={theme.colors.primary}
+              color={theme.colors.textLight}
+              otherStyle={{width:width*0.9,height:height*0.07,alignSelf:'center'}}
+              otherTextStyle={{fontSize:16}}
+              onPress={() => {navigation.navigate('AppStack', { screen: 'PaymentFormScreen' })}}
+              
+            />
+          </View>
+        </BottomSheetComponent>
+    </SafeAreaView>
   );
 };
 

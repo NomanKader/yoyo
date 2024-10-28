@@ -12,7 +12,7 @@ import ReservationForm from '../screens/Form/ReservationForm';
 import ReserveMethod from '../screens/Form/ReserveMethod';
 import ReserveConfirm from '../screens/FormConfirmPages/ReserveConfirm';
 import PaymentForm from '../screens/Form/PaymentForm';
-import ReserveComplete from '../screens/FormConfirmPages/ReserveComplete';
+import ReserveSuccessful from '../screens/FormConfirmPages/ReserveSuccessful';
 import CheckInDetail from '../screens/Room/CheckInDetail';
 import RefundForm from '../screens/Form/RefundForm';
 import PaymentComplete from '../screens/FormConfirmPages/PaymentComplete';
@@ -41,7 +41,7 @@ const AppStack = () => {
       <Stack.Screen name='ReservationFormScreen' component={ReservationForm} options={hiddenHeaderOptions}/>
       <Stack.Screen name='ReserveMethodScreen' component={ReserveMethod} options={hiddenHeaderOptions}/>
       <Stack.Screen name='ReserveConfirmScreen' component={ReserveConfirm} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='ReserveCompleteScreen' component={ReserveComplete} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='ReserveSuccessfulScreen' component={ReserveSuccessful} options={hiddenHeaderOptions}/>
       <Stack.Screen name='PaymentFormScreen' component={PaymentForm} options={hiddenHeaderOptions}/>
       <Stack.Screen name='PaymentCompleteScreen' component={PaymentComplete} options={hiddenHeaderOptions}/>
       
