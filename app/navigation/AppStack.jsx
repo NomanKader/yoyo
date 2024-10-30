@@ -17,6 +17,8 @@ import CheckInDetail from '../screens/Room/CheckInDetail';
 import RefundForm from '../screens/Form/RefundForm';
 import PaymentComplete from '../screens/FormConfirmPages/PaymentComplete';
 import RefundRequestComplete from '../screens/FormConfirmPages/RefundRequestComplete';
+import BookingSuccessful from '../screens/FormConfirmPages/BookingSuccessful';
+import ReadRoomRules from '../screens/Room/ReadRoomRules';
 
 
 const Stack = createNativeStackNavigator();
@@ -48,6 +50,8 @@ const AppStack = () => {
       <Stack.Screen name='CheckInDetailScreen' component={CheckInDetail} options={hiddenHeaderOptions}/>
       <Stack.Screen name='RefundFormScreen' component={RefundForm} options={hiddenHeaderOptions}/>
       <Stack.Screen name='RefundRequestCompleteScreen' component={RefundRequestComplete} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='BookingSuccessfulScreen' component={BookingSuccessful} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='ReadRoomRulesScreen' component={ReadRoomRules} options={hiddenHeaderOptions}/>
     </Stack.Navigator>
   );
 };

@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const {width,height} = Dimensions.get('window');
 
 const ReserveConfirm = ({navigation,route}) => {
-  const [visible,setVisible] = useState(true)
+  const [visible,setVisible] = useState(false)
   const {showBottomTab = false} = route.params || {};
 
   useEffect(()=>{

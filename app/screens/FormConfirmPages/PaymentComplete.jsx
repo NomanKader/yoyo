@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground,Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Make sure to install and link FontAwesome
 import buildingImg from '../../assets/images/buildings.png'
 import theme from '../../style/colors';
 import { CommonStyles } from '../../style/CommonStyles';
+
+  const {width} = Dimensions.get('window')
 
 const PaymentComplete = ({navigation}) => {
   return (
@@ -72,6 +74,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.textLight,
     paddingVertical: 15,
     paddingHorizontal: 40,
+    width: width*0.8,
+    alignItems:'center',
     borderRadius: 10,
     position: 'absolute',
     bottom: 50,
