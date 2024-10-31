@@ -13,28 +13,31 @@ const AppBarComponent = ({ title, navigation, searchData, type }) => {
           {title === 'Bookings' && (
             <TouchableOpacity
               style={styles.iconButton}
-              onPress={() => navigation.navigate('AppStack',{screen:'QRScanScreen'})}
+              onPress={()=>{}}
+              // () => navigation.navigate('AppStack',{screen:'QRScanScreen'})
             >
               <Image source={qrCode} style={styles.iconImage} />
             </TouchableOpacity>
           )}
           <TouchableOpacity
             style={styles.iconButton}
+            onPress={() =>{}}
+            // () => navigation.navigate('AppStack', { screen: title==='Bookings'?'BookingRoomCategoryScreen':'RoomCategoryCreateScreen' })
+          >
+            <Icon name="map-o" size={15} color={theme.icon.primary} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.iconButton}
             onPress={() =>
               navigation.navigate('AppStack', {
-                screen: 'SearchScreen',
-                params: { searchData: searchData, type: type },
+                screen: 'SearchScreen'
+                
               })
             }
           >
             <Icon name="search" size={15} color={theme.icon.primary} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.iconButton}
-            onPress={() => navigation.navigate('AppStack', { screen: title==='Bookings'?'BookingRoomCategoryScreen':'RoomCategoryCreateScreen' })}
-          >
-            <Icon name="plus" size={15} color={theme.icon.primary} />
-          </TouchableOpacity>
+          
         </View>
       </View>
     </View>

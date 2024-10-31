@@ -19,6 +19,7 @@ import PaymentComplete from '../screens/FormConfirmPages/PaymentComplete';
 import RefundRequestComplete from '../screens/FormConfirmPages/RefundRequestComplete';
 import BookingSuccessful from '../screens/FormConfirmPages/BookingSuccessful';
 import ReadRoomRules from '../screens/Room/ReadRoomRules';
+import Search from '../screens/Search/Search';
 
 
 const Stack = createNativeStackNavigator();
@@ -33,6 +34,8 @@ const AppStack = () => {
     <Stack.Navigator initialRouteName=''>
       
       {/* <Stack.Screen name='HomeScreen' component={Hotel} options={hiddenHeaderOptions}/> */}
+      <Stack.Screen name='SearchScreen' component={Search} options={hiddenHeaderOptions}/>
+
       <Stack.Screen name='RoomCategoryScreen' component={RoomCategory} options={hiddenHeaderOptions}/>
       <Stack.Screen name='RoomCategoryAllScreen' component={RoomCategoryAll} options={hiddenHeaderOptions}/>
       

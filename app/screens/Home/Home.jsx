@@ -5,6 +5,7 @@ import Hotel from './Hotel';
 import Apartment from './Apartment';
 import AppBarComponent from '../../components/AppBar/AppBarComponent'
 import theme from '../../style/colors';
+import SearchAppBarComponent from '../../components/AppBar/SearchAppBarComponent';
 
 const {width,height} = Dimensions.get('window')
 
@@ -50,15 +51,17 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
     );
   };
 
-const TopBar = () => {
+const TopBar = ({navigation}) => {
     const TopTab = createMaterialTopTabNavigator();
 
     return(
         <>
             <AppBarComponent 
                 title='Home'
+                navigation={navigation}
             />
-            {/* <Hotel /> */}
+            
+            
             <TopTab.Navigator
                 tabBar={props => <CustomTabBar {...props} />}
                 screenOptions={{
@@ -74,11 +77,11 @@ const TopBar = () => {
 }
 
 
-const Home = () => {
+const Home = ({navigation}) => {
     
 
   return (
-    <TopBar />
+    <TopBar navigation={navigation} />
   )
 }
 

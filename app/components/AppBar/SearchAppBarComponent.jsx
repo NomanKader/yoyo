@@ -17,7 +17,7 @@ const SearchAppBarComponent = ({ navigation, searchQuery, onSearchChange }) => {
           />
         </TouchableOpacity>
         <Text style={styles.title}>Search</Text>
-        <View style={CommonStyles.appBarIcon} />
+        <Icon name="map-outline" size={20} color={theme.colors.textDark} style={styles.searchIcon} />
       </View>
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color={theme.colors.textDark} style={styles.searchIcon} />
@@ -27,6 +27,7 @@ const SearchAppBarComponent = ({ navigation, searchQuery, onSearchChange }) => {
           value={searchQuery}
           onChangeText={onSearchChange}
         />
+        <Icon name="options-outline" size={20} color={theme.colors.textDark} style={styles.searchIcon} />
       </View>
     </View>
   );
