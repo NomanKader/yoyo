@@ -21,8 +21,11 @@ const AppBarComponent = ({ title, navigation, searchData, type }) => {
           )}
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={() =>{}}
-            // () => navigation.navigate('AppStack', { screen: title==='Bookings'?'BookingRoomCategoryScreen':'RoomCategoryCreateScreen' })
+            
+            onPress={() => {
+              navigation.navigate('AppStack',{screen:'MapScreen'})
+                console.log("Pressed")
+              }}
           >
             <Icon name="map-o" size={15} color={theme.icon.primary} />
           </TouchableOpacity>

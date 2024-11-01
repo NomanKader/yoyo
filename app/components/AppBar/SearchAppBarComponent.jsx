@@ -17,7 +17,13 @@ const SearchAppBarComponent = ({ navigation, searchQuery, onSearchChange }) => {
           />
         </TouchableOpacity>
         <Text style={styles.title}>Search</Text>
-        <Icon name="map-outline" size={20} color={theme.colors.textDark} style={styles.searchIcon} />
+        <TouchableOpacity onPress={() => {
+          navigation.navigate('AppStack',{screen:'MapScreen'})
+            console.log("Pressed")
+          }}>
+          <Icon name="map-outline" size={20} color={theme.colors.textDark} style={styles.searchIcon} />
+        </TouchableOpacity >
+        
       </View>
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color={theme.colors.textDark} style={styles.searchIcon} />
