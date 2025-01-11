@@ -1,16 +1,30 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Alert,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import theme from '../../style/colors';
 import qrCode from '../../assets/icons/qrCode.png'; // Import the QR code image
 
-const AppBarComponent = ({ title, navigation, searchData, type }) => {
+const AppBarComponent = ({
+  title,
+  navigation,
+  searchData,
+  type,
+  search = true,
+}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>{title}</Text>
         <View style={styles.iconContainer}>
-          {title === 'Bookings' && (
+          {/*
+          title === 'Bookings' && (
             <TouchableOpacity
               style={styles.iconButton}
               onPress={()=>{}}
@@ -18,29 +32,28 @@ const AppBarComponent = ({ title, navigation, searchData, type }) => {
             >
               <Image source={qrCode} style={styles.iconImage} />
             </TouchableOpacity>
-          )}
+          )
+          */}
+
           <TouchableOpacity
             style={styles.iconButton}
-            
             onPress={() => {
-              navigation.navigate('AppStack',{screen:'MapScreen'})
-                console.log("Pressed")
-              }}
-          >
+              navigation.navigate('AppStack', {screen: 'MapScreen'});
+              console.log('Pressed');
+            }}>
             <Icon name="map-o" size={15} color={theme.icon.primary} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.iconButton}
-            onPress={() =>
-              navigation.navigate('AppStack', {
-                screen: 'SearchScreen'
-                
-              })
-            }
-          >
-            <Icon name="search" size={15} color={theme.icon.primary} />
-          </TouchableOpacity>
-          
+          {search && (
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() =>
+                navigation.navigate('AppStack', {
+                  screen: 'SearchScreen',
+                })
+              }>
+              <Icon name="search" size={15} color={theme.icon.primary} />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>
@@ -48,8 +61,9 @@ const AppBarComponent = ({ title, navigation, searchData, type }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {    
+  container: {
     elevation: 4, // Add shadow/elevation to the container
+    backgroundColor: theme.colors.textLight,
   },
   header: {
     flexDirection: 'row',

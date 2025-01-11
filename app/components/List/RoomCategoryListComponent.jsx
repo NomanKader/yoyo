@@ -6,7 +6,7 @@ import { LanguageContext } from '../../context/LanguageContext';
 
 const {width,height} = Dimensions.get('window')
 
-const RommCategoryListComponent = ({ data, navigation, type, onPress }) => {
+const RommCategoryListComponent = ({ data, navigation, type, onPress,leftBox=true }) => {
   const { translate } = useContext(LanguageContext);
 
   // Function to get status-specific styles
@@ -61,7 +61,8 @@ const RommCategoryListComponent = ({ data, navigation, type, onPress }) => {
               )}
             </View>
             <View style={styles.statusContainer}>
-              <View style={[styles.status, { backgroundColor: statusStyle.backgroundColor }]}>
+              <View style={[styles.status, leftBox ? statusStyle.backgroundColor : theme.colors.textLight]}>
+              
                 <Text style={{ color: statusStyle.color }}>
                   {roomStatus}
                 </Text>

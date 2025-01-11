@@ -10,6 +10,7 @@ import Home from '../screens/Home/Home';
 import List from '../screens/List/List';
 import Bookmark from '../screens/Bookmark/Bookmark';
 import Account from '../screens/Account/Account';
+import Bookings from '../screens/Bookings/Bookings';
 
 
 const Tab = createBottomTabNavigator();
@@ -54,7 +55,7 @@ const TabScreens = () => {
               );
             break;
 
-            case 'List':
+            case 'Bookings':
               iconComponent=(
                 <Icon 
                   name='list'
@@ -90,7 +91,7 @@ const TabScreens = () => {
       })}      
     >      
       <Tab.Screen name="Home" component={Home} options={options} />
-      <Tab.Screen name="List" component={List} options={options} />
+      <Tab.Screen name="Bookings" component={Bookings} options={options} />
       <Tab.Screen name="Bookmark" component={Bookmark} options={options} />
       <Tab.Screen name="Account" component={Account} options={options} />
     </Tab.Navigator>
