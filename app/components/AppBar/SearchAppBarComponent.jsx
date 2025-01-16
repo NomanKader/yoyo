@@ -6,7 +6,7 @@ import backIcon from '../../assets/icons/backIcon.png';
 import theme from '../../style/colors';
 import Icon from 'react-native-vector-icons/Ionicons'; // Importing an icon from react-native-vector-icons
 
-const SearchAppBarComponent = ({ navigation, searchQuery, onSearchChange }) => {
+const SearchAppBarComponent = ({ navigation, searchQuery, onSearchChange,changeFilterVisible }) => {
   return (
     <View style={styles.header}>
       <View style={styles.headerIcons}>
@@ -33,7 +33,9 @@ const SearchAppBarComponent = ({ navigation, searchQuery, onSearchChange }) => {
           value={searchQuery}
           onChangeText={onSearchChange}
         />
-        <Icon name="options-outline" size={20} color={theme.colors.textDark} style={styles.searchIcon} />
+        <TouchableOpacity onPress={changeFilterVisible}>
+          <Icon name="options-outline" size={20} color={theme.colors.textDark} style={styles.searchIcon} />
+        </TouchableOpacity>
       </View>
     </View>
   );

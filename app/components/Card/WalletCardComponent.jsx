@@ -1,11 +1,13 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import theme from '../../style/colors';
 
 const WalletCardComponent = ({
   label,
   amount,
   icon,
+  IconText,
   backgroundColor,
   onPress,
 }) => {
@@ -16,7 +18,8 @@ const WalletCardComponent = ({
         <Text style={styles.amount}>{amount}</Text>
       </View>
       <TouchableWithoutFeedback onPress={onPress}>
-        <Image source={icon} style={styles.icon} />
+        {icon && <Image source={icon} style={styles.icon} />}
+        {IconText && <Text style={styles.IconText}>{IconText}</Text>}
       </TouchableWithoutFeedback>
     </View>
   );
@@ -38,11 +41,22 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     color: '#FFFFFF',
+    marginTop: 10,
   },
   icon: {
     width: 33,
     height: 33,
     resizeMode: 'contain',
+  },
+  IconText: {
+    fontSize: 12,
+    color: theme.colors.textLight,
+    backgroundColor: theme.colors.primary,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: theme.colors.textLight,
   },
 });
 

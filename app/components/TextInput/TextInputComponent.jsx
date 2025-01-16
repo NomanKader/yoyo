@@ -1,11 +1,25 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity,Dimensions } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import theme from '../../style/colors';
 import Icon from 'react-native-vector-icons/Ionicons'; // Make sure to install this or use any icon library of your choice
 
-const {width,height} = Dimensions.get('window')
+const {width, height} = Dimensions.get('window');
 
-const TextInputComponent = ({ label, placeholder, value, onChangeText, keyboardType, isSecure }) => {
+const TextInputComponent = ({
+  label,
+  placeholder,
+  value,
+  onChangeText,
+  keyboardType,
+  isSecure,
+}) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(!isSecure); // State to toggle password visibility
 
   return (
@@ -25,8 +39,7 @@ const TextInputComponent = ({ label, placeholder, value, onChangeText, keyboardT
         {isSecure && (
           <TouchableOpacity
             style={styles.eyeIcon}
-            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-          >
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
             <Icon
               name={isPasswordVisible ? 'eye-off' : 'eye'}
               size={24}
@@ -42,6 +55,7 @@ const TextInputComponent = ({ label, placeholder, value, onChangeText, keyboardT
 const styles = StyleSheet.create({
   container: {
     marginVertical: 10,
+    flex: 1,
   },
   label: {
     fontSize: 14,
@@ -52,15 +66,15 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:'space-between',
+    justifyContent: 'space-between',
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
     backgroundColor: '#F1F1F1',
   },
   input: {
-    // flex: 1,
-    width: width*0.65,
+    flex: 1, // Change from fixed width to flex
+    // width: width * 0.65,  // Remove this line
     height: 48,
     paddingHorizontal: 10,
     backgroundColor: '#F1F1F1',

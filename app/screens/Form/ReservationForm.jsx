@@ -1,152 +1,161 @@
-import { StyleSheet, Text, View,Dimensions } from 'react-native'
-import {useState} from 'react'
-import theme from "../../style/colors";
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { FlatList } from 'react-native-gesture-handler';
+import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {useState} from 'react';
+import theme from '../../style/colors';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {FlatList} from 'react-native-gesture-handler';
 import TextInputComponent from '../../components/TextInput/TextInputComponent';
 import PhoneInputComponent from '../../components/TextInput/PhoneInputComponent';
 import DateInputComponent from '../../components/TextInput/DateInputComponent';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../../components/Divider/DividerComponent';
-import DefaultButtonComponent from "../../components/Button/DefaultButtonComponent";
+import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import DropdownPickerComponent from '../../components/Dropdown/DropdownPickerComponent';
-import { CommonStyles } from '../../style/CommonStyles';
+import {CommonStyles} from '../../style/CommonStyles';
 
-const {width,height} = Dimensions.get('window')
+const {width, height} = Dimensions.get('window');
 
 const ReservationForm = ({navigation}) => {
   const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [days, setDays] = useState(0);
-    const [showLoading, setShowLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [days, setDays] = useState(0);
+  const [showLoading, setShowLoading] = useState(false);
 
-    const [rtOpen, setRtOpen] = useState(false);
-    const [rtValue, setRtValue] = useState(null);
-    const [roomTypes, setRoomTypes] = useState([
-      { label: 'Standard Rooms', value: 'standard' },
-      { label: 'Deluxe Rooms', value: 'deluxe' },
-      { label: 'Executive Rooms', value: 'executive' },
-    ]);
+  const [rtOpen, setRtOpen] = useState(false);
+  const [rtValue, setRtValue] = useState(null);
+  const [roomTypes, setRoomTypes] = useState([
+    {label: 'Standard Rooms', value: 'standard'},
+    {label: 'Deluxe Rooms', value: 'deluxe'},
+    {label: 'Executive Rooms', value: 'executive'},
+  ]);
 
-    const [rnOpen, setRnOpen] = useState(false);
-    const [rnValue, setRnValue] = useState(null);
-    const [roomNumber, setRoomNumber] = useState([
-      { label: '201', value: '201' },
-      { label: '202', value: '202' },
-      { label: '203', value: '203' },
-      { label: '204', value: '204' },
-    ]);
-  
-    const isButtonDisabled = name === '' || phone === '' || rtValue === '' || rnValue === '';
-  
-    return (
-      <SafeAreaView style={{flex:1}}>
-        <FlatList 
-          ListHeaderComponentStyle={CommonStyles.container}
-          ListHeaderComponent={
-            <>
-              <DetailAppBarComponent 
-                title='Reservation Form'
-                navigation={navigation} 
-              />
-              <DividerComponent />
+  const [rnOpen, setRnOpen] = useState(false);
+  const [rnValue, setRnValue] = useState(null);
+  const [roomNumber, setRoomNumber] = useState([
+    {label: '201', value: '201'},
+    {label: '202', value: '202'},
+    {label: '203', value: '203'},
+    {label: '204', value: '204'},
+  ]);
 
-              <View style={CommonStyles.scrollViewContainer}>
-                
-                <View style={{width:'100%'}}>
+  const isButtonDisabled =
+    name === '' || phone === '' || rtValue === '' || rnValue === '';
 
-                  <TextInputComponent
-                    label='Name'
-                    placeholder='Name...'
-                    value={name} 
-                    onChangeText={setName}
-                    keyboardType='' 
-                    isSecure={false}
-                  />
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <FlatList
+        ListHeaderComponentStyle={CommonStyles.container}
+        ListHeaderComponent={
+          <>
+            <DetailAppBarComponent
+              title="Reservation Form"
+              navigation={navigation}
+            />
+            <DividerComponent />
 
-                  <TextInputComponent
-                    label='Email Address'
-                    placeholder='Email...'
-                    value={email} 
-                    onChangeText={setEmail}
-                    keyboardType='email-address' 
-                    isSecure={false}
-                  />
-                  <PhoneInputComponent
-                    label='Phone Number'
-                    value={phone}
-                    onChange={setPhone}
-                  />
-                  
+            <View style={CommonStyles.scrollViewContainer}>
+              <View style={styles.container}>
+                <TextInputComponent
+                  label="Name"
+                  placeholder="Name..."
+                  value={name}
+                  onChangeText={setName}
+                  keyboardType=""
+                  isSecure={false}
+                />
 
-                  <Text style={CommonStyles.formLabel}>Room Type</Text>
-                  <DropdownPickerComponent 
-                    open={rtOpen}
-                    setOpen={setRtOpen}
-                    value={rtValue}
-                    setValue={setRtValue}
-                    items={roomTypes}
-                    setItems={setRoomTypes}
-                    placeholder="Select a room type"
-                  />
+                <TextInputComponent
+                  label="Email Address"
+                  placeholder="Email..."
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  isSecure={false}
+                />
+                <PhoneInputComponent
+                  label="Phone Number"
+                  value={phone}
+                  onChange={setPhone}
+                />
 
-                  <Text style={CommonStyles.formLabel}>Room Number</Text>
-                  <DropdownPickerComponent 
-                    open={rnOpen}
-                    setOpen={setRnOpen}
-                    value={rnValue}
-                    setValue={setRnValue}
-                    items={roomNumber}
-                    setItems={setRoomNumber}
-                    placeholder="Select a room number"
-                    containerStyle={{zIndex:4999}}
-                  />
+                <Text style={CommonStyles.formLabel}>Room Type</Text>
+                <DropdownPickerComponent
+                  open={rtOpen}
+                  setOpen={setRtOpen}
+                  value={rtValue}
+                  setValue={setRtValue}
+                  items={roomTypes}
+                  setItems={setRoomTypes}
+                  placeholder="Select a room type"
+                />
 
-                  <TextInputComponent
-                    label='Number of days'
-                    placeholder='Number of days...'
-                    value={days} 
-                    onChangeText={setDays}
-                    keyboardType='numeric' 
-                    isSecure={false}
-                  />
+                <Text style={CommonStyles.formLabel}>Room Number</Text>
+                <DropdownPickerComponent
+                  open={rnOpen}
+                  setOpen={setRnOpen}
+                  value={rnValue}
+                  setValue={setRnValue}
+                  items={roomNumber}
+                  setItems={setRoomNumber}
+                  placeholder="Select a room number"
+                  containerStyle={styles.dropdownContainer}
+                />
 
-                  <DateInputComponent
-                    title='Date of arrival'
-                  />
-                  
-                  
+                <TextInputComponent
+                  label="Number of days"
+                  placeholder="Number of days..."
+                  value={days}
+                  onChangeText={setDays}
+                  keyboardType="numeric"
+                  isSecure={false}
+                />
 
-                  <DefaultButtonComponent 
-                    title='Continue'
-                    backgroundColor={theme.colors.primary}
-                    onPress={() => {navigation.navigate('AppStack', { screen: 'ReserveMethodScreen' })}}
-                    // onPress={() => Alert.alert('hi')}
-                    color={theme.colors.textLight}
-                    otherStyle={{width:width*0.9,height:height*0.07,alignSelf:'center',marginTop:25}}
-                    otherTextStyle={{fontSize:16}}
-                    // disable={isButtonDisabled || showLoading}
-                  />
+                <DateInputComponent title="Date of arrival" />
 
-                  {showLoading && <ActivityIndicator size='large' />}
-                  
-                  
-                  
-                  
+                <DefaultButtonComponent
+                  title="Continue"
+                  backgroundColor={theme.colors.primary}
+                  onPress={() => {
+                    navigation.navigate('AppStack', {
+                      screen: 'ReserveMethodScreen',
+                    });
+                  }}
+                  // onPress={() => Alert.alert('hi')}
+                  color={theme.colors.textLight}
+                  otherStyle={styles.continueButton}
+                  otherTextStyle={{fontSize: 16}}
+                  // disable={isButtonDisabled || showLoading}
+                />
 
-                </View>
+                {showLoading && <ActivityIndicator size="large" />}
               </View>
-            </>
-          }
-        />
-        {/* <ScrollView style={CommonStyles.container} >
+            </View>
+          </>
+        }
+      />
+      {/* <ScrollView style={CommonStyles.container} >
           
         </ScrollView> */}
-      </SafeAreaView>
-    );
-}
+    </SafeAreaView>
+  );
+};
 
-export default ReservationForm
+export default ReservationForm;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  container: {
+    width: '100%',
+  },
+  dropdownContainer: {
+    zIndex: 4999,
+  },
+  continueButton: {
+    width: width * 0.9,
+    height: height * 0.07,
+    alignSelf: 'center',
+    marginTop: 25,
+  },
+});

@@ -3,6 +3,7 @@ import React from 'react';
 import theme from '../../style/colors';
 import Icon from 'react-native-vector-icons/Feather';
 import rightArrow from '../../assets/icons/rightArrowIcon.png';
+import DividerComponent from '../Divider/DividerComponent';
 
 // const PaymentListComponent = ({icon, title, description, onPress}) => {
 //   return (
@@ -76,25 +77,38 @@ import rightArrow from '../../assets/icons/rightArrowIcon.png';
 //   },
 // });
 
-const PaymentListComponent = ({icon, title, description, onPress}) => {
+const PaymentListComponent = ({
+  icon,
+  title,
+  description,
+  onPress,
+  arrowShown = true,
+  dividerShown = true,
+}) => {
   return (
-    <TouchableOpacity style={styles.menuItem} onPress={onPress}>
-      <View style={styles.iconContainer}>
-        <Icon name={icon} size={20} color="#000" />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.menuTitle}>{title}</Text>
-        <Text style={styles.menuDescription}>{description}</Text>
-      </View>
-      <Icon name="arrow-right" size={20} color="#ccc" />
-      {/* <View style={styles.arrow}>
+    <>
+      <TouchableOpacity style={styles.menuItem} onPress={onPress}>
+        {icon && (
+          <View style={styles.iconContainer}>
+            <Icon name={icon} size={20} color="#000" />
+          </View>
+        )}
+
+        <View style={styles.textContainer}>
+          <Text style={styles.menuTitle}>{title}</Text>
+          <Text style={styles.menuDescription}>{description}</Text>
+        </View>
+        {arrowShown && <Icon name="arrow-right" size={20} color="#ccc" />}
+        {/* <View style={styles.arrow}>
         <Image
           resizeMode="contain"
           style={styles.arrowImg}
           source={rightArrow}
         />
       </View> */}
-    </TouchableOpacity>
+      </TouchableOpacity>
+      {dividerShown && <DividerComponent />}
+    </>
   );
 };
 
@@ -103,8 +117,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.textLightGray,
+    // borderBottomWidth: 1,
+    // borderBottomColor: theme.colors.textLightGray,
   },
   iconContainer: {
     width: 40,

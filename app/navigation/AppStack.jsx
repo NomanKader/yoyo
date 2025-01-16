@@ -23,6 +23,12 @@ import Search from '../screens/Search/Search';
 import Map from '../screens/Home/Map/Map';
 import Notifications from '../screens/Account/Notifications';
 import AccountSetting from '../screens/Account/AccountSetting';
+import UpdatePassword from '../screens/Account/UpdatePassword';
+import AffiliateAndWallet from '../screens/Account/AffiliateAndWallet/AffiliateAndWallet';
+import Affiliate from '../screens/Account/AffiliateAndWallet/Affiliate';
+import Referrals from '../screens/Account/AffiliateAndWallet/Referrals';
+import Wallet from '../screens/Account/AffiliateAndWallet/Wallet';
+import AboutTheApp from '../screens/Account/AboutTheApp';
 
 const Stack = createNativeStackNavigator();
 
@@ -132,6 +138,36 @@ const AppStack = () => {
       <Stack.Screen
         name="AccountSettingScreen"
         component={AccountSetting}
+        options={hiddenHeaderOptions}
+      />
+      <Stack.Screen
+        name="UpdatePasswordScreen"
+        component={UpdatePassword}
+        options={hiddenHeaderOptions}
+      />
+      <Stack.Screen
+        name="AffiliateAndWalletScreen"
+        component={AffiliateAndWallet}
+        options={hiddenHeaderOptions}
+      />
+      <Stack.Screen
+        name="AffiliateScreen"
+        component={Affiliate}
+        options={hiddenHeaderOptions}
+      />
+      <Stack.Screen
+        name="ReferralsScreen"
+        component={Referrals}
+        options={hiddenHeaderOptions}
+      />
+      <Stack.Screen
+        name="WalletScreen"
+        component={Wallet}
+        options={hiddenHeaderOptions}
+      />
+      <Stack.Screen
+        name="AboutTheAppScreen"
+        component={AboutTheApp}
         options={hiddenHeaderOptions}
       />
     </Stack.Navigator>

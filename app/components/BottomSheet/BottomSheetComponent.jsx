@@ -54,11 +54,11 @@ const BottomSheetComponent = ({ isVisible, onClose, title, children, snapPoints:
             </TouchableOpacity>
           </View>
           <DividerComponent />
-          <TouchableWithoutFeedback onPress={()=>onClose()}>
+          {/* <TouchableWithoutFeedback onPress={()=>onClose()}> */}
           <View style={CommonStyles.bottomSheet.bottomSheetItem}>
             {children}
           </View>
-          </TouchableWithoutFeedback>
+          {/* </TouchableWithoutFeedback> */}
         </BottomSheetView>
       </BottomSheetModal>
     </BottomSheetModalProvider>

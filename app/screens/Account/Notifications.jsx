@@ -17,6 +17,8 @@ import theme from '../../style/colors';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
 import NotificationList from '../../components/List/NotificationList';
 
+const {width, height} = Dimensions.get('window');
+
 const Notifications = ({navigation}) => {
   const [notifications, setNotifications] = useState([
     {
@@ -39,8 +41,6 @@ const Notifications = ({navigation}) => {
     },
   ]);
 
-  const {width, height} = Dimensions.get('window');
-
   const handleClearAll = () => {
     setNotifications([]);
   };
@@ -52,20 +52,11 @@ const Notifications = ({navigation}) => {
         navigation={navigation}
         // search={false}
       />
-      <View style={{alignItems: 'flex-end'}}>
+      <View style={styles.clearAllContainer}>
         <TouchableOpacity
-          style={{
-            width: width * 0.27,
-          }}
+          style={styles.clearAllButton}
           onPress={handleClearAll}>
-          <Text
-            style={{
-              borderBottomWidth: 1,
-              borderBottomColor: theme.colors.textGray,
-              width: 70,
-            }}>
-            CLEAR ALL
-          </Text>
+          <Text style={styles.clearAllText}>CLEAR ALL</Text>
         </TouchableOpacity>
       </View>
 
@@ -98,7 +89,17 @@ const styles = StyleSheet.create({
     color: '#007BFF',
     fontWeight: 'bold',
   },
-
+  clearAllContainer: {
+    alignItems: 'flex-end',
+  },
+  clearAllButton: {
+    width: width * 0.27,
+  },
+  clearAllText: {
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.textGray,
+    width: 70,
+  },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',

@@ -101,7 +101,7 @@ const Account = ({navigation}) => {
               description="Manage your affiliate and wallet"
               onPress={() =>
                 navigation.navigate('AppStack', {
-                  screen: 'NotificationsScreen',
+                  screen: 'AffiliateAndWalletScreen',
                 })
               }
             />
@@ -112,7 +112,7 @@ const Account = ({navigation}) => {
               description="Reach out to customer service anytime"
               onPress={() =>
                 navigation.navigate('AppStack', {
-                  screen: 'NotificationsScreen',
+                  screen: 'AboutTheAppScreen',
                 })
               }
             />

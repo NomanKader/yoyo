@@ -1,17 +1,16 @@
 import React, { useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Image } from 'react-native'; // Import Image component
-import Icon from 'react-native-vector-icons/FontAwesome'; // Import Ionicons
+import { View, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import theme from '../style/colors';
-import { LanguageContext } from '../context/LanguageContext'; // Import LanguageContext
+import { LanguageContext } from '../context/LanguageContext';
 import AppStack from './AppStack';
 import Home from '../screens/Home/Home';
 import List from '../screens/List/List';
 import Bookmark from '../screens/Bookmark/Bookmark';
 import Account from '../screens/Account/Account';
 import Bookings from '../screens/Bookings/Bookings';
-
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -25,7 +24,7 @@ const TabScreens = () => {
 
   const tabNames = {
     Home: translate?.navigation?.Home,
-    List: translate?.navigation?.List,
+    Bookings: translate?.navigation?.Bookings,
     Bookmark: translate?.navigation?.Bookmark,
     Account: translate?.navigation?.Account,
   };
@@ -33,62 +32,52 @@ const TabScreens = () => {
   return (
     <Tab.Navigator
       initialRouteName='Home'
-      screenOptions={({route})=>({
+      screenOptions={({route}) => ({
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.textGray,
+        tabBarShowLabel: false,
         tabBarStyle: {
-          display: 'flex',
+          height: 60,
+          paddingHorizontal: 20,
+          backgroundColor: theme.colors.textLight,
+          borderTopWidth: 1,
+          borderTopColor: theme.colors.gridColor,
         },
-        tabBarLabelStyle: {
-          fontSize: 12,
-        },
-        tabBarIcon : ({color,size}) => {
-          let iconComponent;
+        tabBarIcon: ({focused, color, size}) => {
+          let iconName;
 
-          switch(route.name){
+          switch(route.name) {
             case 'Home':
-              iconComponent=(
-                <Icon 
-                  name='home'
-                  style={{fontSize:size,tintColor:color}}
-                />
-              );
-            break;
-
+              iconName = focused ? 'document' : 'document-outline';
+              break;
             case 'Bookings':
-              iconComponent=(
-                <Icon 
-                  name='list'
-                  style={{fontSize:size,tintColor:color}}
-                />
-              );
-            break;
-
+              iconName = focused ? 'home' : 'home-outline';
+              break;
             case 'Bookmark':
-              iconComponent=(
-                <Icon 
-                  name='bookmark'
-                  style={{fontSize:size,tintColor:color}}
-                />
-              );
-            break;
-
+              iconName = focused ? 'bookmark' : 'bookmark-outline';
+              break;
             case 'Account':
-              iconComponent=(
-                <Icon 
-                  name='user'
-                  style={{fontSize:size,tintColor:color}}
-                />
-              );
-            break;
+              iconName = focused ? 'person' : 'person-outline';
+              break;
             default:
-              iconComponent = null;
+              iconName = 'square';
           }
-          return (iconComponent)
 
+          return (
+            <View style={[
+              styles.iconContainer,
+              focused && styles.activeIconContainer
+            ]}>
+              <Icon 
+                name={iconName}
+                size={24}
+                color={color}
+                style={styles.icon}
+              />
+            </View>
+          );
         },
-        tabBarLabel: tabNames[route.name]
-      })}      
+      })}
     >      
       <Tab.Screen name="Home" component={Home} options={options} />
       <Tab.Screen name="Bookings" component={Bookings} options={options} />
@@ -97,6 +86,22 @@ const TabScreens = () => {
     </Tab.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+  },
+  activeIconContainer: {
+    backgroundColor: '#EBF4FF',
+  },
+  icon: {
+    marginBottom: 4,
+  },
+});
 
 const BottomTabStack = () => {
   return (
