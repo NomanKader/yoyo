@@ -3,14 +3,16 @@ import {useState} from 'react';
 import theme from '../../style/colors';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {FlatList} from 'react-native-gesture-handler';
-import TextInputComponent from '../../components/TextInput/TextInputComponent';
-import PhoneInputComponent from '../../components/TextInput/PhoneInputComponent';
-import DateInputComponent from '../../components/TextInput/DateInputComponent';
+import FormikTextInputComponent from '../../components/Formik/FormikTextInputComponent';
+import FormikPhoneInputComponent from '../../components/Formik/FormikPhoneInputComponent';
+import FormikDateInputComponent from '../../components/Formik/FormikDateInputComponent';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../../components/Divider/DividerComponent';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import DropdownPickerComponent from '../../components/Dropdown/DropdownPickerComponent';
 import {CommonStyles} from '../../style/CommonStyles';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 
 const {width, height} = Dimensions.get('window');
 
@@ -19,6 +21,7 @@ const ReservationForm = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [days, setDays] = useState(0);
+  const [dateOfArrival, setDateOfArrival] = useState(null);
   const [showLoading, setShowLoading] = useState(false);
 
   const [rtOpen, setRtOpen] = useState(false);
@@ -55,69 +58,97 @@ const ReservationForm = ({navigation}) => {
 
             <View style={CommonStyles.scrollViewContainer}>
               <View style={styles.container}>
-                <TextInputComponent
-                  label="Name"
-                  placeholder="Name..."
-                  value={name}
-                  onChangeText={setName}
-                  keyboardType=""
-                  isSecure={false}
-                />
+                <Formik
+                  initialValues={{
+                    name: '',
+                    email: '',
+                    phone: '',
+                    days: '',
+                  }}
+                  onSubmit={(values, {resetForm}) => {
+                    console.log(values);
+                    // navigation.navigate('OtpVerificationScreen');
+                  }}>
+                  {formikProps => (
+                    <>
+                      <FormikTextInputComponent
+                        label="Name"
+                        placeholder="Name..."
+                        value={name}
+                        onChangeText={setName}
+                        keyboardType=""
+                        isSecure={false}
+                        formikKey="name"
+                        formikProps={formikProps}
+                      />
 
-                <TextInputComponent
-                  label="Email Address"
-                  placeholder="Email..."
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  isSecure={false}
-                />
-                <PhoneInputComponent
-                  label="Phone Number"
-                  value={phone}
-                  onChange={setPhone}
-                />
+                      <FormikTextInputComponent
+                        label="Email Address"
+                        placeholder="Email..."
+                        value={email}
+                        onChangeText={setEmail}
+                        keyboardType="email-address"
+                        isSecure={false}
+                        formikKey="email"
+                        formikProps={formikProps}
+                      />
+                      <FormikPhoneInputComponent
+                        label="Phone Number"
+                        value={phone}
+                        onChange={setPhone}
+                        formikKey="phone"
+                        formikProps={formikProps}
+                      />
 
-                <Text style={CommonStyles.formLabel}>Room Type</Text>
-                <DropdownPickerComponent
-                  open={rtOpen}
-                  setOpen={setRtOpen}
-                  value={rtValue}
-                  setValue={setRtValue}
-                  items={roomTypes}
-                  setItems={setRoomTypes}
-                  placeholder="Select a room type"
-                />
+                      <Text style={CommonStyles.formLabel}>Room Type</Text>
+                      <DropdownPickerComponent
+                        open={rtOpen}
+                        setOpen={setRtOpen}
+                        value={rtValue}
+                        setValue={setRtValue}
+                        items={roomTypes}
+                        setItems={setRoomTypes}
+                        placeholder="Select a room type"
+                      />
 
-                <Text style={CommonStyles.formLabel}>Room Number</Text>
-                <DropdownPickerComponent
-                  open={rnOpen}
-                  setOpen={setRnOpen}
-                  value={rnValue}
-                  setValue={setRnValue}
-                  items={roomNumber}
-                  setItems={setRoomNumber}
-                  placeholder="Select a room number"
-                  containerStyle={styles.dropdownContainer}
-                />
+                      <Text style={CommonStyles.formLabel}>Room Number</Text>
+                      <DropdownPickerComponent
+                        open={rnOpen}
+                        setOpen={setRnOpen}
+                        value={rnValue}
+                        setValue={setRnValue}
+                        items={roomNumber}
+                        setItems={setRoomNumber}
+                        placeholder="Select a room number"
+                        containerStyle={styles.dropdownContainer}
+                      />
 
-                <TextInputComponent
-                  label="Number of days"
-                  placeholder="Number of days..."
-                  value={days}
-                  onChangeText={setDays}
-                  keyboardType="numeric"
-                  isSecure={false}
-                />
+                      <FormikTextInputComponent
+                        label="Number of days"
+                        placeholder="Number of days..."
+                        value={days}
+                        onChangeText={setDays}
+                        keyboardType="numeric"
+                        isSecure={false}
+                        formikKey="days"
+                        formikProps={formikProps}
+                      />
 
-                <DateInputComponent title="Date of arrival" />
+                      <FormikDateInputComponent
+                        title="Date of arrival"
+                        value={dateOfArrival}
+                        onChange={setDateOfArrival}
+                      />
+                    </>
+                  )}
+                </Formik>
 
                 <DefaultButtonComponent
                   title="Continue"
                   backgroundColor={theme.colors.primary}
                   onPress={() => {
                     navigation.navigate('AppStack', {
-                      screen: 'ReserveMethodScreen',
+                      screen: 'ReserveConfirmScreen',
                     });
                   }}
                   // onPress={() => Alert.alert('hi')}

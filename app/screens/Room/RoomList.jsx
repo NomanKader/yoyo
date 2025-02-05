@@ -17,17 +17,54 @@ import DefaultButtonComponent from '../../components/Button/DefaultButtonCompone
 import discountIcon from '../../assets/icons/discountIcon.png';
 import theme from '../../style/colors';
 import DummyData from '../../config/DummyData.json';
+import {useRoute} from '@react-navigation/native';
+import {availableRoomNumberSearch} from '../../services/RoomService';
 
 const RoomDetail = ({navigation}) => {
-  const [showLoading, setShowLoading] = useState(true);
+  const [showLoading, setShowLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [availableRooms, setAvailableRooms] = useState([]);
+
+  const route = useRoute();
+  const {room_type, hotelId} = route.params || {};
+
+  const fetchRoomNumbers = async () => {
+    try {
+      const response = await availableRoomNumberSearch(
+        room_type.roomTypeID,
+        hotelId,
+      );
+      console.log('fetchRoomNumbers:', JSON.stringify(response, null, 2));
+      if (response?.success === true && response.data?.length > 0) {
+        setAvailableRooms(response.data);
+      } else {
+        console.log('No available rooms found');
+        setAvailableRooms([]);
+      }
+    } catch (error) {
+      console.error('RoomDetail fetchRoomNumbers Error:', error);
+      throw error;
+    }
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowLoading(false), 2000);
+    if (showLoading) return;
+    setShowLoading(true);
+    try {
+      // fetchNearbyHotels();
+      // fetchBookmarkList();
+      fetchRoomNumbers();
+    } catch (error) {
+      console.error('RoomList useEffect Error:', error);
+      throw error;
+    } finally {
+      setShowLoading(false);
+    }
 
-    // Cleanup timer on unmount
-    return () => clearTimeout(timer);
-  });
+    return () => {
+      // Cleanup function to prevent double execution
+    };
+  }, []);
 
   if (showLoading) {
     return (
@@ -73,10 +110,15 @@ const RoomDetail = ({navigation}) => {
                   navigation={navigation}
                   carouselType="roomDetail"
                 />
-                <Text style={CommonStyles.subTitle}>Standard Rooms</Text>
+                <Text style={CommonStyles.subTitle}>
+                  {room_type.roomTypeName}
+                </Text>
                 <Text style={CommonStyles.text}>
-                  <Text style={styles.boldText}>50</Text> rooms,
-                  <Text style={styles.boldText}>20</Text> available rooms
+                  <Text style={styles.boldText}>7</Text> rooms,
+                  <Text style={styles.boldText}>
+                    {room_type.availableRoomCount}
+                  </Text>{' '}
+                  available rooms
                 </Text>
               </View>
 
@@ -113,12 +155,12 @@ const RoomDetail = ({navigation}) => {
               />
 
               <SeeMoreComponent
-                title="Avaliable Rooms(5)"
+                title={`Avaliable Rooms(${room_type.availableRoomCount})`}
                 onPress={() => navigation.navigate('RoomListAllScreen')}
               />
 
               <RoomCategoryListComponent
-                data={data2}
+                data={availableRooms}
                 navigation={navigation}
                 type=""
                 onPress={() => setVisible(true)}
@@ -144,6 +186,7 @@ const RoomDetail = ({navigation}) => {
                     onPress={() =>
                       navigation.navigate('AppStack', {
                         screen: 'ReservationFormScreen',
+                        params: {roomTypeId: room_type.roomTypeID, hotelId},
                       })
                     }
                   />

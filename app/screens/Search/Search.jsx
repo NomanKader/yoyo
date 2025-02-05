@@ -4,15 +4,16 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {CommonStyles} from '../../style/CommonStyles';
 import SearchAppBarComponent from '../../components/AppBar/SearchAppBarComponent';
 import {ScrollView} from 'react-native-gesture-handler';
-import HotelCardWithIcon from '../../components/Card/HotelCardWithIcon';
+import HotelRowWithIcon from '../../components/Card/HotelRowWithIcon';
 import BottomSheetComponent from '../../components/BottomSheet/BottomSheetComponent';
 import {RadioButton, TextInput} from 'react-native-paper';
 import {Button} from 'react-native-paper';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import theme from '../../style/colors';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
-import TextInputComponent from '../../components/TextInput/TextInputComponent';
+import FormikTextInputComponent from '../../components/Formik/FormikTextInputComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {hotelSearch, hotelFilterSearch} from '../../services/HotelService';
 
 const HotelTypeSelector = memo(function HotelTypeSelector({
   selectedType,
@@ -79,7 +80,7 @@ const RoomPriceSlider = ({minPrice, maxPrice, onPriceChange}) => (
   <View style={styles.sliderContainer}>
     <MultiSlider
       values={[minPrice, maxPrice]}
-      min={10000}
+      min={0}
       max={50000}
       step={1000}
       onValuesChange={onPriceChange}
@@ -100,8 +101,65 @@ const Search = ({navigation}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [hotelType, setHotelType] = useState('hotel');
   const [roomStyle, setRoomStyle] = useState('all');
-  const [minPrice, setMinPrice] = useState(10000);
+  const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(50000);
+  const [hotelName, setHotelName] = useState('');
+  const [hotels, setHotels] = useState([]);
+  const [showLoading, setShowLoading] = useState(true);
+
+  const fetchHotelFilterSearch = async () => {
+    let roomStyleId;
+    if (roomStyle == 'all') {
+      roomStyleId = 0;
+    } else if (roomStyle == 'standard') {
+      roomStyleId = 1;
+    } else if (roomStyle == 'suite') roomStyleId = 2;
+
+    try {
+      const response = await hotelFilterSearch(
+        hotelType,
+        roomStyleId || 0,
+        minPrice,
+        maxPrice,
+        hotelName || '',
+      );
+      console.log('fetchHotelFilterSearch', response.data);
+
+      if (response?.success === true && response.data?.length > 0) {
+        setHotels(response.data);
+      } else {
+        console.log('No bookmarks found');
+        setHotels([]);
+      }
+    } catch (error) {
+      console.error('fetchHotelFilterSearch error', error);
+      setHotels([]);
+      throw error;
+    }
+  };
+
+  const fetchSearchHotels = async searchHotelName => {
+    if (searchHotelName.trim() === '') {
+      console.log('Search query is empty');
+      return;
+    }
+
+    try {
+      const response = await hotelSearch(searchHotelName);
+      console.log('fetchNearbyHotels:', JSON.stringify(response, null, 2));
+      setHotels(response.data);
+      if (response?.success === true && response.data?.length > 0) {
+        setHotels(response.data);
+      } else {
+        console.log('No bookmarks found');
+        setHotels([]);
+      }
+    } catch (error) {
+      console.error('fetchNearbyHotels Error:', error);
+      setHotels([]);
+      throw error;
+    }
+  };
 
   const handlePriceChange = values => {
     setMinPrice(values[0]);
@@ -121,10 +179,13 @@ const Search = ({navigation}) => {
   return (
     <SafeAreaView style={CommonStyles.container}>
       <SearchAppBarComponent
+        searchQuery={hotelName}
+        onSearchChange={setHotelName}
         navigation={navigation}
+        onSearchPress={fetchSearchHotels}
         changeFilterVisible={handleOpen}
       />
-      <HotelCardWithIcon />
+      <HotelRowWithIcon hotels={hotels} navigation={navigation} />
       <BottomSheetComponent
         isVisible={isVisible}
         onClose={handleClose}
@@ -136,7 +197,13 @@ const Search = ({navigation}) => {
         />
         <View style={styles.searchRow}>
           <View style={styles.searchInputContainer}>
-            <TextInputComponent label="Search" />
+            {/* <FormikTextInputComponent label="Search" /> */}
+            <TextInput
+              style={styles.tInput}
+              placeholder="Search Hotel Name"
+              value={hotelName}
+              onChange={setHotelName}
+            />
           </View>
           <TouchableOpacity style={styles.mapIcon}>
             <Icon name="map-outline" size={20} color={theme.colors.textDark} />
@@ -153,7 +220,10 @@ const Search = ({navigation}) => {
           onPriceChange={handlePriceChange}
         />
         <DefaultButtonComponent
-          onPress={handleClose}
+          onPress={() => {
+            fetchHotelFilterSearch();
+            handleClose();
+          }}
           backgroundColor={theme.colors.primary}
           color={theme.colors.textLights}
           title="Apply Filter"
@@ -166,8 +236,18 @@ const Search = ({navigation}) => {
 export default Search;
 
 const styles = StyleSheet.create({
+  tInput: {
+    flex: 1, // Change from fixed width to flex
+    // width: width * 0.65,  // Remove this line
+    // height: 48,
+    paddingHorizontal: 10,
+    backgroundColor: '#F1F1F1',
+    color: '#02000A',
+    fontWeight: '500',
+  },
   sliderContainer: {
     marginVertical: 10,
+    width: '100%',
   },
   priceLabels: {
     flexDirection: 'row',
@@ -193,9 +273,9 @@ const styles = StyleSheet.create({
     height: 50,
   },
   mapIcon: {
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     marginHorizontal: 10,
-    height: 70,
+    // height: 70,
   },
   sectionTitle: {
     fontSize: 16,

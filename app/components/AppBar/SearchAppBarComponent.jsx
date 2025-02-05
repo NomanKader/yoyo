@@ -1,40 +1,67 @@
 // SearchAppBarComponent.jsx
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
-import { CommonStyles } from '../../style/CommonStyles';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+} from 'react-native';
+import {CommonStyles} from '../../style/CommonStyles';
 import backIcon from '../../assets/icons/backIcon.png';
 import theme from '../../style/colors';
 import Icon from 'react-native-vector-icons/Ionicons'; // Importing an icon from react-native-vector-icons
 
-const SearchAppBarComponent = ({ navigation, searchQuery, onSearchChange,changeFilterVisible }) => {
+const SearchAppBarComponent = ({
+  navigation,
+  searchQuery,
+  onSearchChange,
+  onSearchPress,
+  changeFilterVisible,
+}) => {
   return (
     <View style={styles.header}>
       <View style={styles.headerIcons}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={backIcon}
-            style={CommonStyles.appBarIcon}
-          />
+          <Image source={backIcon} style={CommonStyles.appBarIcon} />
         </TouchableOpacity>
         <Text style={styles.title}>Search</Text>
-        <TouchableOpacity onPress={() => {
-          navigation.navigate('AppStack',{screen:'MapScreen'})
-            console.log("Pressed")
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('AppStack', {screen: 'MapScreen'});
+            console.log('Pressed');
           }}>
-          <Icon name="map-outline" size={20} color={theme.colors.textDark} style={styles.searchIcon} />
-        </TouchableOpacity >
-        
+          <Icon
+            name="map-outline"
+            size={20}
+            color={theme.colors.textDark}
+            style={styles.searchIcon}
+          />
+        </TouchableOpacity>
       </View>
       <View style={styles.searchContainer}>
-        <Icon name="search" size={20} color={theme.colors.textDark} style={styles.searchIcon} />
+        <TouchableOpacity onPress={() => onSearchPress(searchQuery)}>
+          <Icon
+            name="search"
+            size={20}
+            color={theme.colors.textDark}
+            style={styles.searchIcon}
+          />
+        </TouchableOpacity>
         <TextInput
           style={styles.searchInput}
-          placeholder="Search by room no or status"
+          placeholder="Search by hotel"
           value={searchQuery}
           onChangeText={onSearchChange}
         />
         <TouchableOpacity onPress={changeFilterVisible}>
-          <Icon name="options-outline" size={20} color={theme.colors.textDark} style={styles.searchIcon} />
+          <Icon
+            name="options-outline"
+            size={20}
+            color={theme.colors.textDark}
+            style={styles.searchIcon}
+          />
         </TouchableOpacity>
       </View>
     </View>

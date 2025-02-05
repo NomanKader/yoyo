@@ -13,12 +13,14 @@ import React from 'react';
 import theme from '../style/colors';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
-import TextInputComponent from '../components/TextInput/TextInputComponent';
-import PhoneInputComponent from '../components/TextInput/PhoneInputComponent';
+import FormikTextInputComponent from '../components/Formik/FormikTextInputComponent';
+import FormikPhoneInputComponent from '../components/Formik/FormikPhoneInputComponent';
 import DetailAppBarComponent from '../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../components/Divider/DividerComponent';
 import DefaultButtonComponent from '../components/Button/DefaultButtonComponent';
 import {CommonStyles} from '../style/CommonStyles';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 
 const {width, height} = Dimensions.get('window');
 
@@ -70,66 +72,81 @@ const Register = ({navigation}) => {
             alt="Login image"
           />
           <View style={styles.fullWidth}>
-            <TextInputComponent
-              label="Username"
-              placeholder="Username..."
-              value={username}
-              onChangeText={setUsername}
-              keyboardType=""
-              isSecure={false}
-            />
-
-            <TextInputComponent
-              label="Email"
-              placeholder="Email..."
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              isSecure={false}
-            />
-            <PhoneInputComponent
-              label="Phone"
-              value={phone}
-              onChange={setPhone}
-            />
-
-            <TextInputComponent
-              label="Create Pin"
-              placeholder="Enter 4 digit pin..."
-              value={password}
-              onChangeText={setPassword}
-              keyboardType="numeric"
-              isSecure={false}
-            />
-
-            <TextInputComponent
-              label="Refferal code"
-              placeholder="Refferal code..."
-              value={refferCode}
-              onChangeText={setRefferCode}
-              keyboardType="numeric"
-              isSecure={false}
-            />
-
-            <Text style={[styles.createAccountText, styles.alignSelfEnd]}>
-              Already have an account?
-              <TouchableOpacity
-                onPress={() => navigation.navigate('LoginScreen')}>
-                <Text style={styles.signUpText}>Sign In</Text>
-              </TouchableOpacity>
-            </Text>
-
-            <DefaultButtonComponent
-              title="Register"
-              backgroundColor={theme.colors.primary}
-              onPress={() => {
-                navigation.navigate('OtpVerificationScreen');
+            <Formik
+              initialValues={{
+                username: '',
+                email: '',
+                phone: '',
+                pin: '',
+                refferCode: '',
               }}
-              color={theme.colors.textLight}
-              otherStyle={styles.registerButtonStyle}
-              otherTextStyle={styles.registerButtonTextStyle}
-              disable={isButtonDisabled || showLoading}
-            />
+              onSubmit={(values, {resetForm}) => {
+                console.log(values);
+                navigation.navigate('OtpVerificationScreen');
+              }}>
+              {formikProps => (
+                <>
+                  <FormikTextInputComponent
+                    label="Username"
+                    placeholder="Username..."
+                    formikKey="username"
+                    formikProps={formikProps}
+                    keyboardType=""
+                    isSecure={false}
+                  />
+
+                  <FormikTextInputComponent
+                    label="Email"
+                    placeholder="Email..."
+                    formikKey="email"
+                    formikProps={formikProps}
+                    keyboardType="email-address"
+                    isSecure={false}
+                  />
+                  <FormikPhoneInputComponent
+                    label="Phone"
+                    formikProps={formikProps}
+                    formikKey="phone"
+                  />
+
+                  <FormikTextInputComponent
+                    label="Create Pin"
+                    placeholder="Enter 4 digit pin..."
+                    formikKey="pin"
+                    formikProps={formikProps}
+                    keyboardType="numeric"
+                    isSecure={false}
+                  />
+
+                  <FormikTextInputComponent
+                    label="Refferal code"
+                    placeholder="Refferal code..."
+                    formikKey="refferCode"
+                    formikProps={formikProps}
+                    keyboardType="numeric"
+                    isSecure={false}
+                  />
+
+                  <Text style={[styles.createAccountText, styles.alignSelfEnd]}>
+                    Already have an account?
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate('LoginScreen')}>
+                      <Text style={styles.signUpText}>Sign In</Text>
+                    </TouchableOpacity>
+                  </Text>
+
+                  <DefaultButtonComponent
+                    title="Register"
+                    backgroundColor={theme.colors.primary}
+                    onPress={formikProps.handleSubmit}
+                    color={theme.colors.textLight}
+                    otherStyle={styles.registerButtonStyle}
+                    otherTextStyle={styles.registerButtonTextStyle}
+                    // disable={isButtonDisabled || showLoading}
+                  />
+                </>
+              )}
+            </Formik>
 
             {showLoading && <ActivityIndicator size="large" />}
           </View>

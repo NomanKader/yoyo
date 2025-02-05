@@ -17,8 +17,17 @@ const ReserveMethod = ({navigation}) => {
         icon="credit-card"
         title="Pay with debit card"
         description="Make instant payment with ATM "
+        //   onPress={() => {
+        //     navigation.navigate('AppStack', {screen: 'ReserveConfirmScreen'});
+        //   }
+        // }
         onPress={() => {
-          navigation.navigate('AppStack', {screen: 'ReserveConfirmScreen'});
+          // navigation.goBack();
+          navigation.push('AppStack', {
+            screen: 'ReserveConfirmScreen',
+            params: {showBottomTab: true},
+          });
+          console.log('Button Pressed');
         }}
       />
       <PaymentListComponent

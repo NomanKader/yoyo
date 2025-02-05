@@ -12,11 +12,13 @@ import React from 'react';
 import theme from '../style/colors';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
-import TextInputComponent from '../components/TextInput/TextInputComponent';
+import FormikTextInputComponent from '../components/Formik/FormikTextInputComponent';
 import DetailAppBarComponent from '../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../components/Divider/DividerComponent';
 import DefaultButtonComponent from '../components/Button/DefaultButtonComponent';
 import {CommonStyles} from '../style/CommonStyles';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 
 const {width, height} = Dimensions.get('window');
 
@@ -47,14 +49,26 @@ const OtpVerification = ({navigation}) => {
         <View style={CommonStyles.scrollViewContainer}>
           <View style={styles.fullWidth}>
             <View style={styles.inputContainer}>
-              <TextInputComponent
-                label="OTP Code"
-                placeholder="Enter 6 digit otp code..."
-                value={otp}
-                onChangeText={setOtp}
-                keyboardType=""
-                isSecure={false}
-              />
+              <Formik
+                initialValues={{otp: ''}}
+                onSubmit={(values, {resetForm}) => {
+                  console.log(values);
+                }}>
+                {formikProps => (
+                  <>
+                    <FormikTextInputComponent
+                      label="OTP Code"
+                      placeholder="Enter 6 digit otp code..."
+                      // value={otp}
+                      // onChangeText={setOtp}
+                      keyboardType=""
+                      isSecure={false}
+                      formikKey="otp"
+                      formikProps={formikProps}
+                    />
+                  </>
+                )}
+              </Formik>
             </View>
 
             {showLoading && <ActivityIndicator size="large" />}

@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Hotel from './Active';
 import Apartment from './Completed';
@@ -13,6 +13,7 @@ import AppBarComponent from '../../components/AppBar/AppBarComponent';
 import theme from '../../style/colors';
 import Active from './Active';
 import Completed from './Completed';
+import {bookingList} from '../../services/BookingService';
 
 const {width, height} = Dimensions.get('window');
 
@@ -62,6 +63,49 @@ const CustomTabBar = ({state, descriptors, navigation}) => {
 
 const TopBar = ({navigation}) => {
   const TopTab = createMaterialTopTabNavigator();
+  const [showLoading, setShowLoading] = useState(false);
+  const [bookings, setBookings] = useState([]);
+  const [olderBookings, setOlderBookings] = useState([]);
+  const [activeBookings, setActiveBookings] = useState([]);
+
+  const fetchBookingList = async () => {
+    if (showLoading) return;
+    setShowLoading(true);
+    try {
+      const response = await bookingList();
+      console.log('fetchBookingList:', JSON.stringify(response, null, 2));
+
+      console.log('Older Bookings:', olderBookings);
+      console.log('Active Bookings:', activeBookings);
+
+      if (response?.success === true && response.data?.length > 0) {
+        setBookings(response.data);
+
+        setOlderBookings(
+          response.data.filter(item => item.statusType === 'Older'),
+        );
+        setActiveBookings(
+          response.data.filter(item => item.statusType === 'Active'),
+        );
+      } else {
+        console.log('No bookmarks found');
+        setBookings([]);
+      }
+    } catch (error) {
+      console.error('fetchBookingList Error:', error);
+      setBookings([]);
+      throw error;
+    } finally {
+      setShowLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBookingList();
+    return () => {
+      // Cleanup function to prevent double execution
+    };
+  }, []);
 
   return (
     <>
@@ -76,8 +120,17 @@ const TopBar = ({navigation}) => {
         screenOptions={{
           swipeEnabled: false,
         }}>
-        <TopTab.Screen name="Active" component={Active} />
-        <TopTab.Screen name="Completed" component={Completed} />
+        <TopTab.Screen name="Active">
+          {() => (
+            <Active activeBookings={activeBookings} navigation={navigation} />
+          )}
+        </TopTab.Screen>
+        {/* <TopTab.Screen name="Completed" component={Completed} /> */}
+        <TopTab.Screen name="Completed">
+          {() => (
+            <Completed olderBookings={olderBookings} navigation={navigation} />
+          )}
+        </TopTab.Screen>
       </TopTab.Navigator>
     </>
   );

@@ -61,7 +61,7 @@ const ReserveConfirm = ({navigation, route}) => {
             title="Confirm"
             onPress={() => {
               navigation.navigate('AppStack', {
-                screen: 'ReserveSuccessfulScreen',
+                screen: 'ReserveMethodScreen',
               });
             }}
             backgroundColor={theme.colors.info}

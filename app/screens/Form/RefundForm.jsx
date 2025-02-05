@@ -3,15 +3,17 @@ import {useState} from 'react';
 import theme from '../../style/colors';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {FlatList} from 'react-native-gesture-handler';
-import TextInputComponent from '../../components/TextInput/TextInputComponent';
-import PhoneInputComponent from '../../components/TextInput/PhoneInputComponent';
-import DateInputComponent from '../../components/TextInput/DateInputComponent';
+import FormikTextInputComponent from '../../components/Formik/FormikTextInputComponent';
+import FormikPhoneInputComponent from '../../components/Formik/FormikPhoneInputComponent';
+import FormikDateInputComponent from '../../components/Formik/FormikDateInputComponent';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../../components/Divider/DividerComponent';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import DropdownPickerComponent from '../../components/Dropdown/DropdownPickerComponent';
 import {CommonStyles} from '../../style/CommonStyles';
-import TextAreaComponent from '../../components/TextInput/TextAreaComponent';
+import FormikTextAreaComponent from '../../components/Formik/FormikTextAreaComponent';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 
 const {width, height} = Dimensions.get('window');
 
@@ -56,61 +58,84 @@ const RefundForm = ({navigation}) => {
 
             <View style={CommonStyles.scrollViewContainer}>
               <View style={styles.container}>
-                <TextInputComponent
-                  label="Name"
-                  placeholder="Name..."
-                  value={name}
-                  onChangeText={setName}
-                  keyboardType=""
-                  isSecure={false}
-                />
+                <Formik
+                  initialValues={{
+                    name: '',
+                    email: '',
+                    phone: '',
+                  }}
+                  onSubmit={(values, {resetForm}) => {
+                    console.log(values);
+                    // navigation.navigate('OtpVerificationScreen');
+                  }}>
+                  {formikProps => (
+                    <>
+                      <FormikTextInputComponent
+                        label="Name"
+                        placeholder="Name..."
+                        value={name}
+                        onChangeText={setName}
+                        keyboardType=""
+                        isSecure={false}
+                        formikKey="name"
+                        formikProps={formikProps}
+                      />
 
-                <TextInputComponent
-                  label="Email Address"
-                  placeholder="Email..."
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  isSecure={false}
-                />
-                <PhoneInputComponent
-                  label="Phone Number"
-                  value={phone}
-                  onChange={setPhone}
-                />
+                      <FormikTextInputComponent
+                        label="Email Address"
+                        placeholder="Email..."
+                        value={email}
+                        onChangeText={setEmail}
+                        keyboardType="email-address"
+                        isSecure={false}
+                        formikKey="email"
+                        formikProps={formikProps}
+                      />
+                      <FormikPhoneInputComponent
+                        label="Phone Number"
+                        value={phone}
+                        onChange={setPhone}
+                        formikKey="phone"
+                        formikProps={formikProps}
+                      />
 
-                <Text style={CommonStyles.formLabel}>Room Type</Text>
-                <DropdownPickerComponent
-                  open={rtOpen}
-                  setOpen={setRtOpen}
-                  value={rtValue}
-                  setValue={setRtValue}
-                  items={roomTypes}
-                  setItems={setRoomTypes}
-                  placeholder="Select a room type"
-                />
+                      <Text style={CommonStyles.formLabel}>Room Type</Text>
+                      <DropdownPickerComponent
+                        open={rtOpen}
+                        setOpen={setRtOpen}
+                        value={rtValue}
+                        setValue={setRtValue}
+                        items={roomTypes}
+                        setItems={setRoomTypes}
+                        placeholder="Select a room type"
+                      />
 
-                <Text style={CommonStyles.formLabel}>Room Number</Text>
-                <DropdownPickerComponent
-                  open={rnOpen}
-                  setOpen={setRnOpen}
-                  value={rnValue}
-                  setValue={setRnValue}
-                  items={roomNumber}
-                  setItems={setRoomNumber}
-                  placeholder="Select a room number"
-                  containerStyle={styles.dropdownContainer}
-                />
+                      <Text style={CommonStyles.formLabel}>Room Number</Text>
+                      <DropdownPickerComponent
+                        open={rnOpen}
+                        setOpen={setRnOpen}
+                        value={rnValue}
+                        setValue={setRnValue}
+                        items={roomNumber}
+                        setItems={setRoomNumber}
+                        placeholder="Select a room number"
+                        containerStyle={styles.dropdownContainer}
+                      />
 
-                <Text style={CommonStyles.formLabel}>Refund description</Text>
-                <TextAreaComponent
-                  value={description}
-                  onChangeText={setDescription}
-                  placeholder=""
-                  numberOfLines={4}
-                  // backgroundColor = '#F5F5F5'
-                  borderRadius={10}
-                />
+                      <Text style={CommonStyles.formLabel}>
+                        Refund description
+                      </Text>
+                      <FormikTextAreaComponent
+                        value={description}
+                        onChangeText={setDescription}
+                        placeholder=""
+                        numberOfLines={4}
+                        // backgroundColor = '#F5F5F5'
+                        borderRadius={10}
+                      />
+                    </>
+                  )}
+                </Formik>
 
                 <DefaultButtonComponent
                   title="Request refund"

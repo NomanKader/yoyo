@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
-import TextInputComponent from '../TextInput/TextInputComponent';
+import FormikTextInputComponent from '../Formik/FormikTextInputComponent';
 
-const TypoInfoComponent = ({icon, label, backgroundColor = '#F5F5F5'}) => {    
+const TypoInfoComponent = ({icon, label, backgroundColor = '#F5F5F5'}) => {
   return (
     <View style={[styles.container, {backgroundColor}]}>
       <Image source={icon} style={styles.icon} />
-      <Text style={styles.label}>{label}</Text>     
+      <Text style={styles.label}>{label}</Text>
     </View>
   );
 };

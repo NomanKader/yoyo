@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View, StyleSheet } from 'react-native';
+import React, {useContext} from 'react';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {View, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import theme from '../style/colors';
-import { LanguageContext } from '../context/LanguageContext';
+import {LanguageContext} from '../context/LanguageContext';
 import AppStack from './AppStack';
 import Home from '../screens/Home/Home';
 import List from '../screens/List/List';
@@ -20,7 +20,7 @@ const options = {
 };
 
 const TabScreens = () => {
-  const { translate } = useContext(LanguageContext);
+  const {translate} = useContext(LanguageContext);
 
   const tabNames = {
     Home: translate?.navigation?.Home,
@@ -31,7 +31,7 @@ const TabScreens = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName='Home'
+      initialRouteName="Home"
       screenOptions={({route}) => ({
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.textGray,
@@ -46,12 +46,12 @@ const TabScreens = () => {
         tabBarIcon: ({focused, color, size}) => {
           let iconName;
 
-          switch(route.name) {
+          switch (route.name) {
             case 'Home':
-              iconName = focused ? 'document' : 'document-outline';
+              iconName = focused ? 'home' : 'home-outline';
               break;
             case 'Bookings':
-              iconName = focused ? 'home' : 'home-outline';
+              iconName = focused ? 'document' : 'document-outline';
               break;
             case 'Bookmark':
               iconName = focused ? 'bookmark' : 'bookmark-outline';
@@ -64,11 +64,12 @@ const TabScreens = () => {
           }
 
           return (
-            <View style={[
-              styles.iconContainer,
-              focused && styles.activeIconContainer
-            ]}>
-              <Icon 
+            <View
+              style={[
+                styles.iconContainer,
+                focused && styles.activeIconContainer,
+              ]}>
+              <Icon
                 name={iconName}
                 size={24}
                 color={color}
@@ -77,8 +78,7 @@ const TabScreens = () => {
             </View>
           );
         },
-      })}
-    >      
+      })}>
       <Tab.Screen name="Home" component={Home} options={options} />
       <Tab.Screen name="Bookings" component={Bookings} options={options} />
       <Tab.Screen name="Bookmark" component={Bookmark} options={options} />
@@ -105,9 +105,17 @@ const styles = StyleSheet.create({
 
 const BottomTabStack = () => {
   return (
-    <Stack.Navigator initialRouteName='TabScreen'>
-      <Stack.Screen name="TabScreen" component={TabScreens} options={{ headerShown: false }} />
-      <Stack.Screen name="AppStack" component={AppStack} options={{ headerShown: false }} />
+    <Stack.Navigator initialRouteName="TabScreen">
+      <Stack.Screen
+        name="TabScreen"
+        component={TabScreens}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AppStack"
+        component={AppStack}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };

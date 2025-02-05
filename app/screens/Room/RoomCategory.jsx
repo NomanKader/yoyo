@@ -10,28 +10,76 @@ import SeeMoreComponent from '../../components/screen/SeeMoreComponent';
 import BookingSkeletonComponent from '../../components/Skeleton/BookingSkeletonComponent';
 import DummyData from '../../config/DummyData.json';
 import {FlatList} from 'react-native-gesture-handler';
-import DateInputComponent from '../../components/TextInput/DateInputComponent';
+import FormikDateInputComponent from '../../components/Formik/FormikDateInputComponent';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import theme from '../../style/colors';
+import {useRoute} from '@react-navigation/native';
+import {availableRoomTypeSearch} from '../../services/RoomService';
 
 const RoomCategory = ({navigation}) => {
-  const [showLoading, setShowLoading] = useState(true);
+  const [showLoading, setShowLoading] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [roomTypes, setRoomTypes] = useState([]);
+
+  const route = useRoute();
+  const {hotel, id} = route.params || {};
+  console.log('hotelId:', id);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowLoading(false), 2000);
-
     // Cleanup timer on unmount
-    return () => clearTimeout(timer);
-  });
+    return () => {
+      // Cleanup function to prevent double execution
+    };
+  }, []);
 
   const data = DummyData.data;
 
   const data2 = DummyData.data2;
 
+  const formatDate = date => {
+    const fomattedDate = date
+      ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+          2,
+          '0',
+        )}-${String(date.getDate()).padStart(2, '0')}`
+      : date;
+    return fomattedDate;
+  };
+
+  const availableRoomSearch = async () => {
+    setShowLoading(true);
+    console.log(
+      'start Date:',
+      formatDate(startDate),
+      'end Date:',
+      formatDate(endDate),
+    );
+    try {
+      const response = await availableRoomTypeSearch(
+        id,
+        formatDate(startDate),
+        formatDate(endDate),
+      );
+      console.log('availableRoomSearch:', response);
+      if (response?.success === true && response.data?.length > 0) {
+        setRoomTypes(response.data);
+      }
+    } catch (error) {
+      console.error('availableRoomSearch Error:', error);
+      setRoomTypes([]);
+    } finally {
+      setShowLoading(false);
+    }
+  };
+
   if (showLoading) {
     return (
       <>
-        <DetailAppBarComponent title="" navigation={navigation} />
+        <DetailAppBarComponent
+          title={hotel.hotelName}
+          navigation={navigation}
+        />
         <BookingSkeletonComponent />
       </>
     );
@@ -40,7 +88,10 @@ const RoomCategory = ({navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={CommonStyles.container}>
-        <DetailAppBarComponent title="" navigation={navigation} />
+        <DetailAppBarComponent
+          title={hotel.hotelName}
+          navigation={navigation}
+        />
         <DividerComponent />
         <FlatList
           ListHeaderComponent={
@@ -52,24 +103,34 @@ const RoomCategory = ({navigation}) => {
                   navigation={navigation}
                   carouselType="roomList"
                 />
-                <Text style={CommonStyles.subTitle}>A Hotels</Text>
-                <Text style={CommonStyles.text}>
-                  120 Baho Road,Hlaing, Yangon
+                <Text style={CommonStyles.subTitle}>{hotel.hotelName}</Text>
+                <Text style={CommonStyles.text}>{hotel.address}</Text>
+                <Text style={[styles.text, styles.t20]}>
+                  {hotel.description}
                 </Text>
 
                 <View style={styles.t20}>
                   <Text>Choose Booking Date</Text>
                   <View style={styles.row}>
                     <View style={styles.dateCont}>
-                      <DateInputComponent title="Start Date" />
+                      <FormikDateInputComponent
+                        title="Start Date"
+                        value={startDate}
+                        valueChange={setStartDate}
+                      />
                     </View>
                     <View style={styles.dateCont}>
-                      <DateInputComponent title="End Date" />
+                      <FormikDateInputComponent
+                        title="End Date"
+                        value={endDate}
+                        valueChange={setEndDate}
+                      />
                     </View>
                   </View>
                   <DefaultButtonComponent
                     title="Search"
                     backgroundColor={theme.colors.primary}
+                    onPress={availableRoomSearch}
                   />
                 </View>
               </View>
@@ -79,12 +140,11 @@ const RoomCategory = ({navigation}) => {
                 onPress={() => navigation.navigate('RoomCategoryAllScreen')}
               />
               <RoomCategoryListComponent
-                data={data2}
+                data={roomTypes}
                 navigation={navigation}
                 type="category"
-                onPress={() =>
-                  navigation.navigate('AppStack', {screen: 'RoomListScreen'})
-                }
+                hotelId={id}
+                onPress={() => {}}
               />
             </>
           }
@@ -108,5 +168,9 @@ const styles = StyleSheet.create({
   },
   t20: {
     marginTop: 20,
+  },
+  text: {
+    fontSize: 16,
+    color: theme.colors.textDark,
   },
 });

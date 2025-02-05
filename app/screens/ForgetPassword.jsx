@@ -11,11 +11,13 @@ import React from 'react';
 import theme from '../style/colors';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
-import TextInputComponent from '../components/TextInput/TextInputComponent';
+import FormikTextInputComponent from '../components/Formik/FormikTextInputComponent';
 import DetailAppBarComponent from '../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../components/Divider/DividerComponent';
 import DefaultButtonComponent from '../components/Button/DefaultButtonComponent';
 import {CommonStyles} from '../style/CommonStyles';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 
 const {width, height} = Dimensions.get('window');
 
@@ -47,14 +49,24 @@ const ForgetPassword = ({navigation}) => {
               Please enter your email address to reset your pincode
             </Text>
             <View style={styles.inputContainer}>
-              <TextInputComponent
-                label=""
-                placeholder="Enter email address..."
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                isSecure={false}
-              />
+              <Formik
+                initialValues={{otp: ''}}
+                onSubmit={(values, {resetForm}) => {
+                  console.log(values);
+                }}>
+                {formikProps => (
+                  <>
+                    <FormikTextInputComponent
+                      label=""
+                      placeholder="Enter email address..."
+                      keyboardType="email-address"
+                      isSecure={false}
+                      formikKey="otp"
+                      formikProps={formikProps}
+                    />
+                  </>
+                )}
+              </Formik>
             </View>
 
             {showLoading && <ActivityIndicator size="large" />}

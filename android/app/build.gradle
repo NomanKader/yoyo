@@ -46,11 +46,17 @@ android {
     }
 
     signingConfigs {
-        debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+        // debug {
+        //     storeFile file('debug.keystore')
+        //     storePassword 'android'
+        //     keyAlias 'androiddebugkey'
+        //     keyPassword 'android'
+        // }
+        release {
+            storeFile file('my-release-key.jks')
+            storePassword '12345678'
+            keyAlias 'my-key-alias'
+            keyPassword '12345678'
         }
     }
 
@@ -58,12 +64,17 @@ android {
         debug {
             signingConfig signingConfigs.debug
         }
+        // release {
+        //     signingConfig signingConfigs.debug
+        //     minifyEnabled true
+        //     shrinkResources enableShrinkResources
+        //     proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        //     debuggable false
+        // }
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled true
-            shrinkResources enableShrinkResources
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 

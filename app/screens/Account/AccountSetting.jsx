@@ -4,8 +4,8 @@ import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {CommonStyles} from '../../style/CommonStyles';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../../components/Divider/DividerComponent';
-import TextInputComponent from '../../components/TextInput/TextInputComponent';
-import PhoneInputComponent from '../../components/TextInput/PhoneInputComponent';
+import FormikTextInputComponent from '../../components/Formik/FormikTextInputComponent';
+import FormikPhoneInputComponent from '../../components/Formik/FormikPhoneInputComponent';
 import theme from '../../style/colors';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 
@@ -26,7 +26,7 @@ const AccountSetting = ({navigation}) => {
       <DividerComponent />
 
       <View style={CommonStyles.scrollViewContainer}>
-        <TextInputComponent
+        <FormikTextInputComponent
           label="Full Name"
           placeholder="Tun Tun"
           value={name}
@@ -34,7 +34,7 @@ const AccountSetting = ({navigation}) => {
           keyboardType=""
           isSecure={false}
         />
-        <TextInputComponent
+        <FormikTextInputComponent
           label="Email Address"
           placeholder="Email address..."
           value={email}
@@ -42,10 +42,14 @@ const AccountSetting = ({navigation}) => {
           keyboardType="email-address"
           isSecure={false}
         />
-        <PhoneInputComponent label="Phone" value={phone} onChange={setPhone} />
+        <FormikPhoneInputComponent
+          label="Phone"
+          value={phone}
+          onChange={setPhone}
+        />
         <View style={styles.passwordContainer}>
           <View style={styles.passwordInput}>
-            <TextInputComponent
+            <FormikTextInputComponent
               label="Passwords"
               placeholder="000 000 000 000"
               value={password}

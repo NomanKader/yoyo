@@ -25,6 +25,7 @@ const theme = {
     chipBackgroundColor: '#7FE1F8',
     labelColor: '#001529',
     bookingTabBarColor: '#F7F7F7',
+    danger: 'red',
   },
   status: {
     backgroundColor: '#F7F7F7',

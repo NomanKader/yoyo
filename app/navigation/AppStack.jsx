@@ -78,15 +78,16 @@ const AppStack = () => {
         options={hiddenHeaderOptions}
       />
       <Stack.Screen
-        name="ReserveMethodScreen"
-        component={ReserveMethod}
-        options={hiddenHeaderOptions}
-      />
-      <Stack.Screen
         name="ReserveConfirmScreen"
         component={ReserveConfirm}
         options={hiddenHeaderOptions}
       />
+      <Stack.Screen
+        name="ReserveMethodScreen"
+        component={ReserveMethod}
+        options={hiddenHeaderOptions}
+      />
+
       <Stack.Screen
         name="ReserveSuccessfulScreen"
         component={ReserveSuccessful}

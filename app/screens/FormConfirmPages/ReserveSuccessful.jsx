@@ -1,21 +1,31 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ImageBackground,
+  Dimensions,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Make sure to install and link FontAwesome
-import buildingImg from '../../assets/images/buildings.png'
+import buildingImg from '../../assets/images/buildings.png';
 import theme from '../../style/colors';
-import { CommonStyles } from '../../style/CommonStyles';
+import {CommonStyles} from '../../style/CommonStyles';
 
-  const {width} = Dimensions.get('window')
+const {width} = Dimensions.get('window');
 
 const ReservationComplete = ({navigation}) => {
   return (
     <View style={CommonStyles.container}>
-      <ImageBackground 
-        source={buildingImg} 
+      <ImageBackground
+        source={buildingImg}
         style={styles.backgroundImage}
-        resizeMode="cover"
-      >
-        <TouchableOpacity style={styles.cross} onPress={() => navigation.navigate('AppStack', { screen: 'CheckInDetailScreen' })}>
+        resizeMode="cover">
+        <TouchableOpacity
+          style={styles.cross}
+          onPress={() =>
+            navigation.navigate('AppStack', {screen: 'CheckInDetailScreen'})
+          }>
           <Icon name="times" size={28} color={theme.colors.textLight} />
         </TouchableOpacity>
         <View style={styles.content}>
@@ -24,18 +34,21 @@ const ReservationComplete = ({navigation}) => {
           </View>
           <Text style={styles.title}>Reservation Successful</Text>
           <Text style={styles.subtitle}>
-            Reservation for <Text style={styles.boldText}>Room 406</Text> is successful and the {' '}
-            ID is <Text style={styles.boldText}>CAL7396748</Text>
+            Reservation for <Text style={styles.boldText}>Room 406</Text> is
+            successful and the ID is{' '}
+            <Text style={styles.boldText}>CAL7396748</Text>
           </Text>
         </View>
-        <TouchableOpacity style={styles.button} onPress={() => {
-          // navigation.goBack();
-          navigation.push('AppStack', { 
-            screen: 'ReserveConfirmScreen', 
-            params : {showBottomTab:true} 
-          });
-          console.log("Button Pressed");
-        }}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            // navigation.goBack();
+            navigation.push('AppStack', {
+              screen: 'PaymentCompleteScreen',
+              params: {showBottomTab: true},
+            });
+            console.log('Button Pressed');
+          }}>
           <Text style={styles.buttonText}>Confirm Payment</Text>
         </TouchableOpacity>
       </ImageBackground>
@@ -44,12 +57,11 @@ const ReservationComplete = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  
   backgroundImage: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:theme.colors.primary
+    backgroundColor: theme.colors.primary,
   },
   content: {
     justifyContent: 'center',
@@ -81,8 +93,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.textLight,
     paddingVertical: 15,
     paddingHorizontal: 40,
-    width: width*0.8,
-    alignItems:'center',
+    width: width * 0.8,
+    alignItems: 'center',
     borderRadius: 10,
     position: 'absolute',
     bottom: 50,
@@ -92,11 +104,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  cross:{
-    alignSelf:'flex-end',
-    marginRight:20,
-    marginTop:20
-  }
+  cross: {
+    alignSelf: 'flex-end',
+    marginRight: 20,
+    marginTop: 20,
+  },
 });
 
 export default ReservationComplete;

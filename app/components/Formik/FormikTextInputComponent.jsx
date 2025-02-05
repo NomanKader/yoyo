@@ -9,29 +9,49 @@ import {
 } from 'react-native';
 import theme from '../../style/colors';
 import Icon from 'react-native-vector-icons/Ionicons'; // Make sure to install this or use any icon library of your choice
+import {CommonStyles} from '../../style/CommonStyles';
 
 const {width, height} = Dimensions.get('window');
 
-const TextInputComponent = ({
+const FormikTextInputComponent = ({
   label,
   placeholder,
   value,
   onChangeText,
   keyboardType,
   isSecure,
+  formikProps,
+  formikKey,
+  required = false,
 }) => {
+  const hasError =
+    formikProps.touched[formikKey] && formikProps.errors[formikKey];
+
+  const onTextChange = value => {
+    formikProps.setFieldValue(formikKey, value);
+    if (onChangeText) {
+      onChangeText(value);
+    }
+  };
+
   const [isPasswordVisible, setIsPasswordVisible] = useState(!isSecure); // State to toggle password visibility
 
   return (
-    <View style={styles.container}>
-      {label && <Text style={styles.label}>{label}</Text>}
-      <View style={styles.inputContainer}>
+    <View style={[styles.container]}>
+      {label && (
+        <Text style={styles.label}>
+          {label}
+          {required && <Text style={styles.asterisk}> *</Text>}
+        </Text>
+      )}
+      <View style={[styles.inputContainer, hasError && CommonStyles.error]}>
         <TextInput
           keyboardType={keyboardType}
-          style={styles.input}
+          style={[styles.input, hasError && styles.errorInput]}
           placeholder={placeholder}
-          value={value}
-          onChangeText={onChangeText}
+          value={formikProps.values[formikKey] || ''}
+          onChangeText={onTextChange}
+          onBlur={formikProps.handleBlur(formikKey)}
           placeholderTextColor={theme.colors.textInputColor}
           autoCapitalize="none"
           secureTextEntry={isSecure && !isPasswordVisible} // Only set secureTextEntry if isSecure is true
@@ -48,6 +68,9 @@ const TextInputComponent = ({
           </TouchableOpacity>
         )}
       </View>
+      {hasError && (
+        <Text style={styles.errorText}>{formikProps.errors[formikKey]}</Text>
+      )}
     </View>
   );
 };
@@ -81,9 +104,20 @@ const styles = StyleSheet.create({
     color: '#02000A',
     fontWeight: '500',
   },
+  errorInput: {
+    borderColor: '#F44336',
+  },
   eyeIcon: {
     paddingHorizontal: 10,
   },
+  asterisk: {
+    color: 'red',
+  },
+  errorText: {
+    color: '#F44336',
+    fontSize: 12,
+    marginTop: 4,
+  },
 });
 
-export default TextInputComponent;
+export default FormikTextInputComponent;

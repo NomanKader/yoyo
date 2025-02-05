@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet,Image, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import theme from '../../style/colors';
 import Icon from 'react-native-vector-icons/Ionicons'; // Make sure to install this or use any icon library of your choice
-import PaymentIcon from '../../assets/images/paymentIcon.png'
+import PaymentIcon from '../../assets/images/paymentIcon.png';
 
-const TextIconInputComponent = ({ label, placeholder, value, onChangeText, keyboardType }) => {
-  
-
+const FormikTextIconInputComponent = ({
+  label,
+  placeholder,
+  value,
+  onChangeText,
+  keyboardType,
+  formikProps,
+  formikKey,
+}) => {
   return (
-    
     <View style={styles.container}>
-        
       {label && <Text style={styles.label}>{label}</Text>}
-      
+
       <View style={styles.inputContainer}>
         <Image source={PaymentIcon} style={styles.img} />
         <TextInput
@@ -23,9 +34,7 @@ const TextIconInputComponent = ({ label, placeholder, value, onChangeText, keybo
           onChangeText={onChangeText}
           placeholderTextColor={theme.colors.textInputColor}
           autoCapitalize="none"
-          
         />
-        
       </View>
     </View>
   );
@@ -61,11 +70,11 @@ const styles = StyleSheet.create({
   eyeIcon: {
     paddingHorizontal: 10,
   },
-  img : {
-    width:60,
-    height:30,
-    marginRight:15
-  }
+  img: {
+    width: 60,
+    height: 30,
+    marginRight: 15,
+  },
 });
 
-export default TextIconInputComponent;
+export default FormikTextIconInputComponent;

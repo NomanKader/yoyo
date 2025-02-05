@@ -11,7 +11,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {CommonStyles} from '../../style/CommonStyles';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../../components/Divider/DividerComponent';
-import TextInputComponent from '../../components/TextInput/TextInputComponent';
+import FormikTextInputComponent from '../../components/Formik/FormikTextInputComponent';
 import theme from '../../style/colors';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 
@@ -28,7 +28,7 @@ const UpdatePassword = ({navigation}) => {
       <DividerComponent />
 
       <View style={CommonStyles.scrollViewContainer}>
-        <TextInputComponent
+        <FormikTextInputComponent
           label="Old Password"
           placeholder="Enter old password..."
           value={oldPassword}
@@ -36,7 +36,7 @@ const UpdatePassword = ({navigation}) => {
           keyboardType="numeric"
           isSecure={true}
         />
-        <TextInputComponent
+        <FormikTextInputComponent
           label="New Password"
           placeholder="Enter new password..."
           value={newPassword}
@@ -44,7 +44,7 @@ const UpdatePassword = ({navigation}) => {
           keyboardType="numeric"
           isSecure={true}
         />
-        <TextInputComponent
+        <FormikTextInputComponent
           label="Verify New Password"
           placeholder="Re-enter new password..."
           value={verifyNewPassword}

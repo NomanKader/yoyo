@@ -1,8 +1,13 @@
-import { View, TextInput, StyleSheet } from 'react-native';
+import {View, TextInput, StyleSheet} from 'react-native';
 
-const TextAreaComponent = ({ backgroundColor = '#EEEEEE', placeholder, value, onChange }) => {
+const FormikTextAreaComponent = ({
+  backgroundColor = '#EEEEEE',
+  placeholder,
+  value,
+  onChange,
+}) => {
   return (
-    <View style={[styles.container, { backgroundColor }]}>
+    <View style={[styles.container, {backgroundColor}]}>
       <TextInput
         style={styles.textArea}
         placeholder={placeholder}
@@ -28,4 +33,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TextAreaComponent;
+export default FormikTextAreaComponent;

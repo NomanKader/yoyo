@@ -3,14 +3,16 @@ import {useState} from 'react';
 import theme from '../../style/colors';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {FlatList, ScrollView} from 'react-native-gesture-handler';
-import TextIconInputComponent from '../../components/TextInput/TextIconInputComponent';
-import TextInputComponent from '../../components/TextInput/TextInputComponent';
-import DateInputComponent from '../../components/TextInput/DateInputComponent';
+import FormikTextIconInputComponent from '../../components/Formik/FormikTextIconInputComponent';
+import FormikTextInputComponent from '../../components/Formik/FormikTextInputComponent';
+import FormikDateInputComponent from '../../components/Formik/FormikDateInputComponent';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../../components/Divider/DividerComponent';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import {CommonStyles} from '../../style/CommonStyles';
 import LeftRightText from '../../components/ConfirmPage/LeftRightText';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 
 const {width, height} = Dimensions.get('window');
 
@@ -34,42 +36,64 @@ const PaymentForm = ({navigation}) => {
 
             <View style={CommonStyles.scrollViewContainer}>
               <View style={styles.container}>
-                <TextInputComponent
-                  label="Name on card"
-                  placeholder="Enter Name"
-                  value={name}
-                  onChangeText={setName}
-                  keyboardType=""
-                  isSecure={false}
-                />
+                <Formik
+                  initialValues={{
+                    name: '',
+                    ccv: '',
+                  }}
+                  onSubmit={(values, {resetForm}) => {
+                    console.log(values);
+                    // navigation.navigate('OtpVerificationScreen');
+                  }}>
+                  {formikProps => (
+                    <>
+                      <FormikTextInputComponent
+                        label="Name on card"
+                        placeholder="Enter Name"
+                        value={name}
+                        onChangeText={setName}
+                        keyboardType=""
+                        isSecure={false}
+                        formikKey="name"
+                        formikProps={formikProps}
+                      />
 
-                <TextIconInputComponent
-                  label="Card Number"
-                  placeholder="xxxx xxxx xxxx xxxx"
-                  value={card}
-                  onChangeText={setCard}
-                  keyboardType="numeric"
-                  isSecure={false}
-                />
+                      <FormikTextIconInputComponent
+                        label="Card Number"
+                        placeholder="xxxx xxxx xxxx xxxx"
+                        value={card}
+                        onChangeText={setCard}
+                        keyboardType="numeric"
+                        isSecure={false}
+                      />
 
-                {/* <Text style={CommonStyles.formLabel}>Room Number</Text> */}
+                      {/* <Text style={CommonStyles.formLabel}>Room Number</Text> */}
 
-                <View style={styles.cvvDateContainer}>
-                  <View style={styles.cvvInput}>
-                    <TextInputComponent
-                      label="CVV"
-                      placeholder="CVV..."
-                      value={CVV}
-                      onChangeText={setCVV}
-                      keyboardType="numeric"
-                      isSecure={false}
-                    />
-                  </View>
+                      <View style={styles.cvvDateContainer}>
+                        <View style={styles.cvvInput}>
+                          <FormikTextInputComponent
+                            label="CVV"
+                            placeholder="CVV..."
+                            value={CVV}
+                            onChangeText={setCVV}
+                            keyboardType="numeric"
+                            isSecure={false}
+                            formikKey="ccv"
+                            formikProps={formikProps}
+                          />
+                        </View>
 
-                  <View style={styles.dateInput}>
-                    <DateInputComponent title="Date of arrival" />
-                  </View>
-                </View>
+                        <View style={styles.dateInput}>
+                          <FormikDateInputComponent
+                            title="Expire date"
+                            value={expireDate}
+                            onChange={setExpireDate}
+                          />
+                        </View>
+                      </View>
+                    </>
+                  )}
+                </Formik>
 
                 {showLoading && <ActivityIndicator size="large" />}
               </View>
@@ -83,7 +107,10 @@ const PaymentForm = ({navigation}) => {
           title="Continue"
           backgroundColor={theme.colors.primary}
           onPress={() => {
-            navigation.navigate('AppStack', {screen: 'PaymentCompleteScreen'});
+            // navigation.navigate('AppStack', {screen: 'PaymentCompleteScreen'});
+            navigation.navigate('AppStack', {
+              screen: 'ReserveSuccessfulScreen',
+            });
           }}
           color={theme.colors.textLight}
           otherStyle={styles.continueButton}

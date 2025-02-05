@@ -17,18 +17,18 @@ import fbIcon from '../assets/icons/facebookIcon.png';
 import appleIcon from '../assets/icons/appleIcon.png';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
-import TextInputComponent from '../components/TextInput/TextInputComponent';
+import FormikTextInputComponent from '../components/Formik/FormikTextInputComponent';
 import DetailAppBarComponent from '../components/AppBar/DetailAppBarComponent';
 import DividerComponent from '../components/Divider/DividerComponent';
 import {CommonStyles} from '../style/CommonStyles';
 import DefaultButtonComponent from '../components/Button/DefaultButtonComponent';
 import SocialLoginButtonComponent from '../components/Button/SocialLoginButtonComponent';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 
 const {width, height} = Dimensions.get('window');
 
 const LoginScreen = ({navigation}) => {
-  const [email, setEmail] = useState('test1@gmail.com');
-  const [password, setPassword] = useState(1214);
   const [showLoading, setShowLoading] = useState(false);
 
   useEffect(() => {
@@ -43,18 +43,28 @@ const LoginScreen = ({navigation}) => {
     // checkToken();
   }, []);
 
-  const handleLogin = () => {
-    setShowLoading(true);
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    pin: Yup.string().required('Pin is required'),
+  });
+
+  const handleLogin = async (values, {resetForm}) => {
+    console.log('values', values);
+    // setShowLoading(true);
+
     // Basic validation
-    if (email === '' || password === '') {
-      Alert.alert('Error', 'Please enter both email and password.');
-      setShowLoading(false);
-      return;
-    }
-    LoginService({email, password}, navigation, setShowLoading);
+    // if (email === '' || password === '') {
+    // Alert.alert('Error', 'Testing');
+
+    //   setShowLoading(false);
+    //   return;
+    // }
+    // setShowLoading(false);
+    navigation.navigate('OtpVerificationScreen');
+    // LoginService({email, password}, navigation, setShowLoading);
   };
 
-  const isButtonDisabled = email === '' || password === '';
+  // const isButtonDisabled = email === '' || password === '';
 
   return (
     <SafeAreaView style={styles.flexContainer}>
@@ -70,41 +80,52 @@ const LoginScreen = ({navigation}) => {
             alt="Login image"
           />
           <View>
-            <TextInputComponent
-              label="Email Address"
-              placeholder="Email address..."
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              isSecure={false}
-            />
+            <Formik
+              validationSchema={validationSchema}
+              initialValues={{email: 'test@gmail.com', pin: '1234'}}
+              onSubmit={handleLogin}>
+              {formikProps => (
+                <>
+                  <FormikTextInputComponent
+                    label="Email Address"
+                    placeholder="Email address..."
+                    // value={email}
+                    // onChangeText={setEmail}
+                    keyboardType="email-address"
+                    isSecure={false}
+                    formikKey="email"
+                    formikProps={formikProps}
+                  />
 
-            <TextInputComponent
-              label="Pin"
-              placeholder="Enter 4 digit pin..."
-              value={password}
-              onChangeText={setPassword}
-              keyboardType="numeric"
-              isSecure={true}
-            />
+                  <FormikTextInputComponent
+                    label="Pin"
+                    placeholder="Enter 4 digit pin..."
+                    // value={password}
+                    // onChangeText={setPassword}
+                    keyboardType="numeric"
+                    isSecure={true}
+                    formikKey="pin"
+                    formikProps={formikProps}
+                  />
 
-            <TouchableOpacity
-              style={styles.forgetPasswordButton}
-              onPress={() => navigation.navigate('ForgetPasswordScreen')}>
-              <Text style={styles.forgetPasswordText}>Forgot Pin</Text>
-            </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.forgetPasswordButton}
+                    onPress={() => navigation.navigate('ForgetPasswordScreen')}>
+                    <Text style={styles.forgetPasswordText}>Forgot Pin</Text>
+                  </TouchableOpacity>
 
-            <DefaultButtonComponent
-              title="Login"
-              backgroundColor={theme.colors.primary}
-              onPress={() => {
-                navigation.navigate('OtpVerificationScreen');
-              }}
-              color={theme.colors.textLight}
-              otherStyle={styles.loginButtonStyle}
-              otherTextStyle={styles.loginButtonTextStyle}
-              disable={isButtonDisabled || showLoading}
-            />
+                  <DefaultButtonComponent
+                    title="Login"
+                    backgroundColor={theme.colors.primary}
+                    onPress={formikProps.handleSubmit}
+                    color={theme.colors.textLight}
+                    otherStyle={styles.loginButtonStyle}
+                    otherTextStyle={styles.loginButtonTextStyle}
+                  />
+                </>
+              )}
+            </Formik>
+
             {showLoading && <ActivityIndicator size="large" />}
 
             <Text style={styles.createAccountText}>
