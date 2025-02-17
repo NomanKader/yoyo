@@ -11,6 +11,7 @@ import CarouselSkeletonComponent from '../../components/Skeleton/CauroselSkeleto
 import DummyData from '../../config/DummyData.json';
 import {hotelList} from '../../services/HotelService';
 import {bookmarkList} from '../../services/BookmarkService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Hotel = ({navigation}) => {
   const [showLoading, setShowLoading] = useState(false);
@@ -50,7 +51,7 @@ const Hotel = ({navigation}) => {
     } catch (error) {
       console.error('fetchBookmarkList Error:', error);
       setBookmarkedHotels([]);
-      throw error;
+      // throw error;
     }
   };
 
@@ -112,12 +113,18 @@ const Hotel = ({navigation}) => {
                       hotelId={item.id}
                       bookmarked={isBookmarked}
                       refreshFun={fetchBookmarkList}
-                      onPress={() =>
+                      onPress={async () => {
+                        let reserveInfo = {hotelId: item.id};
+                        await AsyncStorage.setItem(
+                          'reserveInfo',
+                          JSON.stringify(reserveInfo),
+                        );
+
                         navigation.navigate('AppStack', {
                           screen: 'RoomCategoryScreen',
                           params: {hotel: item, id: item.id},
-                        })
-                      }
+                        });
+                      }}
                       refreshing={refreshing}
                       onRefresh={() => {
                         setRefreshing(true);

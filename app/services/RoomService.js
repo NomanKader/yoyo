@@ -114,7 +114,7 @@ export const availableRoomNumberSearch = async (roomTypeId, hotelId) => {
     const response = await OMSApi.get(
       `/room/GetAvailableRoomNumbersWithPhotosforcustomers?roomTypeId=${roomTypeId}&hotelId=${hotelId}`,
     );
-    return response.data;
+    return response;
   } catch (error) {
     console.error('Error:', error);
     throw error;

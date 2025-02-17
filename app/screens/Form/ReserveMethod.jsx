@@ -15,7 +15,41 @@ const ReserveMethod = ({navigation}) => {
       <DividerComponent />
       <PaymentListComponent
         icon="credit-card"
-        title="Pay with debit card"
+        title="Pay with Kpay"
+        description="Make instant payment with ATM "
+        //   onPress={() => {
+        //     navigation.navigate('AppStack', {screen: 'ReserveConfirmScreen'});
+        //   }
+        // }
+        onPress={() => {
+          // navigation.goBack();
+          navigation.push('AppStack', {
+            screen: 'ReserveConfirmScreen',
+            params: {showBottomTab: true},
+          });
+          console.log('Button Pressed');
+        }}
+      />
+      <PaymentListComponent
+        icon="credit-card"
+        title="Pay with Wavepay"
+        description="Make instant payment with ATM "
+        //   onPress={() => {
+        //     navigation.navigate('AppStack', {screen: 'ReserveConfirmScreen'});
+        //   }
+        // }
+        onPress={() => {
+          // navigation.goBack();
+          navigation.push('AppStack', {
+            screen: 'ReserveConfirmScreen',
+            params: {showBottomTab: true},
+          });
+          console.log('Button Pressed');
+        }}
+      />
+      <PaymentListComponent
+        icon="credit-card"
+        title="Pay with Ayapay"
         description="Make instant payment with ATM "
         //   onPress={() => {
         //     navigation.navigate('AppStack', {screen: 'ReserveConfirmScreen'});

@@ -12,6 +12,7 @@ import DividerComponent from '../Divider/DividerComponent';
 import theme from '../../style/colors';
 import {LanguageContext} from '../../context/LanguageContext';
 import {ScrollView} from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width, height} = Dimensions.get('window');
 
@@ -53,7 +54,6 @@ const RommCategoryListComponent = ({
   const renderItem = ({item, index}) => {
     const isCategory = type === 'category';
     const statusStyle = getStatusStyle(item.roomStatus);
-    console.log('renderItem value', item);
 
     const roomStatus = isCategory
       ? `${item.availableRoomCount} ${translate.room.Rooms}`
@@ -63,13 +63,24 @@ const RommCategoryListComponent = ({
       <Pressable
         onPress={
           type == 'category'
-            ? () => {
+            ? async () => {
+                let reserveInfo = await AsyncStorage.getItem('reserveInfo');
+                let reserveInfoData = JSON.parse(reserveInfo);
+                reserveInfoData = {
+                  ...reserveInfoData,
+                  ...{roomID: item.roomID},
+                };
+                await AsyncStorage.setItem(
+                  'reserveInfo',
+                  JSON.stringify(reserveInfoData),
+                );
+                console.log('reserveInfoData : ', reserveInfoData);
                 navigation.navigate('AppStack', {
                   screen: 'RoomListScreen',
                   params: {room_type: item, hotelId},
                 });
               }
-            : onPress
+            : () => onPress(item)
         }>
         <View style={styles.card}>
           <View style={styles.thumbnail}>

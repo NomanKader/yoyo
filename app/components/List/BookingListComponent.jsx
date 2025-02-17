@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
 import DividerComponent from '../Divider/DividerComponent';
 import theme from '../../style/colors';
 import {LanguageContext} from '../../context/LanguageContext';
-import {ScrollView} from 'react-native-gesture-handler';
+import {RefreshControl, ScrollView} from 'react-native-gesture-handler';
 
 const {width, height} = Dimensions.get('window');
 
@@ -21,9 +21,11 @@ const BookingListComponent = ({
   type,
   hotelId,
   onPress,
+  refreshBooking,
   leftBox = true,
 }) => {
   const {translate} = useContext(LanguageContext);
+  const [refreshing, setRefreshing] = useState(false);
 
   // Function to get status-specific styles
   const getStatusStyle = status => {
@@ -53,7 +55,7 @@ const BookingListComponent = ({
   const renderItem = ({item, index}) => {
     const isCategory = type === 'category';
     const statusStyle = getStatusStyle(item.roomStatus);
-    console.log('renderItem value', item);
+    // console.log('renderItem value', item);
 
     const roomStatus = isCategory
       ? `${item.availableRoomCount} ${translate.room.Rooms}`
@@ -90,12 +92,12 @@ const BookingListComponent = ({
                   <Text
                     style={
                       styles.subtitle
-                    }>{`${item.price.toLocaleString()} Kyats`}</Text>
+                    }>{`${item.amount.toLocaleString()} Kyats`}</Text>
                 </>
               ) : (
                 <>
-                  <Text style={styles.title}>{item.roomNo}</Text>
                   <Text style={styles.subtitle}>{item.hotelName}</Text>
+                  <Text style={styles.title}>{item.bookingStatus}</Text>
                 </>
               )}
             </View>
@@ -117,12 +119,21 @@ const BookingListComponent = ({
     );
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refreshBooking();
+    setRefreshing(false);
+  };
+
   return (
     <FlatList
       style={{minHeight: 500}}
       data={data}
       renderItem={renderItem}
       keyExtractor={item => item.roomTypeID}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     />
     // <ScrollView nestedScrollEnabled={true} style={{minHeight: 500}}>
     //   {data.map((item, index) => {

@@ -9,7 +9,7 @@ import DummyData from '../../config/DummyData.json';
 import RommCategoryListComponent from '../../components/List/RoomCategoryListComponent';
 import BookingListComponent from '../../components/List/BookingListComponent';
 
-const Active = ({navigation, activeBookings}) => {
+const Active = ({navigation, activeBookings, refreshBooking}) => {
   const [showLoading, setShowLoading] = useState(false);
 
   useEffect(() => {
@@ -31,6 +31,7 @@ const Active = ({navigation, activeBookings}) => {
           data={activeBookings}
           navigation={navigation}
           leftBox={false}
+          refreshBooking={refreshBooking}
           // type='category'
           onPress={() =>
             navigation.navigate('AppStack', {screen: 'CheckInDetailScreen'})

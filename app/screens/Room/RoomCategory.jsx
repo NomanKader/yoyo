@@ -15,6 +15,8 @@ import DefaultButtonComponent from '../../components/Button/DefaultButtonCompone
 import theme from '../../style/colors';
 import {useRoute} from '@react-navigation/native';
 import {availableRoomTypeSearch} from '../../services/RoomService';
+import DatePickerInputComponent from '../../components/DatePicker/DatePickerComponent';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RoomCategory = ({navigation}) => {
   const [showLoading, setShowLoading] = useState(false);
@@ -49,21 +51,24 @@ const RoomCategory = ({navigation}) => {
 
   const availableRoomSearch = async () => {
     setShowLoading(true);
-    console.log(
-      'start Date:',
-      formatDate(startDate),
-      'end Date:',
-      formatDate(endDate),
-    );
+
     try {
       const response = await availableRoomTypeSearch(
         id,
         formatDate(startDate),
         formatDate(endDate),
       );
-      console.log('availableRoomSearch:', response);
+      console.log('availableRoomSearch:', response.data);
+      await AsyncStorage.setItem('startDate', JSON.stringify(startDate));
       if (response?.success === true && response.data?.length > 0) {
+        console.log(response.data);
         setRoomTypes(response.data);
+        const roomTypes = response.data.map(room => ({
+          label: room.roomTypeName,
+          value: room.roomID,
+        }));
+        console.log('roomTypes', roomTypes);
+        await AsyncStorage.setItem('roomTypes', JSON.stringify(roomTypes));
       }
     } catch (error) {
       console.error('availableRoomSearch Error:', error);
@@ -113,17 +118,17 @@ const RoomCategory = ({navigation}) => {
                   <Text>Choose Booking Date</Text>
                   <View style={styles.row}>
                     <View style={styles.dateCont}>
-                      <FormikDateInputComponent
+                      <DatePickerInputComponent
                         title="Start Date"
-                        value={startDate}
-                        valueChange={setStartDate}
+                        date={startDate}
+                        setDate={setStartDate}
                       />
                     </View>
                     <View style={styles.dateCont}>
-                      <FormikDateInputComponent
+                      <DatePickerInputComponent
                         title="End Date"
-                        value={endDate}
-                        valueChange={setEndDate}
+                        date={endDate}
+                        setDate={setEndDate}
                       />
                     </View>
                   </View>
@@ -144,7 +149,7 @@ const RoomCategory = ({navigation}) => {
                 navigation={navigation}
                 type="category"
                 hotelId={id}
-                onPress={() => {}}
+                // onPress={() => {}}
               />
             </>
           }

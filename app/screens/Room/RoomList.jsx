@@ -19,6 +19,7 @@ import theme from '../../style/colors';
 import DummyData from '../../config/DummyData.json';
 import {useRoute} from '@react-navigation/native';
 import {availableRoomNumberSearch} from '../../services/RoomService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RoomDetail = ({navigation}) => {
   const [showLoading, setShowLoading] = useState(false);
@@ -34,16 +35,25 @@ const RoomDetail = ({navigation}) => {
         room_type.roomTypeID,
         hotelId,
       );
-      console.log('fetchRoomNumbers:', JSON.stringify(response, null, 2));
-      if (response?.success === true && response.data?.length > 0) {
-        setAvailableRooms(response.data);
+      console.log(
+        'fetchRoomNumbers:',
+        JSON.stringify(response.status, null, 2),
+      );
+      if (response?.status === 200 && response?.data?.data?.length > 0) {
+        setAvailableRooms(response.data.data);
+        const roomNumbers = response.data.data.map(room => ({
+          label: room.roomNumber,
+          value: room.roomNumberId,
+        }));
+        // console.log('roomNumbers', roomNumbers);
+        await AsyncStorage.setItem('roomNumbers', JSON.stringify(roomNumbers));
       } else {
         console.log('No available rooms found');
         setAvailableRooms([]);
       }
     } catch (error) {
-      console.error('RoomDetail fetchRoomNumbers Error:', error);
-      throw error;
+      console.log('RoomDetail fetchRoomNumbers Error:', error.response.status);
+      setAvailableRooms([]);
     }
   };
 
@@ -55,8 +65,8 @@ const RoomDetail = ({navigation}) => {
       // fetchBookmarkList();
       fetchRoomNumbers();
     } catch (error) {
-      console.error('RoomList useEffect Error:', error);
-      throw error;
+      console.log('RoomList useEffect Error:', error);
+      // throw error;
     } finally {
       setShowLoading(false);
     }
@@ -163,7 +173,20 @@ const RoomDetail = ({navigation}) => {
                 data={availableRooms}
                 navigation={navigation}
                 type=""
-                onPress={() => setVisible(true)}
+                onPress={async item => {
+                  let reserveInfo = await AsyncStorage.getItem('reserveInfo');
+                  let reserveInfoData = JSON.parse(reserveInfo);
+                  reserveInfoData = {
+                    ...reserveInfoData,
+                    ...{roomNumberId: item.roomNumberId},
+                  };
+                  await AsyncStorage.setItem(
+                    'reserveInfo',
+                    JSON.stringify(reserveInfoData),
+                  );
+                  console.log('reserveInfoData : ', reserveInfoData);
+                  setVisible(true);
+                }}
               />
 
               <BottomSheetComponent
@@ -183,12 +206,12 @@ const RoomDetail = ({navigation}) => {
                     backgroundColor={theme.colors.primary}
                     color={theme.colors.textLight}
                     otherStyle={styles.bookButton}
-                    onPress={() =>
+                    onPress={async () => {
                       navigation.navigate('AppStack', {
                         screen: 'ReservationFormScreen',
                         params: {roomTypeId: room_type.roomTypeID, hotelId},
-                      })
-                    }
+                      });
+                    }}
                   />
                   <DefaultButtonComponent
                     title="Book without account"

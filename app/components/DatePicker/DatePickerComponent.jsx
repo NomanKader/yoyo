@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import {View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import theme from '../../style/colors';
 
-const DatePickerInputComponent = ({ label, date, setDate }) => {
+const DatePickerInputComponent = ({label, date, setDate}) => {
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
+  };
+
+  const onConfirm = (event, selectedDate) => {
+    // const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    if (selectedDate) {
+      const localDate = new Date(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate(),
+      ); // Create a new Date without time (local time)
+
+      setDate(localDate); // Store only the local date
+    }
+
+    // Format the date as needed
+    // const formatted = currentDate.toLocaleDateString();
+
+    // if (formikProps) {
+    //   formikProps.setFieldValue(formikKey, formatted); // Ensure field value updates correctly
+    // } else {
+    //   valueChange(selectedDate);
+    // }
   };
 
   const showMode = () => {
@@ -20,12 +43,24 @@ const DatePickerInputComponent = ({ label, date, setDate }) => {
   return (
     <View>
       <TouchableOpacity onPress={showMode} style={styles.inputContainer}>
-        <Icon name="calendar-today" size={24} color={theme.colors.textInputColor} style={styles.icon} />
+        <Icon
+          name="calendar-today"
+          size={24}
+          color={theme.colors.textInputColor}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder={label}
           placeholderTextColor={theme.colors.textInputColor}
-          value={date ? date.toLocaleDateString() : ''}
+          value={
+            date
+              ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+                  2,
+                  '0',
+                )}-${String(date.getDate()).padStart(2, '0')}`
+              : ''
+          }
           editable={false} // Prevent typing in the input
         />
       </TouchableOpacity>
@@ -34,7 +69,7 @@ const DatePickerInputComponent = ({ label, date, setDate }) => {
           value={date || new Date()}
           mode="date"
           display="default"
-          onChange={onChange}
+          onChange={onConfirm}
         />
       )}
     </View>
@@ -49,7 +84,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     backgroundColor: '#F9F9F9',
-    marginBottom:20
+    marginBottom: 20,
   },
   icon: {
     padding: 10,

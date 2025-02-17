@@ -25,7 +25,8 @@ import DefaultButtonComponent from '../components/Button/DefaultButtonComponent'
 import SocialLoginButtonComponent from '../components/Button/SocialLoginButtonComponent';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {OMSApi} from '../services/HttpService';
 const {width, height} = Dimensions.get('window');
 
 const LoginScreen = ({navigation}) => {
@@ -51,17 +52,35 @@ const LoginScreen = ({navigation}) => {
   const handleLogin = async (values, {resetForm}) => {
     console.log('values', values);
     // setShowLoading(true);
+    // try {
+    //   const response = await OMSApi.post('/auth/login-customers', {
+    //     email: values.email,
+    //     password: values.pin,
+    //   });
+    //   console.log('login : ', response.data);
 
-    // Basic validation
-    // if (email === '' || password === '') {
-    // Alert.alert('Error', 'Testing');
-
-    //   setShowLoading(false);
+    //   await AsyncStorage.setItem(
+    //     'id',
+    //     JSON.stringify(response.data.data.customerId),
+    //   );
+    // } catch (error) {
+    //   console.log('Login error : ', error);
+    //   if (error.response) {
+    //     // If API responds with an error
+    //     if (error.response.status === 401) {
+    //       Alert.alert('Error', 'Incorrect username or password');
+    //     } else {
+    //       Alert.alert('Error', 'Something went wrong. Please try again.');
+    //     }
+    //   } else {
+    //     // If there's no response from server (network error)
+    //     console.log('network Error');
+    //     Alert.alert('Error', 'network Error');
+    //   }
     //   return;
     // }
-    // setShowLoading(false);
-    navigation.navigate('OtpVerificationScreen');
-    // LoginService({email, password}, navigation, setShowLoading);
+
+    navigation.replace('TabStack');
   };
 
   // const isButtonDisabled = email === '' || password === '';
@@ -82,7 +101,7 @@ const LoginScreen = ({navigation}) => {
           <View>
             <Formik
               validationSchema={validationSchema}
-              initialValues={{email: 'test@gmail.com', pin: '1234'}}
+              initialValues={{email: 'yu@gmail.com', pin: '1234'}}
               onSubmit={handleLogin}>
               {formikProps => (
                 <>

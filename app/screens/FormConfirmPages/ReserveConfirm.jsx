@@ -14,11 +14,13 @@ const {width, height} = Dimensions.get('window');
 
 const ReserveConfirm = ({navigation, route}) => {
   const [visible, setVisible] = useState(false);
-  const {showBottomTab = false} = route.params || {};
+  const [bookingData, setBookingData] = useState({});
+  const {showBottomTab = false, values} = route.params || {};
 
   useEffect(() => {
     setVisible(showBottomTab);
     console.log('Value is ' + showBottomTab);
+    setBookingData(values);
   }, [showBottomTab]);
 
   return (

@@ -122,13 +122,21 @@ const TopBar = ({navigation}) => {
         }}>
         <TopTab.Screen name="Active">
           {() => (
-            <Active activeBookings={activeBookings} navigation={navigation} />
+            <Active
+              activeBookings={activeBookings}
+              refreshBooking={fetchBookingList}
+              navigation={navigation}
+            />
           )}
         </TopTab.Screen>
         {/* <TopTab.Screen name="Completed" component={Completed} /> */}
         <TopTab.Screen name="Completed">
           {() => (
-            <Completed olderBookings={olderBookings} navigation={navigation} />
+            <Completed
+              olderBookings={olderBookings}
+              refreshBooking={fetchBookingList}
+              navigation={navigation}
+            />
           )}
         </TopTab.Screen>
       </TopTab.Navigator>

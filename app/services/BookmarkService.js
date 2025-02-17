@@ -1,9 +1,12 @@
 import {OMSApi} from './HttpService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const bookmarkList = async () => {
   try {
+    const customerId = await AsyncStorage.getItem('id');
+    console.log(customerId);
     const response = await OMSApi.get('/bookmarks/GetByCustomerId', {
-      params: {customerId: 1},
+      params: {customerId: customerId},
     });
     return response.data;
   } catch (error) {
@@ -14,8 +17,9 @@ export const bookmarkList = async () => {
 
 export const addBookmark = async hotelId => {
   try {
+    const customerId = await AsyncStorage.getItem('id');
     const response = await OMSApi.post('/bookmarks/addBookmarks', {
-      customerId: 1,
+      customerId: customerId,
       hotelId,
     });
     return response.data;
@@ -28,8 +32,9 @@ export const addBookmark = async hotelId => {
 export const removeBookmark = async hotelId => {
   console.log('removeBookmark:', hotelId);
   try {
+    const customerId = await AsyncStorage.getItem('id');
     const response = await OMSApi.delete(
-      `/bookmarks/RemoveByCustomer?customerId=${1}&hotelId=${hotelId}`,
+      `/bookmarks/RemoveByCustomer?customerId=${customerId}&hotelId=${hotelId}`,
     );
     return response.data;
   } catch (error) {

@@ -70,6 +70,7 @@ OMSApi.interceptors.response.use(
   response => response,
   async error => {
     console.log(error, 'response error');
+
     const originalRequest = error.config;
 
     if (!error.response) {
@@ -93,6 +94,8 @@ OMSApi.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    /*
+
     if (error.response.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise(function (resolve, reject) {
@@ -110,7 +113,7 @@ OMSApi.interceptors.response.use(
 
       try {
         const {accessToken} = await refreshToken();
-        await AsyncStorage.setItem('techForgeToken', accessToken);
+        await AsyncStorage.setItem('OMSApi', accessToken);
         OMSApi.defaults.headers.common['Authorization'] =
           'Bearer ' + accessToken;
         originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
@@ -118,7 +121,7 @@ OMSApi.interceptors.response.use(
         return OMSApi(originalRequest);
       } catch (err) {
         processQueue(err, null);
-        await AsyncStorage.removeItem('techForgeToken');
+        await AsyncStorage.removeItem('OMSApi');
         removeAuthHeader();
         navigate('AuthStack');
         return Promise.reject(err);
@@ -126,6 +129,8 @@ OMSApi.interceptors.response.use(
         isRefreshing = false;
       }
     }
+
+    */
 
     // Enhanced Error Logging
     if (error.response) {
@@ -142,10 +147,9 @@ OMSApi.interceptors.response.use(
 
 // Function to set the authorization header dynamically
 export async function setAuthHeader() {
-  const techForgeToken = await AsyncStorage.getItem('techForgeToken');
-  if (techForgeToken) {
-    OMSApi.defaults.headers.common['Authorization'] =
-      'Bearer ' + techForgeToken;
+  const OMSApi = await AsyncStorage.getItem('OMSApi');
+  if (OMSApi) {
+    OMSApi.defaults.headers.common['Authorization'] = 'Bearer ' + OMSApi;
   }
 }
 
