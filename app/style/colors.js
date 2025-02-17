@@ -24,6 +24,7 @@ const theme = {
     borderColor: '#202020',
     chipBackgroundColor: '#7FE1F8',
     labelColor: '#001529',
+    bottomUnselectedColor:"#292D32",
     bookingTabBarColor: '#F7F7F7',
     danger: 'red',
   },

@@ -5,13 +5,15 @@ import LoginScreen from '../screens/LoginScreen';
 import Register from '../screens/Register';
 import OtpVerification from '../screens/OtpVerification';
 import ForgetPassword from '../screens/ForgetPassword';
+import ChooseScreen from '../screens/ChooseScreen';
 
 
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => {
   return (
-    <Stack.Navigator initialRouteName='WelcomeScreen'>
+    <Stack.Navigator initialRouteName='ChooseScreen'>
+      <Stack.Screen name='ChooseScreen' component={ChooseScreen} options={{ headerShown: false }} />      
       <Stack.Screen name='WelcomeScreen' component={WelcomeScreen} options={{ headerShown: false }} />      
       <Stack.Screen name='LoginScreen' component={LoginScreen} options={{ headerShown: false, title:'Login' }} />      
       <Stack.Screen name='RegisterScreen' component={Register} options={{ headerShown: false, title:'Register' }} />
