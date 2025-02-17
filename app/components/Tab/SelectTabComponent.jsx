@@ -1,73 +1,72 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import theme from '../../style/colors';
 
-const SelectTabComponent = () => {
-  const [selectedTab, setSelectedTab] = useState('Ongoing');
-
+const SelectTabComponent = ({tabs, onTabSelect, selectedTab}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={[
-          styles.tab,
-          selectedTab === 'Ongoing' ? styles.selectedTab : styles.unselectedTab,
-        ]}
-        onPress={() => setSelectedTab('Ongoing')}
-      >
-        <Text style={[
-          styles.tabText,
-          selectedTab === 'Ongoing' ? styles.selectedTabText : styles.unselectedTabText,
-        ]}>
-          Ongoing
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.tab,
-          selectedTab === 'Completed' ? styles.selectedTab : styles.unselectedTab,
-        ]}
-        onPress={() => setSelectedTab('Completed')}
-      >
-        <Text style={[
-          styles.tabText,
-          selectedTab === 'Completed' ? styles.selectedTabText : styles.unselectedTabText,
-        ]}>
-          Completed
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.tabContainer}>
+        {tabs.map(tab => (
+          <TouchableOpacity
+            key={tab}
+            style={[
+              styles.tab,
+              selectedTab === tab ? styles.selectedTab : styles.unselectedTab,
+            ]}
+            onPress={() => onTabSelect(tab)}>
+            <Text
+              style={[
+                styles.tabText,
+                selectedTab === tab
+                  ? styles.selectedTabText
+                  : styles.unselectedTabText,
+              ]}>
+              {tab}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
+  },
+  tabContainer: {
     flexDirection: 'row',
-    backgroundColor: '#F4F4F4', // Container background color
-    borderRadius: 8,
-    padding: 4, // Padding around the tabs
-    backgroundColor:'red'
+    backgroundColor: theme.colors.backgroundColor,
+    borderRadius: 12,
+    padding: 4,
+    width: '100%',
+    justifyContent:'space-between'
   },
   tab: {
     flex: 1,
-    paddingVertical: 12,
+    height:53,
+    paddingVertical: 10,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
   },
   selectedTab: {
-    backgroundColor: '#ffffff', // Background for selected tab
+    backgroundColor: theme.colors.primary,
+    borderRadius: 12,
+    paddingVertical: 12,
   },
   unselectedTab: {
-    backgroundColor: 'transparent', // Transparent background for unselected tab
+    backgroundColor:theme.colors.backgroundColor,
   },
   tabText: {
     fontSize: 16,
     fontWeight: '500',
   },
   selectedTabText: {
-    color: '#000000', // Text color for selected tab
+    color: '#FFFFFF',
   },
   unselectedTabText: {
-    color: '#888888', // Text color for unselected tab
+    color: theme.colors.bottomUnselectedColor,
   },
 });
 
