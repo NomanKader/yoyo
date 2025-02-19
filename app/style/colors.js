@@ -21,6 +21,7 @@ const theme = {
     textInputColor: '#B7B8BA',
     gridColor: '#f0f0f0',
     walletCardColor: '#0071FE',
+    starColor:"#FFF500",
     typoInfoColor: '#F5F5F5',
     borderColor: '#202020',
     chipBackgroundColor: '#7FE1F8',

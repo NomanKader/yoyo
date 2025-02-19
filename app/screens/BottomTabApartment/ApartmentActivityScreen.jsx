@@ -8,8 +8,6 @@ import notiIcon3 from '../../assets/icons/notiIcon3.png';
 import notiIcon4 from '../../assets/icons/notiIcon4.png';
 
 const TABS = ['Notifications', 'Messages'];
-const icons = [notiIcon1, notiIcon2, notiIcon3];
-
 const notificationsData = [
   {
     id: '1',
