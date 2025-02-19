@@ -12,9 +12,9 @@ import {
 import theme from '../../style/colors';
 import reverIcon from '../../assets/icons/reverse.png';
 import searchIcon from '../../assets/icons/search.png';
-import starIcon from '../../assets/icons/star.png';
-import plusIcon from '../../assets/icons/plus.png';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import ApartmentNewListingCard from '../../components/apartmentCard/ApartmentNewListingCard';
+import ApartmentNearYouCard from '../../components/apartmentCard/ApartmentNearYouCard';
 
 export default function ApartmentHomeScreen() {
   const [searchText, setSearchText] = useState('');
@@ -121,7 +121,7 @@ export default function ApartmentHomeScreen() {
           placeholder="Search"
           placeholderTextColor={theme.colors.bottomUnselectedColor}
         />
-        <TouchableOpacity onPress={() => Alert.alert("Hello") }>
+        <TouchableOpacity onPress={() => Alert.alert('Hello')}>
           <Image
             source={searchIcon}
             style={{width: 24, height: 24, marginRight: 30}}
@@ -133,28 +133,12 @@ export default function ApartmentHomeScreen() {
       <Text style={styles.sectionTitle}>Near you</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {nearYou.map(item => (
-          <View key={item.id} style={styles.card}>
-            <Image source={{uri: item.image}} style={styles.cardImage} />
-            <View style={styles.overlay} />
-            <View style={styles.overlayText}>
-              <Text style={styles.cardPrice}>{item.price}</Text>
-              <Text style={styles.cardAddress}>{item.address}</Text>
-              <Text style={styles.cardDistance}>{item.distance}</Text>
-            </View>
-            <View style={styles.starIcon}>
-              <Image
-                source={starIcon}
-                style={{width: 24, height: 24}}
-                tintColor={theme.colors.starColor}
-              />
-              <Text style={styles.rating}>4</Text>
-              <Image
-                source={plusIcon}
-                style={{width: 40, height: 40, marginLeft: '70%'}}
-                tintColor={theme.colors.textLight}
-              />
-            </View>
-          </View>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            key={item.id}
+            onPress={() => Alert.alert(item.address)}>
+            <ApartmentNearYouCard key={item.id} item={item} />
+          </TouchableOpacity>
         ))}
       </ScrollView>
 
@@ -169,18 +153,12 @@ export default function ApartmentHomeScreen() {
         renderItem={({item}) => (
           <View style={styles.pairContainer}>
             {item.map(subItem => (
-              <View key={subItem.id} style={styles.listingItem}>
-                <Image
-                  source={{uri: `${subItem.image}?t=${subItem.id}`}} // Unique URL per item
-                  style={styles.listingImage}
-                  resizeMode="cover"
-                />
-
-                <View>
-                  <Text style={styles.listingAddress}>{subItem.address}</Text>
-                  <Text style={styles.listingPrice}>{subItem.price}</Text>
-                </View>
-              </View>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                key={subItem.id}
+                onPress={() => Alert.alert(subItem.address)}>
+                <ApartmentNewListingCard subItem={subItem} />
+              </TouchableOpacity>
             ))}
           </View>
         )}
@@ -238,90 +216,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: theme.colors.bottomUnselectedColor,
     marginVertical: 10,
-  },
-  card: {
-    width: 300,
-    borderRadius: 10,
-    overflow: 'hidden',
-    marginRight: 10,
-    elevation: 3,
-    backgroundColor: '#fff',
-    position: 'relative',
-  },
-  cardImage: {
-    width: '100%',
-    height: 250, // Adjust height to prevent stretching
-    resizeMode: 'cover',
-  },
-  overlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '40%',
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-  },
-  overlayText: {
-    position: 'absolute',
-    bottom: 10,
-    left: 10,
-    right: 10,
-  },
-  cardPrice: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#fff',
-    marginStart: 15,
-  },
-  cardAddress: {
-    fontSize: 30,
-    fontWeight: '500',
-    color: '#fff',
-  },
-  cardDistance: {
-    fontWeight: '500',
-    fontSize: 14,
-    color: '#fff',
-  },
-  starIcon: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    padding: 5,
-    borderRadius: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rating: {
-    marginLeft: 5,
-    fontSize: 16,
-    color: theme.colors.starColor,
-  },
-  listingItem: {
-    width: '100%',
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    alignItems: 'center',
-    marginBottom: 10,
-    elevation: 2,
-  },
-  listingImage: {
-    width: 80,
-    height: 60,
-    borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 5,
-    marginRight: 10,
-  },
-  listingAddress: {
-    fontSize: 20,
-    fontWeight: '500',
-    marginBottom: 10,
-    color: theme.colors.bottomUnselectedColor,
-  },
-  listingPrice: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: theme.colors.bottomUnselectedColor,
   },
 });
