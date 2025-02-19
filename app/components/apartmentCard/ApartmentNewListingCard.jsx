@@ -30,21 +30,23 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   listingImage: {
-    width: 80,
-    height: 60,
+    width: 90,
+    height: 80,
     borderTopLeftRadius: 5,
     borderBottomLeftRadius: 5,
     marginRight: 10,
   },
   listingAddress: {
     fontSize: 20,
+    justifyContent:'flex-start',
     fontWeight: '500',
-    marginBottom: 10,
+    marginBottom: 20,
     color: theme.colors.bottomUnselectedColor,
   },
   listingPrice: {
     fontSize: 14,
     fontWeight: '400',
+    justifyContent:"flex-end",
     color: theme.colors.bottomUnselectedColor,
   },
 });

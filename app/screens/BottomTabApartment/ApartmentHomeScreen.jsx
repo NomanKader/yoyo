@@ -171,7 +171,9 @@ export default function ApartmentHomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop:10,
+    paddingBottom:10,
     backgroundColor: '#F5F5F5',
   },
   header: {
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
   },
   pairContainer: {
     width: 300,
-    marginRight: 15, // Added spacing between horizontal items
+    marginRight: 20, 
   },
   searchContainer: {
     position: 'relative',
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
     top: '50%',
-    transform: [{translateY: -10}], // Center the icon
+    transform: [{translateY: -10}], 
   },
   sectionTitle: {
     fontSize: 26,
