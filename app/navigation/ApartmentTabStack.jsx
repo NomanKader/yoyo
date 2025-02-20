@@ -3,11 +3,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {Image, View, Text} from 'react-native';
 import theme from '../style/colors';
 
-import ApartmentHomeScreen from '../screens/BottomTabApartment/ApartmentHomeScreen';
-import ApartmentMapScreen from '../screens/BottomTabApartment/ApartmentMapScreen';
-import ApartmentSearchScreen from '../screens/BottomTabApartment/ApartmentSearchScreen';
-import ApartmentActivityScreen from '../screens/BottomTabApartment/ApartmentActivityScreen';
-import ApartmentProfileScreen from '../screens/BottomTabApartment/ApartmentProfileScreen';
+import ApartmentHomeScreen from '../screens/Apartment/ApartmentHomeScreen';
+import ApartmentMapScreen from '../screens/Apartment/ApartmentMapScreen';
+import ApartmentSearchScreen from '../screens/Apartment/ApartmentSearchScreen';
+import ApartmentActivityScreen from '../screens/Apartment/ApartmentActivityScreen';
+import ApartmentProfileScreen from '../screens/Apartment/ApartmentProfileScreen';
 
 import activityIcon from '../assets/icons/apartmentTab/activity.png';
 import homeIcon from '../assets/icons/apartmentTab/home.png';
