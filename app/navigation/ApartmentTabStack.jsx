@@ -55,7 +55,8 @@ const tabScreens = [
 const ApartmentTabStack = () => {
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({route}) => ({
+        tabBarHideOnKeyboard: true,
         headerShown: false,
         tabBarStyle: {
           height: 80,
@@ -66,7 +67,7 @@ const ApartmentTabStack = () => {
         },
         tabBarInactiveTintColor: theme.colors.bottomUnselectedColor,
         tabBarActiveTintColor: theme.colors.primary,
-      }}>
+      })}>
       {tabScreens.map(({name, component, label, icon, unselectedIcon}) => (
         <Tab.Screen
           key={name}

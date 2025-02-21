@@ -23,6 +23,7 @@ const theme = {
     walletCardColor: '#0071FE',
     starColor:"#FFF500",
     typoInfoColor: '#F5F5F5',
+    textOwner:"#78858F",
     borderColor: '#202020',
     chipBackgroundColor: '#7FE1F8',
     labelColor: '#001529',

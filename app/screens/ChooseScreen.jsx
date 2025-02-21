@@ -51,11 +51,11 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 30,
+    // marginBottom: 10,
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: 200,
+    height: 200,
     resizeMode: 'contain',
   },
   buttonContainer: {
