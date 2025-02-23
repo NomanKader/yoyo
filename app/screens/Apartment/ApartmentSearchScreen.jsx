@@ -14,7 +14,7 @@ import filterIcon from '../../assets/icons/filter.png';
 import theme from '../../style/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-export default function ApartmentSearchScreen() {
+export default function ApartmentSearchScreen({navigation}) {
   const [searchText, setSearchText] = useState('');
   const [filteredApartments, setFilteredApartments] = useState(apartmentList);
 
@@ -101,12 +101,17 @@ export default function ApartmentSearchScreen() {
 
       <FlatList
         data={filteredApartments}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()} // Ensure key is a string
         renderItem={({item}) => (
           <TouchableOpacity
             activeOpacity={0.9}
             key={item.id}
-            onPress={() => Alert.alert(item.address)}>
+            onPress={() =>
+              navigation.navigate('ApartmentAppStack', {
+                screen: 'ListingDetail',
+                params: {id: item.id},
+              })
+            }>
             <ApartmentPostCard item={item} />
           </TouchableOpacity>
         )}

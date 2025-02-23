@@ -1,13 +1,14 @@
-import React, { useContext } from "react";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import BottomTabStack from "./app/navigation/TabStack";
-import { AuthContext, AuthProvider } from "./app/context/AuthContext";
-import { LanguageProvider } from "./app/context/LanguageContext";
-import { ActivityIndicator, View, Text, StatusBar } from 'react-native';
-import AuthStack from "./app/navigation/AuthStack";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import React, {useContext} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import BottomTabStack from './app/navigation/TabStack';
+import {AuthContext, AuthProvider} from './app/context/AuthContext';
+import {LanguageProvider} from './app/context/LanguageContext';
+import {ActivityIndicator, View, Text, StatusBar} from 'react-native';
+import AuthStack from './app/navigation/AuthStack';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ApartmentTabStack from './app/navigation/ApartmentTabStack';
+import ApartmentAppStack from './app/navigation/ApartmentAppStack';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,11 @@ const AppNavigator = () => {
           component={ApartmentTabStack}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="ApartmentAppStack"
+          component={ApartmentAppStack}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -49,15 +55,15 @@ const AppNavigator = () => {
 export default function App() {
   return (
     <GestureHandlerRootView>
-    <AuthProvider>
-      <LanguageProvider>
-        <StatusBar
-          barStyle="dark-content" // Black text color
-          backgroundColor="#ffffff" // White background color
-        />
-        <AppNavigator />
-      </LanguageProvider>
-    </AuthProvider>
+      <AuthProvider>
+        <LanguageProvider>
+          <StatusBar
+            barStyle="dark-content" // Black text color
+            backgroundColor="#ffffff" // White background color
+          />
+          <AppNavigator />
+        </LanguageProvider>
+      </AuthProvider>
     </GestureHandlerRootView>
   );
 }
