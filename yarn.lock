@@ -2378,6 +2378,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/geolocation@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "@react-native-community/geolocation@npm:3.4.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 4a1a334de5b8345ee5ca9af987718a4cdd0b401b6d024268330c98736eccd0bebf45fd1d4cb396558f429a4670e5b29da0b5b7ebd4e51ca12972d4b08b55d4bc
+  languageName: node
+  linkType: hard
+
 "@react-native-community/netinfo@npm:^11.4.1":
   version: 11.4.1
   resolution: "@react-native-community/netinfo@npm:11.4.1"
@@ -7378,6 +7388,7 @@ __metadata:
     "@react-native-async-storage/async-storage": ^1.23.1
     "@react-native-community/checkbox": ^0.5.17
     "@react-native-community/datetimepicker": ^8.2.0
+    "@react-native-community/geolocation": ^3.4.0
     "@react-native-community/netinfo": ^11.4.1
     "@react-native-community/slider": ^4.5.3
     "@react-native-masked-view/masked-view": 0.2.9
@@ -7414,6 +7425,7 @@ __metadata:
     react-native-image-picker: ^7.1.2
     react-native-keychain: ^8.2.0
     react-native-linear-gradient: ^2.8.3
+    react-native-map-link: ^3.7.0
     react-native-maps: ^1.18.2
     react-native-modal: ^13.0.1
     react-native-pager-view: ^6.3.3
@@ -8825,6 +8837,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: f980d324e551bbc475c6406bdc5250a08242020cbe653412fa169bbdf51e28a502e225de105b4d696d6a1a1b733d44782469020f4936d8b3ce0e2c78e51cf58f
+  languageName: node
+  linkType: hard
+
+"react-native-map-link@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "react-native-map-link@npm:3.7.0"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-native: ">=0.40.0"
+  checksum: 68dfd694aa35a86163d280371627809425bbad189ea075fb8b3d2df9673a8f0dfa05fd1e5b952a3eef7f5eb049fc5ed9e1059f97e5932ce1c126513554ef115f
   languageName: node
   linkType: hard
 
