@@ -69,7 +69,7 @@ const RegisterScreen = ({navigation}) => {
         <Text style={styles.registerText}>Have an account?</Text>
         <Text
           style={styles.registerTextPress}
-          onPress={() => navigation.navigate('register')}>
+          onPress={() => navigation.goBack()}>
           Login
         </Text>
       </View>
