@@ -8,17 +8,18 @@ import CustomTextInput from '../../components/Input/CustomTextInput';
 import CustomDividerComponent from '../../components/Divider/CustomDividerComponent';
 import SigninOrRegisterCardComponent from '../../components/Card/SginOrRegisterCardComponent';
 
-const LoginScreen = ({navigation}) => {
+const RegisterScreen = ({navigation}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isChecked, setIsChecked] = useState(false);
 
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>Welcome Back</Text>
+        <Text style={styles.titleText}>Start Your Journey with Us</Text>
         <Text style={styles.subTitleText}>
-          Welcome Back. please Enter your details
+          Please provide additional information for registration
         </Text>
       </View>
       <CustomTextInput title="Email" value={email} onChangeText={setEmail} />
@@ -27,33 +28,23 @@ const LoginScreen = ({navigation}) => {
         value={password}
         onChangeText={setPassword}
       />
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          margin: 20,
-        }}>
+      <CustomTextInput
+        title="Confirm Password"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+      />
         <CustomCheckBox
           isChecked={isChecked}
           isSwap={true}
           onToggle={() => setIsChecked(!isChecked)}
-          label={'Remember me'}
-          infoContainerStyle={{marginRight: 10}}
+          label={'I agree to Terms and Conditions'}
+          infoContainerStyle={{paddingLeft: 16}}
         />
-        <Text
-          style={{
-            color: theme.colors.textGray,
-            textAlign: 'right',
-            borderBottomColor: theme.colors.textGray,
-            borderBottomWidth: 1,
-          }}>
-          Forgot Password?
-        </Text>
-      </View>
+      
       <DefaultButtonComponent
         title="Login"
-        onPress={() => navigation.navigate('confirmEmail')}
-        buttonStyle={{marginVertical: 30}}
+        onPress={() => Alert.alert('Register')}
+        buttonStyle={{marginVertical: 20}}
       />
       <CustomDividerComponent
         containerStyle={{marginBottom: 30, marginHorizontal: 16}}
@@ -64,27 +55,29 @@ const LoginScreen = ({navigation}) => {
         l
         iconColor={theme.colors.primary}
         containerStyle={{marginBottom: 10, paddingVertical: 20}}
+        onPress={() => Alert.alert('Google')}
       />
       <SigninOrRegisterCardComponent
         iconName={'facebook'}
         title={'Continue With Facebook'}
         iconColor={theme.colors.primary}
         containerStyle={{paddingVertical: 20}}
+        onPress={() => Alert.alert('Facebook')}
       />
       <View
         style={{flexDirection: 'row', justifyContent: 'center', marginTop: 10}}>
-        <Text style={styles.registerText}>Don't have an account?</Text>
+        <Text style={styles.registerText}>Have an account?</Text>
         <Text
           style={styles.registerTextPress}
           onPress={() => navigation.navigate('register')}>
-          Register
+          Login
         </Text>
       </View>
     </View>
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -93,7 +86,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: 'center',
-    marginTop: 100,
+    marginTop: 80,
     marginBottom: 20,
   },
   titleText: {

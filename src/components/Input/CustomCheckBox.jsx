@@ -30,7 +30,7 @@ export default function CustomCheckBox({
               alignItems: 'center',
               marginLeft: 10,
             }}>
-            {label}
+            <Text>{label}</Text>
           </View>
         </>
       ) : (
@@ -41,7 +41,7 @@ export default function CustomCheckBox({
               alignItems: 'center',
               marginRight: 10,
             }}>
-            {label}
+            <Text>{label}</Text>
           </View>
           <CheckBox
             isChecked={isChecked}
