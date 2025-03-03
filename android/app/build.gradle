@@ -108,7 +108,7 @@ android {
 }
 
 dependencies {
-    // The version of react-native is set by the React Native Gradle Plugin
+    // Existing dependencies
     implementation("com.facebook.react:react-android")
 
     if (hermesEnabled.toBoolean()) {
@@ -117,3 +117,4 @@ dependencies {
         implementation jscFlavor
     }
 }
+

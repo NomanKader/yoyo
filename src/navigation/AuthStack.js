@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 export default function AuthStack() {
   return (
     <Stack.Navigator
-      initialRouteName="login"
+      initialRouteName="createNewPassword"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="confirmEmail" component={ConfirmEmailScreen} />

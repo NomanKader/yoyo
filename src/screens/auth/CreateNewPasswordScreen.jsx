@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import DefaultButtonComponent from "../../components/Button/DefaultButtonComponent";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
