@@ -18,7 +18,7 @@ export default function CreateNewPasswordScreen({ navigation }) {
   const handleContinue = () => {
     if (password === confirmPassword && validLength && validCase) {
       console.log("Password changed successfully!");
-      navigation.navigate("NextScreen"); // Navigate after successful validation
+      navigation.navigate("AppStack",{screen:'explore'}); // Navigate after successful validation
     } else {
       alert("Please ensure passwords match and meet the requirements.");
     }
