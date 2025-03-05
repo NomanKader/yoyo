@@ -2,14 +2,14 @@ import theme from './colors';
 
 export const CommonStyles = {
   container: {
-    flex:1,
-    display: 'flex',    
+    flex: 1,
+    display: 'flex',
     alignItems: 'center',
-    backgroundColor:theme.colors.textLight
+    backgroundColor: theme.colors.textLight,
   },
-  header: {    
+  header: {
     fontSize: 20,
-    fontWeight:'bold',
+    fontWeight: 'bold',
   },
   thaiHeader: {
     fontFamily: theme.customfonts.medium,

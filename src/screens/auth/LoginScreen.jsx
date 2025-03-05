@@ -21,11 +21,17 @@ const LoginScreen = ({navigation}) => {
           Welcome Back. please Enter your details
         </Text>
       </View>
-      <CustomTextInput title="Email" value={email} onChangeText={setEmail} />
+      <CustomTextInput
+        type={'phone-pad'}
+        title="Mobile Phone"
+        value={email}
+        onChangeText={setEmail}
+      />
       <CustomTextInput
         title="Password"
         value={password}
         onChangeText={setPassword}
+        type={'password'}
       />
       <View
         style={{
@@ -46,7 +52,8 @@ const LoginScreen = ({navigation}) => {
             textAlign: 'right',
             borderBottomColor: theme.colors.textGray,
             borderBottomWidth: 1,
-          }}>
+          }}
+          onPress={() => navigation.navigate('confirmEmail')}>
           Forgot Password?
         </Text>
       </View>
@@ -61,22 +68,21 @@ const LoginScreen = ({navigation}) => {
       <SigninOrRegisterCardComponent
         iconName={'google'}
         title={'Continue With Google'}
-        l
-        iconColor={theme.colors.primary}
-        containerStyle={{marginBottom: 10, paddingVertical: 20}}
+        iconColor={theme.colors.googleIconColor}
+        containerStyle={{marginBottom: 10}}
       />
       <SigninOrRegisterCardComponent
         iconName={'facebook'}
         title={'Continue With Facebook'}
-        iconColor={theme.colors.primary}
-        containerStyle={{paddingVertical: 20}}
+        iconColor={theme.colors.facebookIconColor}
+        containerStyle={{marginBottom: 10}}
       />
       <View
         style={{flexDirection: 'row', justifyContent: 'center', marginTop: 10}}>
         <Text style={styles.registerText}>Don't have an account?</Text>
         <Text
           style={styles.registerTextPress}
-          onPress={() => navigation.navigate('register')}>
+          onPress={() => navigation.replace('register')}>
           Register
         </Text>
       </View>
@@ -89,7 +95,8 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 10,
+    padding: 10,
+    backgroundColor: theme.colors.textLight,
   },
   titleContainer: {
     alignItems: 'center',
