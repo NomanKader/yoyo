@@ -47,6 +47,8 @@ const theme = {
     blackTransparent: 'rgba(0,0,0,0.65)',
     outlineBtnBorder: '#505A76',
     disabledGray: '#cccccc',
+    googleIconColor:'#DB4437',
+    facebookIconColor:"#1877F2",
     carousel: {
       activDotColor: '#ffffff',
       inActiveDotColor: '#E0EBF6',
