@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,10 +13,27 @@ import authIllustrationImage from '../../assets/images/authIllustration.png';
 import BGCardComponent from '../../components/Card/BGCardComponent';
 import SigninOrRegisterCardComponent from '../../components/Card/SginOrRegisterCardComponent';
 import theme from '../../styles/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 const screenHeight = Dimensions.get('window').height;
 
 export default function AuthScreen({navigation}) {
+  useEffect(()=>{
+    const getToken=async()=>{
+      try{
+        const token=await AsyncStorage.getItem('jwt');
+        console.log("Token",token);
+        if(token!=null){
+          navigation.navigate('TabStack')
+        }        
+      }
+      catch(err){
+        console.error(err);
+      }
+    }
+    getToken();
+  },[])
   return (
     <View style={styles.container}>
       {/* Illustration Container */}
