@@ -7,11 +7,36 @@ import CustomCheckBox from '../../components/Input/CustomCheckBox';
 import CustomTextInput from '../../components/Input/CustomTextInput';
 import CustomDividerComponent from '../../components/Divider/CustomDividerComponent';
 import SigninOrRegisterCardComponent from '../../components/Card/SginOrRegisterCardComponent';
+import {LoginAPI} from '../../api/Auth/AuthController';
+import CustomModalAlert from '../../components/Modal/CustomModalAlert';
 
 const LoginScreen = ({navigation}) => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('891011');
+  const [password, setPassword] = useState('123');
   const [isChecked, setIsChecked] = useState(false);
+  const [status, setStatus] = useState(false);
+  const [message, setMessage] = useState();
+  const [visible, setVisible] = useState(false);
+
+  const handleLogin = async () => {
+    const postBody = {
+      Phone: phoneNumber,
+      Password: password,
+    };    
+    try {
+      const res = await LoginAPI(postBody);
+      console.log('Res', res);
+      setMessage(res.message);
+      setStatus(res.status);
+      setVisible(true);
+      // navigation.replace('TabStack')
+    } catch (error) {
+      console.error('Login Error', error);
+      setMessage('An error occurred'); // Default error message
+      setStatus(false);
+      setVisible(true);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -24,8 +49,8 @@ const LoginScreen = ({navigation}) => {
       <CustomTextInput
         type={'phone-pad'}
         title="Mobile Phone"
-        value={email}
-        onChangeText={setEmail}
+        value={phoneNumber}
+        onChangeText={setPhoneNumber}
       />
       <CustomTextInput
         title="Password"
@@ -59,7 +84,7 @@ const LoginScreen = ({navigation}) => {
       </View>
       <DefaultButtonComponent
         title="Login"
-        onPress={() => navigation.navigate('confirmEmail')}
+        onPress={() => handleLogin()}
         buttonStyle={{marginVertical: 30}}
       />
       <CustomDividerComponent
@@ -86,6 +111,14 @@ const LoginScreen = ({navigation}) => {
           Register
         </Text>
       </View>
+      <CustomModalAlert
+        visible={visible}
+        type={status?'success':'warning'}
+        status={status}
+        title={'Login Status'}
+        message={message}
+        onClose={()=>[setVisible,navigation.replace('TabStack')]}
+      />
     </View>
   );
 };
