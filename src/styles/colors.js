@@ -10,6 +10,7 @@ const theme = {
     white: '#fff',
     green: '#008000',
     darkBlue: '#2e6eb5',
+    chipBorderColor:"#D4D4D4",
     darkGray: '#888',
     darkCyan: '#507571',
     green_grey: '#808c42',
