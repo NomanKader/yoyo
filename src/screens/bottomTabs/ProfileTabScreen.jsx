@@ -39,7 +39,7 @@ export default function ProfileTabScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.iconButton}>
+        <TouchableOpacity style={styles.iconButton} onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={22} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Setting</Text>
