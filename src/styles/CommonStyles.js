@@ -50,7 +50,7 @@ export const CommonStyles = {
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 5,
-    width: '90%',
+    width: '100%',
     marginVertical: 10,
     alignSelf: 'center',
   },
