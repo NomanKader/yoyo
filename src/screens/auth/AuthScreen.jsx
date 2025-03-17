@@ -75,7 +75,7 @@ export default function AuthScreen({navigation}) {
             Don't have an account?{' '}
             <Text
               style={styles.registerLink}
-              onPress={() => navigation.navigate('register')}>
+              onPress={() => navigation.navigate('forgetPin')}>
               Register
             </Text>
           </Text>

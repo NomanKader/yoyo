@@ -6,6 +6,7 @@ import CreateNewPasswordScreen from "../screens/auth/CreateNewPasswordScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
 import AuthScreen from "../screens/auth/AuthScreen";
 import OTPVerificationScreen from "../screens/auth/OTPVerificationScreen";
+import ForgetPinScreen from "../screens/auth/ForgetPinScreen";
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ export default function AuthStack() {
       <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="register" component={RegisterScreen} />
       <Stack.Screen name="otpVerification" component={OTPVerificationScreen} />
+      <Stack.Screen name="forgetPin" component={ForgetPinScreen}/>
       <Stack.Screen name="confirmEmail" component={ConfirmEmailScreen} />
       <Stack.Screen name="verifyOTP" component={VerifyOTPScreen} />
       <Stack.Screen name="createNewPassword" component={CreateNewPasswordScreen} />
