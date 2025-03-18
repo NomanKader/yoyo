@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Modal,
   View,
@@ -9,39 +9,72 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import theme from '../../styles/colors';
 
-const FilterModalComponent = ({ modalVisible, setModalVisible }) => {
-  const [selectedSort, setSelectedSort] = useState('Recommendations');
-  const [selectedPropertyType, setSelectedPropertyType] = useState('Apartments');
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const [bedroom, setBedroom] = useState(null);
-  const [bathroom, setBathroom] = useState(null);
+const FilterModalComponent = ({modalVisible, setModalVisible, navigation}) => {
+  const initialState = {
+    selectedSort: 'Recommendations',
+    selectedPropertyType: 'Apartments',
+    minPrice: '',
+    maxPrice: '',
+    bedroom: null,
+    bathroom: null,
+  };
 
-  const sortOptions = ['Recommendations', 'Newest', 'Lowest Price', 'Highest Price'];
-  const propertyTypes = ['Apartments', 'Shop-houses', 'Condominiums', 'Houses', 'Warehouses', 'Villas', 'Land'];
+  const [filters, setFilters] = useState(initialState);
+
+  const resetFilters = () => {
+    setFilters(initialState);
+  };
+
+  const sortOptions = [
+    'Recommendations',
+    'Newest',
+    'Lowest Price',
+    'Highest Price',
+  ];
+  const propertyTypes = [
+    'Apartments',
+    'Shop-houses',
+    'Condominiums',
+    'Houses',
+    'Warehouses',
+    'Villas',
+    'Land',
+  ];
   const numbers = [1, 2, 3, 4, '5+'];
 
   return (
     <Modal visible={modalVisible} animationType="slide" transparent={false}>
+      <View style={styles.filterContainer}>
+        <Text style={styles.modalTitle}>Filter</Text>
+        <TouchableOpacity
+          onPress={() => setModalVisible(false)}
+          style={styles.chipClose}>
+          <Icon name="x" size={24} color="#888" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Sort By */}
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.filterContainer}>
-          <Text style={styles.modalTitle}>Filter</Text>
-          <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.chipClose}>
-            <Icon name="x" size={24} color="#888" />
-          </TouchableOpacity>
-        </View>
-        
-        {/* Sort By */}
         <Text style={styles.sectionTitle}>Sort By</Text>
         <View style={styles.optionsContainer}>
-          {sortOptions.map((option) => (
+          {sortOptions.map(option => (
             <TouchableOpacity
               key={option}
-              style={[styles.optionButton, selectedSort === option && styles.selectedButton]}
-              onPress={() => setSelectedSort(option)}
-            >
-              <Text style={selectedSort === option ? styles.selectedText : styles.optionText}>{option}</Text>
+              style={[
+                styles.optionButton,
+                filters.selectedSort === option && styles.selectedButton,
+              ]}
+              onPress={() => setFilters({...filters, selectedSort: option})}>
+              <Text
+                style={
+                  filters.selectedSort === option
+                    ? styles.selectedText
+                    : styles.optionText
+                }>
+                {option}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -53,28 +86,39 @@ const FilterModalComponent = ({ modalVisible, setModalVisible }) => {
             style={styles.priceInput}
             placeholder="Min"
             keyboardType="numeric"
-            value={minPrice}
-            onChangeText={setMinPrice}
+            value={filters.minPrice}
+            onChangeText={value => setFilters({...filters, minPrice: value})}
           />
           <TextInput
             style={styles.priceInput}
             placeholder="Max"
             keyboardType="numeric"
-            value={maxPrice}
-            onChangeText={setMaxPrice}
+            value={filters.maxPrice}
+            onChangeText={value => setFilters({...filters, maxPrice: value})}
           />
         </View>
 
         {/* Property Type */}
         <Text style={styles.sectionTitle}>Property Type</Text>
         <View style={styles.optionsContainer}>
-          {propertyTypes.map((type) => (
+          {propertyTypes.map(type => (
             <TouchableOpacity
               key={type}
-              style={[styles.optionButton, selectedPropertyType === type && styles.selectedButton]}
-              onPress={() => setSelectedPropertyType(type)}
-            >
-              <Text style={selectedPropertyType === type ? styles.selectedText : styles.optionText}>{type}</Text>
+              style={[
+                styles.optionButton,
+                filters.selectedPropertyType === type && styles.selectedButton,
+              ]}
+              onPress={() =>
+                setFilters({...filters, selectedPropertyType: type})
+              }>
+              <Text
+                style={
+                  filters.selectedPropertyType === type
+                    ? styles.selectedText
+                    : styles.optionText
+                }>
+                {type}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -82,13 +126,22 @@ const FilterModalComponent = ({ modalVisible, setModalVisible }) => {
         {/* Bedroom */}
         <Text style={styles.sectionTitle}>Bedroom</Text>
         <View style={styles.optionsContainer}>
-          {numbers.map((num) => (
+          {numbers.map(num => (
             <TouchableOpacity
               key={num}
-              style={[styles.optionButton, bedroom === num && styles.selectedButton]}
-              onPress={() => setBedroom(num)}
-            >
-              <Text style={bedroom === num ? styles.selectedText : styles.optionText}>{num}</Text>
+              style={[
+                styles.optionButton,
+                filters.bedroom === num && styles.selectedButton,
+              ]}
+              onPress={() => setFilters({...filters, bedroom: num})}>
+              <Text
+                style={
+                  filters.bedroom === num
+                    ? styles.selectedText
+                    : styles.optionText
+                }>
+                {num}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -96,23 +149,37 @@ const FilterModalComponent = ({ modalVisible, setModalVisible }) => {
         {/* Bathroom */}
         <Text style={styles.sectionTitle}>Bathroom</Text>
         <View style={styles.optionsContainer}>
-          {numbers.map((num) => (
+          {numbers.map(num => (
             <TouchableOpacity
               key={num}
-              style={[styles.optionButton, bathroom === num && styles.selectedButton]}
-              onPress={() => setBathroom(num)}
-            >
-              <Text style={bathroom === num ? styles.selectedText : styles.optionText}>{num}</Text>
+              style={[
+                styles.optionButton,
+                filters.bathroom === num && styles.selectedButton,
+              ]}
+              onPress={() => setFilters({...filters, bathroom: num})}>
+              <Text
+                style={
+                  filters.bathroom === num
+                    ? styles.selectedText
+                    : styles.optionText
+                }>
+                {num}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
 
         {/* Buttons */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.resetButton} onPress={() => {}}>
+          <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>
             <Text style={styles.buttonText}>Reset Filter</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.applyButton} onPress={() => setModalVisible(false)}>
+          <TouchableOpacity
+            style={styles.applyButton}
+            onPress={() => {
+              navigation.navigate("AppStack",{screen:'searchDetailScreen'});
+              setModalVisible(false);
+            }}>
             <Text style={styles.buttonText}>View Properties</Text>
           </TouchableOpacity>
         </View>
@@ -131,7 +198,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 5,
+    paddingVertical: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: '#F1F1F1',
   },
   modalTitle: {
     fontSize: 20,
@@ -140,7 +210,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   chipClose: {
-    padding: 5,
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    marginRight: 10,
   },
   sectionTitle: {
     fontSize: 16,

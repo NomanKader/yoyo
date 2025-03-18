@@ -1,122 +1,151 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
+  StyleSheet,
   Image,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
-import Icon from "react-native-vector-icons/Feather";
-import { Picker } from "@react-native-picker/picker";
-
+  TextInput,
+  Modal
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import ProfileImage from '../../assets/images/profileImage.png';
+import theme from '../../styles/colors';
+ 
 export default function EditProfileScreen({ navigation }) {
-  const [name, setName] = useState("Allex Nail");
-  const [email, setEmail] = useState("allexnail@gmail.com");
-  const [phone, setPhone] = useState("2615 6125 6125");
-  const [country, setCountry] = useState("Indonesia");
-  const [userType, setUserType] = useState("Buyer");
-
+  const [profilePic, setProfilePic] = useState(ProfileImage);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [base64Image, setBase64Image] = useState(null);
+ 
+  // Function to handle Image Selection
+  const handleChoosePhoto = (type) => {
+    const options = {
+      mediaType: 'photo',
+      quality: 1,
+      includeBase64: true, // Converts image to base64
+    };
+ 
+    const callback = (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image selection');
+      } else if (response.errorMessage) {
+        console.log('Error:', response.errorMessage);
+      } else if (response.assets && response.assets.length > 0) {
+        setProfilePic({ uri: response.assets[0].uri });
+        setBase64Image(response.assets[0].base64); // Store base64 data
+        setModalVisible(false);
+      }
+    };
+ 
+    if (type === 'camera') {
+      launchCamera(options, callback);
+    } else {
+      launchImageLibrary(options, callback);
+    }
+  };
+ 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
+      {/* Back Button */}
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Icon name="arrow-left" size={24} color="#000" />
+      </TouchableOpacity>
+ 
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={24} color="#000" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Edit Profile</Text>
-        <View style={{ width: 24 }} /> {/* Empty view for spacing */}
-      </View>
-
-      {/* Profile Picture */}
+      <Text style={styles.headerText}>Edit Profile</Text>
+ 
+      {/* Profile Image */}
       <View style={styles.profileContainer}>
-        <Image
-          source={require("../../assets/images/profileImage.png")}
-          style={styles.profileImage}
-        />
-        <TouchableOpacity style={styles.editIcon}>
-          <Icon name="edit" size={18} color="#FFF" />
+        <Image source={profilePic} style={styles.profileImage} />
+        <TouchableOpacity style={styles.editIcon} onPress={() => setModalVisible(true)}>
+          <Icon name="camera" size={18} color="#FFF" />
         </TouchableOpacity>
-        <Text style={styles.profileName}>{name}</Text>
-        <Text style={styles.profileRole}>Buyer</Text>
       </View>
-
-      {/* Form Fields */}
-      <View style={styles.form}>
-        <Text style={styles.label}>Name</Text>
-        <TextInput style={styles.input} value={name} onChangeText={setName} />
-
+ 
+      {/* Personal Details */}
+      <Text style={styles.sectionTitle}>Personal Details</Text>
+ 
+      <View style={styles.inputRow}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>First Name</Text>
+          <TextInput style={styles.input} value="Aung" />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Last Name</Text>
+          <TextInput style={styles.input} value="Aung" />
+        </View>
+      </View>
+ 
+      <View style={styles.inputContainerFull}>
+        <Text style={styles.label}>Mobile Number</Text>
+        <TextInput style={styles.input} value="1234567890" />
+      </View>
+ 
+      <View style={styles.inputContainerFull}>
         <Text style={styles.label}>Email Address</Text>
-        <TextInput
-          style={styles.input}
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-        />
-
-        <Text style={styles.label}>Phone</Text>
-        <View style={styles.phoneContainer}>
-          <Text style={styles.countryCode}>+66</Text>
-          <TextInput
-            style={styles.phoneInput}
-            value={phone}
-            onChangeText={setPhone}
-            keyboardType="phone-pad"
-          />
-        </View>
-
-        <Text style={styles.label}>Country</Text>
-        <View style={styles.dropdown}>
-          <Picker
-            selectedValue={country}
-            onValueChange={(itemValue) => setCountry(itemValue)}
-          >
-            <Picker.Item label="Indonesia" value="Indonesia" />
-            <Picker.Item label="Thailand" value="Thailand" />
-            <Picker.Item label="USA" value="USA" />
-          </Picker>
-        </View>
-
-        <Text style={styles.label}>User Type</Text>
-        <View style={styles.dropdown}>
-          <Picker
-            selectedValue={userType}
-            onValueChange={(itemValue) => setUserType(itemValue)}
-          >
-            <Picker.Item label="Buyer" value="Buyer" />
-            <Picker.Item label="Seller" value="Seller" />
-          </Picker>
-        </View>
-
-        {/* Save Profile Button */}
-        <TouchableOpacity style={styles.saveButton}>
-          <Text style={styles.saveButtonText}>Save Profile</Text>
+        <TextInput style={styles.input} value="aung@gmail.com" />
+      </View>
+ 
+      <View style={styles.inputContainerFull}>
+        <Text style={styles.label}>Address</Text>
+        <TextInput style={styles.input} value="Panbedan, Maharbandula" />
+      </View>
+ 
+      {/* Buttons */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.cancelButton} onPress={() => setEditing(false)}>
+          <Text style={styles.cancelText}>Cancel</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.saveButton} onPress={() => setEditing(false)}>
+          <Text style={styles.saveText}>Save</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+ 
+      {/* Image Picker Modal */}
+      <Modal animationType="slide" transparent={true} visible={modalVisible}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Choose an Option</Text>
+            <TouchableOpacity style={styles.modalButton} onPress={() => handleChoosePhoto('camera')}>
+              <Icon name="camera" size={20} color="#FFF" />
+              <Text style={styles.modalButtonText}>Take a Photo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.modalButton} onPress={() => handleChoosePhoto('gallery')}>
+              <Icon name="image" size={20} color="#FFF" />
+              <Text style={styles.modalButtonText}>Choose from Gallery</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.modalCancel} onPress={() => setModalVisible(false)}>
+              <Text style={styles.modalCancelText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 }
-
+ 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    backgroundColor: "#F8F8F8",
-    paddingHorizontal: 20,
-    paddingVertical: 30,
+    flex: 1,
+    backgroundColor: '#F8F8F8',
+    padding: 20,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+  backButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    padding: 10,
+  },
+  headerText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
     marginBottom: 20,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
+    marginTop: 10,
   },
   profileContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     marginBottom: 20,
   },
   profileImage: {
@@ -125,79 +154,103 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   editIcon: {
-    position: "absolute",
-    bottom: 5,
-    right: 130,
-    backgroundColor: "#007BFF",
+    position: 'absolute',
+    bottom: 0,
+    backgroundColor: theme.colors.primary,
+    alignSelf: 'center',
     width: 30,
     height: 30,
-    borderRadius: 15,
-    alignItems: "center",
-    justifyContent: "center",
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  profileName: {
+  sectionTitle: {
     fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 10,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
-  profileRole: {
-    fontSize: 14,
-    color: "#777",
+  inputRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  form: {
-    backgroundColor: "#FFF",
-    borderRadius: 10,
-    padding: 15,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
+  inputContainer: {
+    width: '48%',
+  },
+  inputContainerFull: {
+    marginBottom: 10,
   },
   label: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: '600',
     marginBottom: 5,
   },
   input: {
-    backgroundColor: "#F0F0F0",
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 15,
+    backgroundColor: '#EAEAEA',
+    padding: 10,
+    borderRadius: 5,
   },
-  phoneContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F0F0F0",
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 15,
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
   },
-  countryCode: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginRight: 10,
-  },
-  phoneInput: {
-    flex: 1,
-    paddingVertical: 12,
-  },
-  dropdown: {
-    backgroundColor: "#F0F0F0",
-    borderRadius: 8,
-    marginBottom: 15,
+  cancelButton: {
+    backgroundColor: '#D3D3D3',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
   },
   saveButton: {
-    backgroundColor: "#0047AB",
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: "center",
+    backgroundColor: theme.colors.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: 5,
+  },
+  cancelText: {
+    fontSize: 16,
+  },
+  saveText: {
+    fontSize: 16,
+    color: '#FFF',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: 300,
+    backgroundColor: '#FFF',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  modalButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    padding: 10,
+    backgroundColor: theme.colors.primary,
+    borderRadius: 5,
+    marginVertical: 5,
+    justifyContent: 'center',
+  },
+  modalButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  modalCancel: {
     marginTop: 10,
   },
-  saveButtonText: {
+  modalCancelText: {
     fontSize: 16,
-    color: "#FFF",
-    fontWeight: "bold",
+    color: '#FF0000',
   },
 });
-
-

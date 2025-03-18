@@ -152,6 +152,7 @@ const SearchScreen = ({navigation}) => {
       <FilterModalComponent
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+        navigation={navigation}
       />
     </View>
   );
