@@ -43,6 +43,36 @@ export default function ProfileTabScreen() {
     ]);
   };
 
+  // Reusable Menu Item Component
+const MenuItem = ({icon, text}) => (
+  <TouchableOpacity style={styles.menuItem} onPress={()=>handleMenu(text)}>
+    <View style={styles.menuIconContainer}>
+      <Image source={icon} style={styles.menuIcon} />
+    </View>
+    <Text style={styles.menuText}>{text}</Text>
+    <Icon name="chevron-right" size={22} color="#A0A0A0" />
+  </TouchableOpacity>
+);
+
+const handleMenu=(text)=>{
+  switch(text){
+    case 'My Profile':
+      navigation.navigate('AppStack',{screen:'editProfileScreen'})
+      break;
+    case 'Favorites':
+      navigation.navigate('AppStack',{screen:'favoriteListScreen'});
+      break;
+    case 'Transaction History':
+      navigation.navigate('AppStack',{screen:'transactionHistoryScreen'});
+      break;
+    case 'Compare':
+      navigation.navigate('AppStack',{screen:'compareScreen'});
+      break;
+    case 'FAQ':
+      navigation.navigate('AppStack',{screen:'faqScreen'});
+      break;
+  }
+}
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -53,7 +83,7 @@ export default function ProfileTabScreen() {
           <Icon name="arrow-left" size={22} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Setting</Text>
-        <TouchableOpacity style={styles.iconButton}>
+        <TouchableOpacity style={styles.iconButton} onPress={()=>navigation.navigate('AppStack',{screen:'settingScreen'})}>
           <Icon name="settings" size={22} color="#000" />
         </TouchableOpacity>
       </View>
@@ -67,10 +97,8 @@ export default function ProfileTabScreen() {
 
       {/* Menu List */}
       <ScrollView>
-        <View style={styles.menuList}>
-          <TouchableOpacity onPress={() => navigation.navigate('AuthStack',{screen:'editProfile'})}>
-            <MenuItem icon={profileIcon} text="My Profile" />
-          </TouchableOpacity>
+        <View style={styles.menuList}>          
+            <MenuItem icon={profileIcon} text="My Profile" />          
           <MenuItem icon={favouriteIcon} text="Favorites" />
           <MenuItem icon={transactionHistoryIcon} text="Transaction History" />
           <MenuItem icon={compareIcon} text="Compare" />
@@ -92,16 +120,7 @@ export default function ProfileTabScreen() {
   );
 }
 
-// Reusable Menu Item Component
-const MenuItem = ({icon, text}) => (
-  <TouchableOpacity style={styles.menuItem}>
-    <View style={styles.menuIconContainer}>
-      <Image source={icon} style={styles.menuIcon} />
-    </View>
-    <Text style={styles.menuText}>{text}</Text>
-    <Icon name="chevron-right" size={22} color="#A0A0A0" />
-  </TouchableOpacity>
-);
+
 
 const styles = StyleSheet.create({
   container: {

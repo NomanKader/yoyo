@@ -1,151 +1,184 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   Image,
   TouchableOpacity,
   TextInput,
-  Modal
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import ProfileImage from '../../assets/images/profileImage.png';
-import theme from '../../styles/colors';
- 
+  StyleSheet,
+  ScrollView,
+  Modal,
+} from "react-native";
+import Icon from "react-native-vector-icons/Feather";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
+import { Picker } from "@react-native-picker/picker";
+
 export default function EditProfileScreen({ navigation }) {
-  const [profilePic, setProfilePic] = useState(ProfileImage);
+  const [profilePic, setProfilePic] = useState(require("../../assets/images/profileImage.png"));
   const [modalVisible, setModalVisible] = useState(false);
-  const [base64Image, setBase64Image] = useState(null);
- 
+  const [name, setName] = useState("Allex Nail");
+  const [email, setEmail] = useState("allexnail@gmail.com");
+  const [phone, setPhone] = useState("2615 6125 6125");
+  const [country, setCountry] = useState("Indonesia");
+  const [userType, setUserType] = useState("Buyer");
+
   // Function to handle Image Selection
   const handleChoosePhoto = (type) => {
     const options = {
-      mediaType: 'photo',
+      mediaType: "photo",
       quality: 1,
-      includeBase64: true, // Converts image to base64
     };
- 
+
     const callback = (response) => {
       if (response.didCancel) {
-        console.log('User cancelled image selection');
+        console.log("User cancelled image selection");
       } else if (response.errorMessage) {
-        console.log('Error:', response.errorMessage);
+        console.log("Error:", response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
         setProfilePic({ uri: response.assets[0].uri });
-        setBase64Image(response.assets[0].base64); // Store base64 data
         setModalVisible(false);
       }
     };
- 
-    if (type === 'camera') {
+
+    if (type === "camera") {
       launchCamera(options, callback);
     } else {
       launchImageLibrary(options, callback);
     }
   };
- 
+
   return (
-    <View style={styles.container}>
-      {/* Back Button */}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Icon name="arrow-left" size={24} color="#000" />
-      </TouchableOpacity>
- 
+    <ScrollView contentContainerStyle={styles.container}>
       {/* Header */}
-      <Text style={styles.headerText}>Edit Profile</Text>
- 
-      {/* Profile Image */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-left" size={24} color="#000" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Edit Profile</Text>
+        <View style={{ width: 24 }} />
+      </View>
+
+      {/* Profile Picture */}
       <View style={styles.profileContainer}>
         <Image source={profilePic} style={styles.profileImage} />
-        <TouchableOpacity style={styles.editIcon} onPress={() => setModalVisible(true)}>
-          <Icon name="camera" size={18} color="#FFF" />
+        <TouchableOpacity
+          style={styles.editIcon}
+          onPress={() => setModalVisible(true)}
+        >
+          <Icon name="edit-2" size={14} color="#FFF" />
         </TouchableOpacity>
+        <Text style={styles.profileName}>{name}</Text>
+        <Text style={styles.profileRole}>Buyer</Text>
       </View>
- 
-      {/* Personal Details */}
-      <Text style={styles.sectionTitle}>Personal Details</Text>
- 
-      <View style={styles.inputRow}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>First Name</Text>
-          <TextInput style={styles.input} value="Aung" />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Last Name</Text>
-          <TextInput style={styles.input} value="Aung" />
-        </View>
-      </View>
- 
-      <View style={styles.inputContainerFull}>
-        <Text style={styles.label}>Mobile Number</Text>
-        <TextInput style={styles.input} value="1234567890" />
-      </View>
- 
-      <View style={styles.inputContainerFull}>
+
+      {/* Form Fields */}
+      <View style={styles.form}>
+        <Text style={styles.label}>Name</Text>
+        <TextInput
+          style={styles.input}
+          value={name}
+          onChangeText={setName}
+        />
+
         <Text style={styles.label}>Email Address</Text>
-        <TextInput style={styles.input} value="aung@gmail.com" />
-      </View>
- 
-      <View style={styles.inputContainerFull}>
-        <Text style={styles.label}>Address</Text>
-        <TextInput style={styles.input} value="Panbedan, Maharbandula" />
-      </View>
- 
-      {/* Buttons */}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.cancelButton} onPress={() => setEditing(false)}>
-          <Text style={styles.cancelText}>Cancel</Text>
+        <TextInput
+          style={styles.input}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
+
+        <Text style={styles.label}>Phone</Text>
+        <View style={styles.phoneContainer}>
+          <Text style={styles.countryCode}>+66</Text>
+          <TextInput
+            style={styles.phoneInput}
+            value={phone}
+            onChangeText={setPhone}
+            keyboardType="phone-pad"
+          />
+        </View>
+
+        <Text style={styles.label}>Country</Text>
+        <View style={styles.dropdown}>
+          <Picker
+            selectedValue={country}
+            onValueChange={(itemValue) => setCountry(itemValue)}
+          >
+            <Picker.Item label="Indonesia" value="Indonesia" />
+            <Picker.Item label="Thailand" value="Thailand" />
+            <Picker.Item label="Myanmar" value="Myanmar" />
+          </Picker>
+        </View>
+
+        <Text style={styles.label}>User Type</Text>
+        <View style={styles.dropdown}>
+          <Picker
+            selectedValue={userType}
+            onValueChange={(itemValue) => setUserType(itemValue)}
+          >
+            <Picker.Item label="Buyer" value="Buyer" />
+            <Picker.Item label="Seller" value="Seller" />
+          </Picker>
+        </View>
+
+        {/* Save Profile Button */}
+        <TouchableOpacity style={styles.saveButton}>
+          <Text style={styles.saveButtonText}>Save Profile</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.saveButton} onPress={() => setEditing(false)}>
-          <Text style={styles.saveText}>Save</Text>
-        </TouchableOpacity>
       </View>
- 
+
       {/* Image Picker Modal */}
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Choose an Option</Text>
-            <TouchableOpacity style={styles.modalButton} onPress={() => handleChoosePhoto('camera')}>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleChoosePhoto("camera")}
+            >
               <Icon name="camera" size={20} color="#FFF" />
               <Text style={styles.modalButtonText}>Take a Photo</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.modalButton} onPress={() => handleChoosePhoto('gallery')}>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleChoosePhoto("gallery")}
+            >
               <Icon name="image" size={20} color="#FFF" />
               <Text style={styles.modalButtonText}>Choose from Gallery</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.modalCancel} onPress={() => setModalVisible(false)}>
+            <TouchableOpacity
+              style={styles.modalCancel}
+              onPress={() => setModalVisible(false)}
+            >
               <Text style={styles.modalCancelText}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 }
- 
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#F8F8F8',
-    padding: 20,
+    flexGrow: 1,
+    backgroundColor: "#F8F8F8",
+    paddingHorizontal: 20,
+    paddingTop: 30,
   },
-  backButton: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    padding: 10,
-  },
-  headerText: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    textAlign: 'center',
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 20,
-    marginTop: 10,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
   profileContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   profileImage: {
@@ -154,95 +187,106 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   editIcon: {
-    position: 'absolute',
-    bottom: 0,
-    backgroundColor: theme.colors.primary,
-    alignSelf: 'center',
+    position: "absolute",
+    bottom: 50,
+    right: 135,
+    backgroundColor: "#007BFF",
     width: 30,
     height: 30,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  sectionTitle: {
+  profileName: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    fontWeight: "bold",
+    marginTop: 10,
   },
-  inputRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  profileRole: {
+    fontSize: 14,
+    color: "#777",
   },
-  inputContainer: {
-    width: '48%',
-  },
-  inputContainerFull: {
-    marginBottom: 10,
+  form: {
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    padding: 15,
   },
   label: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "bold",
     marginBottom: 5,
   },
   input: {
-    backgroundColor: '#EAEAEA',
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: "#F0F0F0",
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 15,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
+  phoneContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F0F0F0",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 15,
   },
-  cancelButton: {
-    backgroundColor: '#D3D3D3',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+  countryCode: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginRight: 10,
+  },
+  phoneInput: {
+    flex: 1,
+    paddingVertical: 12,
+  },
+  dropdown: {
+    backgroundColor: "#F0F0F0",
+    borderRadius: 8,
+    marginBottom: 15,
   },
   saveButton: {
-    backgroundColor: theme.colors.primary,
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 5,
+    backgroundColor: "#0047AB",
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 10,
   },
-  cancelText: {
+  saveButtonText: {
     fontSize: 16,
-  },
-  saveText: {
-    fontSize: 16,
-    color: '#FFF',
+    color: "#FFF",
+    fontWeight: "bold",
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Overlay for dimming effect
   },
   modalContent: {
     width: 300,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     padding: 20,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
+    elevation: 5, // Shadow for modal
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 15,
   },
   modalButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    padding: 10,
-    backgroundColor: theme.colors.primary,
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    padding: 12,
+    backgroundColor: "#007BFF",
     borderRadius: 5,
     marginVertical: 5,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   modalButtonText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 16,
     marginLeft: 10,
   },
@@ -251,6 +295,7 @@ const styles = StyleSheet.create({
   },
   modalCancelText: {
     fontSize: 16,
-    color: '#FF0000',
+    color: "#FF0000",
   },
 });
+
