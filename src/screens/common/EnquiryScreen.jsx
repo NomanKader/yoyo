@@ -9,6 +9,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RNPickerSelect from 'react-native-picker-select';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
+import theme from '../../styles/colors';
 
 const EnquiryScreen = ({navigation}) => {
   const [name, setName] = useState('');
@@ -67,7 +68,8 @@ const EnquiryScreen = ({navigation}) => {
         <View style={styles.phoneContainer}>
           <TextInput
             style={styles.countryCodeInput}
-            placeholder="+66"
+            placeholder='+66'
+            placeholderTextColor={theme.colors.textLightGray}
             keyboardType="phone-pad"
             value={countryCode}
             onChangeText={handleCountryCodeChange}

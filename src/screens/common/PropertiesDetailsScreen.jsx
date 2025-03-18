@@ -58,7 +58,7 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => console.log('Go Back')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back-outline" size={24} color="black" />
         </TouchableOpacity>
 
@@ -92,21 +92,21 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
         </View>
 
         <View style={styles.featuresContainer}>
-          <View style={styles.featureItem}>
+          <View style={styles.featureThreeItem}>
             <Ionicons name="business-outline" size={20} color="black" />
             <Text style={styles.featureText}>Condo</Text>
           </View>
 
           <View style={styles.divider} />
 
-          <View style={styles.featureItem}>
+          <View style={styles.featureThreeItem}>
             <Ionicons name="bed-outline" size={20} color="black" />
             <Text style={styles.featureText}>1 Bed</Text>
           </View>
 
           <View style={styles.divider} />
 
-          <View style={styles.featureItem}>
+          <View style={styles.featureThreeItem}>
             <Ionicons name="water-outline" size={20} color="black" />
             <Text style={styles.featureText}>1 Bath</Text>
           </View>
@@ -630,6 +630,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '45%',
+    marginBottom: 10,
+  },
+  featureThreeItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 10,
   },
 
