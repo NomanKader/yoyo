@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,9 +9,10 @@ import {
   StyleSheet,
   ImageBackground,
   ScrollView,
+  Alert,
+  BackHandler,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import theme from '../../styles/colors';
 
 // Dummy Data
 const categories = [
@@ -45,6 +46,7 @@ const recentlyAdded = [
 ];
 
 export default function HomeTabScreen({navigation}) {
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -61,15 +63,13 @@ export default function HomeTabScreen({navigation}) {
                 source={require('../../assets/images/profileImage.png')}
                 style={styles.profileImage}
               />
-            </TouchableOpacity> 
-            
+            </TouchableOpacity>
           </View>
-          <View style={{flexDirection:'column'}}>
+          <View style={{flexDirection: 'column'}}>
             <Text style={styles.headerTitle}>
               Your Property Hub for All Needs
-            </Text>        
-            </View>
-          
+            </Text>
+          </View>
 
           {/* Search Bar */}
           <View style={styles.searchBar}>
@@ -158,10 +158,10 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#FFF',     
+    color: '#FFF',
     marginLeft: 10,
-    marginTop:40,
-    textAlign:'left'
+    marginTop: 40,
+    textAlign: 'left',
   },
   profileImage: {
     width: 40,
@@ -224,49 +224,49 @@ const styles = StyleSheet.create({
     width: 160,
     marginRight: 15,
     borderRadius: 10,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     padding: 10,
     marginHorizontal: 5,
-    position: "relative",
-    marginBottom:20
+    position: 'relative',
+    marginBottom: 20,
   },
   propertyImage: {
-    width: "100%",
+    width: '100%',
     height: 100,
     borderRadius: 10,
   },
   propertyIcons: {
-    position: "absolute",
+    position: 'absolute',
     top: 10,
     right: 10,
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 8, // Spacing between icons
   },
   iconCircle: {
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     width: 30,
     height: 30,
     borderRadius: 15,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     elevation: 3,
-    marginTop:5
+    marginTop: 5,
   },
   propertyName: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginTop: 5,
   },
   propertyLocation: {
     fontSize: 12,
-    color: "#777",
+    color: '#777',
   },
   propertyPrice: {
     fontSize: 14,
-    fontWeight: "bold",
-    color: "#007BFF",
+    fontWeight: 'bold',
+    color: '#007BFF',
   },
 });

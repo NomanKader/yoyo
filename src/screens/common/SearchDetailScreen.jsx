@@ -126,9 +126,6 @@ const SearchDetailScreen = ({navigation}) => {
       </View>
       <Text style={styles.propertyCount}>1,200 Properties found</Text>
 
-      {/* Search Bar */}
-
-      {/* Filter Buttons */}
       <View style={styles.filterContainer}>
         {['Sort', 'Bedrooms', 'Price', 'Property Type'].map(filter => (
           <TouchableOpacity
@@ -156,7 +153,13 @@ const SearchDetailScreen = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={styles.row}
         renderItem={({item}) => (
-          <View style={styles.card}>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() =>
+              navigation.navigate('AppStack', {
+                screen: 'propertiesDetailsScreen',
+              })
+            }>
             <Image source={item.image} style={styles.propertyImage} />
             <View style={styles.cardContent}>
               <Text style={styles.title}>{item.title}</Text>
@@ -168,7 +171,7 @@ const SearchDetailScreen = ({navigation}) => {
                 <Text style={styles.detailText}>{item.baths} Bath</Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>
