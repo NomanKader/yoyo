@@ -7,6 +7,7 @@ import TabStack from './src/navigation/TabStack';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {ThemeProvider} from './src/context/ThemeContext';
+import {TranslationProvider} from './src/context/TranslationContext';
 
 const Stack = createStackNavigator();
 
@@ -15,15 +16,17 @@ export default function App() {
     <ThemeProvider>
       <GestureHandlerRootView style={{flex: 1}}>
         <SafeAreaProvider style={{flexGrow: 1}}>
-          <NavigationContainer>
-            <Stack.Navigator
-              initialRouteName="AuthStack"
-              screenOptions={{headerShown: false}}>
-              <Stack.Screen name="AuthStack" component={AuthStack} />
-              <Stack.Screen name="AppStack" component={AppStack} />
-              <Stack.Screen name="TabStack" component={TabStack} />
-            </Stack.Navigator>
-          </NavigationContainer>
+          <TranslationProvider>
+            <NavigationContainer>
+              <Stack.Navigator
+                initialRouteName="AuthStack"
+                screenOptions={{headerShown: false}}>
+                <Stack.Screen name="AuthStack" component={AuthStack} />
+                <Stack.Screen name="AppStack" component={AppStack} />
+                <Stack.Screen name="TabStack" component={TabStack} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </TranslationProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
     </ThemeProvider>

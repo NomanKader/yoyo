@@ -19,8 +19,10 @@ import theme from '../../styles/colors';
 import {RegisterAPI} from '../../api/Auth/AuthController';
 import DatePickerComponent from '../../components/Formik/DatePickerComponent';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
+import { useTranslation } from 'react-i18next';
 
 const RegisterScreen = ({navigation}) => {
+  const {t} = useTranslation()
   const [formState, setFormState] = useState({
     username: '',
     fullName: '',
@@ -100,7 +102,7 @@ const RegisterScreen = ({navigation}) => {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <DetailAppBarComponent navigation={navigation} title={'Register'} />
+      <DetailAppBarComponent navigation={navigation} title={t('register')} />
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
