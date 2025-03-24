@@ -5,8 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18nextReactNativeAsyncStorage from 'i18next-react-native-async-storage';
 
 import en from '../languages/en.json';
-import th from '../languages/th.json';
-
+import mm from "../languages/mm.json"
 const getSavedLanguage = async () => {
   const savedLanguage = await AsyncStorage.getItem('userLanguage');
   return savedLanguage || 'en';
@@ -24,7 +23,7 @@ const getSavedLanguage = async () => {
       debug: true,
       resources: {
         en,
-        th,
+        mm,
       },
       ns: ['translation'],
       defaultNS: 'translation',

@@ -11,7 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/Feather';
 import theme from '../../styles/colors';
 
-const FilterModalComponent = ({modalVisible, setModalVisible, navigation}) => {
+const FilterModalComponent = ({modalVisible, setModalVisible, navigation,propertyTypes}) => {
   const initialState = {
     selectedSort: 'Recommendations',
     selectedPropertyType: 'Apartments',
@@ -33,15 +33,15 @@ const FilterModalComponent = ({modalVisible, setModalVisible, navigation}) => {
     'Lowest Price',
     'Highest Price',
   ];
-  const propertyTypes = [
-    'Apartments',
-    'Shop-houses',
-    'Condominiums',
-    'Houses',
-    'Warehouses',
-    'Villas',
-    'Land',
-  ];
+  // const propertyTypes = [
+  //   'Apartments',
+  //   'Shop-houses',
+  //   'Condominiums',
+  //   'Houses',
+  //   'Warehouses',
+  //   'Villas',
+  //   'Land',
+  // ];
   const numbers = [1, 2, 3, 4, '5+'];
 
   return (

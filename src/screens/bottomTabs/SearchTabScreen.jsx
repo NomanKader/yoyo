@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import filterIcon from '../../assets/icons/filter.png';
 import theme from '../../styles/colors';
 import Icon from 'react-native-vector-icons/Feather';
 import FilterModalComponent from '../../components/filterModal/FilterModalComponent';
+import {GetPropertyTypes} from '../../api/DataController';
 
 const SearchTabScreen = ({navigation}) => {
   const [searchText, setSearchText] = useState('');
@@ -26,6 +27,23 @@ const SearchTabScreen = ({navigation}) => {
     'Thong Lo',
     'BTS Ekkamai',
   ]);
+  const [propertyTypes, setPropertyType] = useState([]);
+
+  useEffect(() => {
+    const getPropertyTypes = async () => {
+      try {
+        const response = await GetPropertyTypes();
+        console.log('Response:', response);
+
+        const names = response.data.map(item => item.name);
+        setPropertyType(names);
+      } catch (error) {
+        console.error('Error fetching property types:', error);
+      }
+    };
+
+    getPropertyTypes();
+  }, []);
 
   const exploreData = [
     {
@@ -153,6 +171,7 @@ const SearchTabScreen = ({navigation}) => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         navigation={navigation}
+        propertyTypes={propertyTypes}
       />
     </View>
   );
