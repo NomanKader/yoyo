@@ -33,8 +33,7 @@ const SearchTabScreen = ({navigation}) => {
     const getPropertyTypes = async () => {
       try {
         const response = await GetPropertyTypes();
-        console.log('Response:', response);
-
+        console.log('Response:', response);        
         const names = response.data.map(item => item.name);
         setPropertyType(names);
       } catch (error) {
