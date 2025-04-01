@@ -9,6 +9,7 @@ import CustomDividerComponent from '../../components/Divider/CustomDividerCompon
 import SigninOrRegisterCardComponent from '../../components/Card/SginOrRegisterCardComponent';
 import {LoginAPI} from '../../api/Auth/AuthController';
 import CustomModalAlert from '../../components/Modal/CustomModalAlert';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({navigation}) => {
   const [phoneNumber, setPhoneNumber] = useState('891011');
@@ -29,6 +30,9 @@ const LoginScreen = ({navigation}) => {
       setMessage(res.message);
       setStatus(res.status);
       setVisible(true);
+      if (res.status && res.data?.id) {
+        await AsyncStorage.setItem('userId', res.data.id.toString());
+      }
       // navigation.replace('TabStack')
     } catch (error) {
       console.error('Login Error', error);

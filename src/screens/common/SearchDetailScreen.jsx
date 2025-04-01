@@ -13,15 +13,48 @@ import {
 import Icon from 'react-native-vector-icons/Feather';
 import backIcon from '../../assets/icons/back.png';
 import filterIcon from '../../assets/icons/filter.png';
-import {GetPropertyListByCityId} from '../../api/DataController';
+import {
+  AddToFavourite,
+  GetPropertyListByCityId,
+} from '../../api/DataController';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SearchDetailScreen = ({navigation, route}) => {
-  const BASE_IMAGE_URL = 'https://2783-37-19-205-148.ngrok-free.app/';
   const {cityId} = route.params;
   console.log('CityId', cityId);
   const [activeFilter, setActiveFilter] = useState('Sort');
   const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [favorites, setFavorites] = useState({});
+
+  const toggleFavorite = async propertyId => {
+    const customerId = await AsyncStorage.getItem('userId');
+
+    const postBody = {
+      customerId: 1,
+      propertyId: propertyId,
+    };
+    console.log('Post Body:', postBody);
+    try {
+      // Optimistically update UI
+      const response = await AddToFavourite(postBody);
+      console.log('respone', response);
+
+      if (!response.status) {
+        Alert.alert('Error', response.message);
+      } else {
+        console.log('Property added to favorites');
+        setFavorites(prev => ({
+          ...prev,
+          [propertyId]: !prev[propertyId],
+        }));
+      }
+    } catch (error) {
+      console.error('Add to favorites failed:', error);
+      Alert.alert('Error', 'Failed to add to favorites');
+    }
+  };
 
   useEffect(() => {
     const fetchPropertiesListByCityId = async () => {
@@ -35,9 +68,7 @@ const SearchDetailScreen = ({navigation, route}) => {
             location: item.location,
             pricePerMonth: `$${item.pricePerMonth} / month`,
             imagePath: {
-              uri: `${BASE_IMAGE_URL}${item.imagePath
-                .replace(/^.*Images/, 'Images')
-                .trim()}`,
+              uri: item.imagePath.trim(),
             },
             bedroom: item.bedroom,
             bathroom: item.bathroom,
@@ -76,7 +107,26 @@ const SearchDetailScreen = ({navigation, route}) => {
           screen: 'propertiesDetailsScreen',
         })
       }>
-      <Image source={item.imagePath} style={styles.propertyImage} />
+      <View style={styles.imageWrapper}>
+        <Image source={item.imagePath} style={styles.propertyImage} />
+
+        <View style={styles.topIcons}>
+          <TouchableOpacity
+            style={styles.iconCircle}
+            onPress={() => toggleFavorite(item.id.toString())}>
+            <FontAwesome
+              name={favorites[item.id] ? 'heart' : 'heart-o'}
+              size={16}
+              color={favorites[item.id] ? '#e63946' : '#999'}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.iconCircle}>
+            <Icon name="share-2" size={16} color="#999" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
       <View style={styles.cardContent}>
         <Text style={styles.title}>{item.name}</Text>
         <Text style={styles.location}>{item.location}</Text>
@@ -315,5 +365,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 999,
+  },
+  imageWrapper: {
+    position: 'relative',
+    width: '100%',
+    height: 120,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    overflow: 'hidden',
+  },
+
+  topIcons: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    flexDirection: 'row',
+  },
+
+  iconCircle: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 4,
   },
 });

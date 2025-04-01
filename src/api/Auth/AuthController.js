@@ -12,6 +12,7 @@ export const LoginAPI = async (postBody) => {
     return {
       status: res.data.success,
       message: res.data.message,
+      data: res.data.data,
     };
   } catch (err) {
     console.error("Login API Error:", err?.response?.data);

@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Modal,
   Button,
+  ActivityIndicator,
 } from 'react-native';
 import backIcon from '../../assets/icons/back.png';
 import filterIcon from '../../assets/icons/filter.png';
@@ -28,12 +29,15 @@ const SearchTabScreen = ({navigation}) => {
     'BTS Ekkamai',
   ]);
   const [propertyTypes, setPropertyType] = useState([]);
+  const [isLoadingExplore, setIsLoadingExplore] = useState(true);
   const [exploreData, setExploreData] = useState([]);
 
   useEffect(() => {
     const getDataList = async () => {
       try {
         // Wait for both API calls to resolve
+        setIsLoadingExplore(true);
+
         const [propertyTypeList, exploreTypeList] = await Promise.all([
           GetPropertyTypes(),
           GetExploreList(),
@@ -51,6 +55,8 @@ const SearchTabScreen = ({navigation}) => {
         setPropertyType(names);
       } catch (error) {
         console.error('Error fetching property types:', error);
+      } finally {
+        setIsLoadingExplore(false);
       }
     };
 
@@ -147,13 +153,21 @@ const SearchTabScreen = ({navigation}) => {
         )}
 
         <Text style={styles.sectionTitle}>Explore</Text>
-        <FlatList
-          data={exploreData}
-          renderItem={renderExploreItem}
-          keyExtractor={item => item.id}
-          numColumns={2}
-          columnWrapperStyle={styles.exploreGrid}
-        />
+        {isLoadingExplore ? (
+          <ActivityIndicator
+            size="large"
+            color="#007bff"
+            style={{marginTop: 20}}
+          />
+        ) : (
+          <FlatList
+            data={exploreData}
+            renderItem={renderExploreItem}
+            keyExtractor={item => item.id}
+            numColumns={2}
+            columnWrapperStyle={styles.exploreGrid}
+          />
+        )}
       </View>
       <FilterModalComponent
         modalVisible={modalVisible}
