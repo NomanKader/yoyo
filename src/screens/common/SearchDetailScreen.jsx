@@ -70,7 +70,7 @@ const SearchDetailScreen = ({navigation, route}) => {
             id: item.id,
             name: item.name,
             location: item.location,
-            pricePerMonth: `$${item.pricePerMonth} / month`,
+            pricePerMonth: `$${Number(item.pricePerMonth).toLocaleString()} / month`,
             imagePath: {
               uri: item.imagePath.trim(),
             },
