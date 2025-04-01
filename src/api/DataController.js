@@ -57,11 +57,12 @@ export const GetPropertyListByCityId = async cityId => {
   }
 };
 
-export const AddToFavourite = async postBody => {
+export const AddToFavourite = async (type,postBody) => {
   const apiUrl = configData.baseJsonUrl;
+  const toOrFrom = type === 'add' ? 'to' : 'from';
   try {
     const res = await axios.post(
-      `${apiUrl}properties/add-to-favorites`,
+      `${apiUrl}properties/${type}-${toOrFrom}-favorites`,
       postBody,
     );
 
@@ -71,7 +72,7 @@ export const AddToFavourite = async postBody => {
       data: res.data.data,
     };
   } catch (err) {
-    console.error('add to favourite error :', err);
+    console.error(`${type} to favourite error :`, err);
     return {
       status: err?.response?.data?.success || false,
       message: err?.response?.data?.message || 'An error occurred',

@@ -28,34 +28,38 @@ const SearchDetailScreen = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [favorites, setFavorites] = useState({});
 
-  const toggleFavorite = async propertyId => {
+  const toggleFavorite = async (propertyId) => {
     const customerId = await AsyncStorage.getItem('userId');
-
+  
     const postBody = {
-      customerId: 1,
+      customerId: 1, // Make sure it's a number
       propertyId: propertyId,
     };
-    console.log('Post Body:', postBody);
+  
+    const isCurrentlyFavorite = favorites[propertyId] === true;
+    const action = isCurrentlyFavorite ? 'remove' : 'add';
+  
+    console.log('Post Body:', postBody, 'Action:', action);
+  
     try {
-      // Optimistically update UI
-      const response = await AddToFavourite(postBody);
-      console.log('respone', response);
-
+      const response = await AddToFavourite(action, postBody);
+      console.log('Response:', action);
+  
       if (!response.status) {
         Alert.alert('Error', response.message);
       } else {
-        console.log('Property added to favorites');
-        setFavorites(prev => ({
+        console.log(`Property ${action}ed to favorites`);
+        setFavorites((prev) => ({
           ...prev,
-          [propertyId]: !prev[propertyId],
+          [propertyId]: !isCurrentlyFavorite,
         }));
       }
     } catch (error) {
-      console.error('Add to favorites failed:', error);
-      Alert.alert('Error', 'Failed to add to favorites');
+      console.error(`Failed to ${action} favorite:`, error);
+      Alert.alert('Error', `Failed to ${action} favorite`);
     }
   };
-
+  
   useEffect(() => {
     const fetchPropertiesListByCityId = async () => {
       try {
