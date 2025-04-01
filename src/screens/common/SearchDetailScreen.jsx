@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   StyleSheet,
@@ -7,91 +7,96 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import backIcon from '../../assets/icons/back.png';
 import filterIcon from '../../assets/icons/filter.png';
+import {GetPropertyListByCityId} from '../../api/DataController';
 
-const properties = [
-  {
-    id: '1',
-    title: 'Citi Smart Sukhumvit 18',
-    location: 'Phrom Phong, Bangkok',
-    price: '$1,200 / month',
-    image: {
-      uri: 'https://images.pexels.com/photos/358528/pexels-photo-358528.jpeg',
-    },
-    beds: 2,
-    baths: 1,
-    type: 'Condo',
-  },
-  {
-    id: '2',
-    title: 'The Waterford Rama 4',
-    location: 'Phra Khanong Tai, Bangkok',
-    price: '$900 / month',
-    image: {
-      uri: 'https://images.pexels.com/photos/258109/pexels-photo-258109.jpeg',
-    },
-    beds: 2,
-    baths: 1,
-    type: 'Condo',
-  },
-  {
-    id: '3',
-    title: 'The Deck Patong',
-    location: 'Pa Tong, Phuket',
-    price: '$1,500 / month',
-    image: {
-      uri: 'https://images.pexels.com/photos/373912/pexels-photo-373912.jpeg',
-    },
-    beds: 1,
-    baths: 1,
-    type: 'Condo',
-  },
-  {
-    id: '4',
-    title: 'Marakesh Residence',
-    location: 'Nong Kae, Prachuap Khiri Khan',
-    price: '$950 / month',
-    image: {
-      uri: 'https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg',
-    },
-    beds: 2,
-    baths: 1,
-    type: 'Condo',
-  },
-  {
-    id: '5',
-    title: 'Marakesh Residence',
-    location: 'Nong Kae, Prachuap Khiri Khan',
-    price: '$950 / month',
-    image: {
-      uri: 'https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg',
-    },
-    beds: 2,
-    baths: 1,
-    type: 'Condo',
-  },
-  {
-    id: '6',
-    title: 'Marakesh Residence',
-    location: 'Nong Kae, Prachuap Khiri Khan',
-    price: '$950 / month',
-    image: {
-      uri: 'https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg',
-    },
-    beds: 2,
-    baths: 1,
-    type: 'Condo',
-  },
-];
-
-const SearchDetailScreen = ({navigation}) => {
+const SearchDetailScreen = ({navigation, route}) => {
+  const BASE_IMAGE_URL = 'https://2783-37-19-205-148.ngrok-free.app/';
+  const {cityId} = route.params;
+  console.log('CityId', cityId);
   const [activeFilter, setActiveFilter] = useState('Sort');
+  const [properties, setProperties] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPropertiesListByCityId = async () => {
+      try {
+        setIsLoading(true);
+        const response = await GetPropertyListByCityId(cityId);
+        if (response.status) {
+          const propertyList = response.data.map(item => ({
+            id: item.id,
+            name: item.name,
+            location: item.location,
+            pricePerMonth: `$${item.pricePerMonth} / month`,
+            imagePath: {
+              uri: `${BASE_IMAGE_URL}${item.imagePath
+                .replace(/^.*Images/, 'Images')
+                .trim()}`,
+            },
+            bedroom: item.bedroom,
+            bathroom: item.bathroom,
+            propertyType: item.propertyType,
+          }));
+          setProperties(propertyList);
+        } else {
+          if (response.status === false) {
+            Alert.alert('Information', 'This city has no properties yet!', [
+              {
+                text: 'Ok',
+                onPress: () => {
+                  navigation.goBack();
+                },
+              },
+            ]);
+          } else {
+            console.log('Error fetching properties:', response.message);
+          }
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPropertiesListByCityId();
+  }, []);
+
+  const renderPropertyItem = ({item}) => (
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() =>
+        navigation.navigate('AppStack', {
+          screen: 'propertiesDetailsScreen',
+        })
+      }>
+      <Image source={item.imagePath} style={styles.propertyImage} />
+      <View style={styles.cardContent}>
+        <Text style={styles.title}>{item.name}</Text>
+        <Text style={styles.location}>{item.location}</Text>
+        <Text style={styles.price}>{item.pricePerMonth}</Text>
+        <View style={styles.details}>
+          <Text style={styles.detailText}>{item.propertyType}</Text>
+          <Text style={styles.detailText}>{item.bedroom} Bed</Text>
+          <Text style={styles.detailText}>{item.bathroom} Bath</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
+      {isLoading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#007bff" />
+        </View>
+      )}
       <View style={styles.searchContainer}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -117,6 +122,7 @@ const SearchDetailScreen = ({navigation}) => {
           <Image source={filterIcon} style={styles.icon} />
         </TouchableOpacity>
       </View>
+
       <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>Property rent on Bangkok</Text>
         <TouchableOpacity style={styles.mapButton}>
@@ -124,6 +130,7 @@ const SearchDetailScreen = ({navigation}) => {
           <Text style={styles.mapText}>Maps</Text>
         </TouchableOpacity>
       </View>
+
       <Text style={styles.propertyCount}>1,200 Properties found</Text>
 
       <View style={styles.filterContainer}>
@@ -145,34 +152,14 @@ const SearchDetailScreen = ({navigation}) => {
           </TouchableOpacity>
         ))}
       </View>
-      {/* Property List in Grid */}
+
       <FlatList
         data={properties}
         keyExtractor={item => item.id}
         numColumns={2}
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={styles.row}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() =>
-              navigation.navigate('AppStack', {
-                screen: 'propertiesDetailsScreen',
-              })
-            }>
-            <Image source={item.image} style={styles.propertyImage} />
-            <View style={styles.cardContent}>
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.location}>{item.location}</Text>
-              <Text style={styles.price}>{item.price}</Text>
-              <View style={styles.details}>
-                <Text style={styles.detailText}>{item.type}</Text>
-                <Text style={styles.detailText}>{item.beds} Bed</Text>
-                <Text style={styles.detailText}>{item.baths} Bath</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
+        renderItem={renderPropertyItem}
       />
     </View>
   );
@@ -185,6 +172,40 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 16,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 12,
+  },
+  iconWrapper: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  icon: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+  },
+  searchBar: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    height: 44,
+    marginHorizontal: 10,
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: '#333',
   },
   headerContainer: {
     flexDirection: 'row',
@@ -220,65 +241,28 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 10,
   },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 12,
-  },
-  iconWrapper: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  icon: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    resizeMode: 'contain',
-  },
-  searchBar: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    height: 44,
-    marginHorizontal: 10,
-  },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: '#333',
-  },
   filterContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
   },
   filterButton: {
-    backgroundColor: '#eee',
     paddingVertical: 8,
     paddingHorizontal: 12,
-    borderRadius: 12,
-    borderRadius: 20, // More rounded
-    borderWidth: 1, // Add border
-    borderColor: '#ccc', // Default border color (inactive)
-    backgroundColor: '#fff', // White background
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: '#fff',
   },
   filterButtonActive: {
-    borderColor: '#007bff', // Blue border for active button
+    borderColor: '#007bff',
   },
   filterText: {
     fontSize: 14,
     color: '#333',
   },
   filterTextActive: {
-    color: '#007bff', // Blue text for active button
+    color: '#007bff',
   },
   row: {
     justifyContent: 'space-between',
@@ -289,6 +273,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '48%',
     overflow: 'hidden',
+    elevation: 1,
   },
   propertyImage: {
     width: '100%',
@@ -319,5 +304,16 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#555',
     marginRight: 6,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999,
   },
 });

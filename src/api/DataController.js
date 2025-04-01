@@ -1,20 +1,62 @@
-import configData from "../constants/configData";
-import axios from "axios";
+import configData from '../constants/configData';
+import axios from 'axios';
 
 export const GetPropertyTypes = async () => {
-    const apiUrl = configData.baseJsonUrl
-    try {
-      const res = await axios.get('https://828f-212-102-51-93.ngrok-free.app/api/PropertyType/property-types');  
-      return {
-        status: res.data.success,
-        message: res.data.message,
-        data:res.data.data
-      };
-    } catch (err) {
-      console.error("Get Property Type Error:", err);
-      return {
-        status: err?.response?.data?.success || false,  
-        message: err?.response?.data?.message || "An error occurred",
-      };
-    }
-  };
+  const apiUrl = configData.baseJsonUrl;
+  try {
+    const res = await axios.get(
+      `${apiUrl}PropertyType/property-types`,
+    );
+    return {
+      status: res.data.success,
+      message: res.data.message,
+      data: res.data.data,
+    };
+  } catch (err) {
+    console.error('Get Property Type Error:', err);
+    return {
+      status: err?.response?.data?.success || false,
+      message: err?.response?.data?.message || 'An error occurred',
+    };
+  }
+};
+
+export const GetExploreList = async () => {
+  const apiUrl = configData.baseJsonUrl;
+  try {
+    const res = await axios.get(
+      `${apiUrl}CityCountry/cities`,
+    );
+    return {
+      status: res.data.success,
+      message: res.data.message,
+      data: res.data.data,
+    };
+  } catch (err) {
+    console.error('Get Explore List Type Error:', err);
+    return {
+      status: err?.response?.data?.success || false,
+      message: err?.response?.data?.message || 'An error occurred',
+    };
+  }
+};
+
+export const GetPropertyListByCityId = async (cityId) => {
+  const apiUrl = configData.baseJsonUrl;
+  try {
+    const res = await axios.get(
+      `${apiUrl}properties/properties-by-cities/${cityId}`,
+    );
+    return {
+      status: res.data.success,
+      message: res.data.message,
+      data: res.data.data,
+    };
+  } catch (err) {
+    console.error('Get properties list by city id :', err);
+    return {
+      status: err?.response?.data?.success || false,
+      message: err?.response?.data?.message || 'An error occurred',
+    };
+  }
+};

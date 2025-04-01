@@ -15,7 +15,7 @@ import filterIcon from '../../assets/icons/filter.png';
 import theme from '../../styles/colors';
 import Icon from 'react-native-vector-icons/Feather';
 import FilterModalComponent from '../../components/filterModal/FilterModalComponent';
-import {GetPropertyTypes} from '../../api/DataController';
+import {GetExploreList, GetPropertyTypes} from '../../api/DataController';
 
 const SearchTabScreen = ({navigation}) => {
   const [searchText, setSearchText] = useState('');
@@ -28,54 +28,34 @@ const SearchTabScreen = ({navigation}) => {
     'BTS Ekkamai',
   ]);
   const [propertyTypes, setPropertyType] = useState([]);
+  const [exploreData, setExploreData] = useState([]);
 
   useEffect(() => {
-    const getPropertyTypes = async () => {
+    const getDataList = async () => {
       try {
-        const response = await GetPropertyTypes();
-        console.log('Response:', response);        
-        const names = response.data.map(item => item.name);
+        // Wait for both API calls to resolve
+        const [propertyTypeList, exploreTypeList] = await Promise.all([
+          GetPropertyTypes(),
+          GetExploreList(),
+        ]);
+
+        const names = propertyTypeList.data.map(item => item.name);
+        const exploreData = exploreTypeList.data.map(item => ({
+          id: item.id,
+          name: item.name,
+          image: item.imagePath.trim(),
+        }));
+        console.log('Explore Data:', exploreData);
+
+        setExploreData(exploreData);
         setPropertyType(names);
       } catch (error) {
         console.error('Error fetching property types:', error);
       }
     };
 
-    getPropertyTypes();
+    getDataList();
   }, []);
-
-  const exploreData = [
-    {
-      id: '1',
-      name: 'Silom',
-      image: 'https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg',
-    },
-    {
-      id: '2',
-      name: 'Asok',
-      image: 'https://images.pexels.com/photos/358528/pexels-photo-358528.jpeg',
-    },
-    {
-      id: '3',
-      name: 'Silom',
-      image: 'https://images.pexels.com/photos/258109/pexels-photo-258109.jpeg',
-    },
-    {
-      id: '4',
-      name: 'Ekkamai',
-      image: 'https://images.pexels.com/photos/373912/pexels-photo-373912.jpeg',
-    },
-    {
-      id: '5',
-      name: 'Sathorn',
-      image: 'https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg',
-    },
-    {
-      id: '6',
-      name: 'Phrom Phong',
-      image: 'https://images.pexels.com/photos/358588/pexels-photo-358588.jpeg',
-    },
-  ];
 
   const removeSearch = item => {
     setRecentSearches(prevSearches => {
@@ -99,7 +79,16 @@ const SearchTabScreen = ({navigation}) => {
   };
 
   const renderExploreItem = ({item}) => (
-    <TouchableOpacity style={styles.exploreCard}>
+    <TouchableOpacity
+      style={styles.exploreCard}
+      onPress={() => {
+        navigation.navigate('AppStack', {
+          screen: 'searchDetailScreen',
+          params: {
+            cityId: item.id,
+          },
+        });
+      }}>
       <Image source={{uri: item.image}} style={styles.exploreImage} />
       <View style={styles.textOverlay}>
         <Text style={styles.exploreText}>{item.name}</Text>

@@ -4,6 +4,6 @@ const configData={
     headers:{
         'Content-Type':"application/json"
     },
-    baseJsonUrl:"https://828f-212-102-51-93.ngrok-free.app/api/"
+    baseJsonUrl:"https://2783-37-19-205-148.ngrok-free.app/api/"
 }
 export default configData;
