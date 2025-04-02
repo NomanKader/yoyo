@@ -17,21 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const screenHeight = Dimensions.get('window').height;
 
-export default function AuthScreen({navigation}) {
-  useEffect(() => {
-    const getToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem('jwt');
-        console.log('Token', token);
-        if (token != null) {
-          navigation.navigate('TabStack');
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    getToken();
-  }, []);
+export default function AuthScreen({navigation}) {  
   return (
     <View style={styles.container}>
       {/* Illustration Container */}

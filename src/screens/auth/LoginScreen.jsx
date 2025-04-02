@@ -26,6 +26,7 @@ const LoginScreen = ({navigation}) => {
     };    
     try {
       const res = await LoginAPI(postBody);
+      AsyncStorage.setItem('jwt',JSON.stringify(res?.data?.token))
       console.log('Res', res);
       setMessage(res.message);
       setStatus(res.status);
