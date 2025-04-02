@@ -101,7 +101,7 @@ const FavouriteListScreen = ({navigation}) => {
       </View>
 
       {isLoading ? (
-        <ActivityIndicator size="large" color="#007bff" />
+        <ActivityIndicator size="large" color="#007bff"  style={{flex:1,justifyContent:'center',alignContent:'center'}}/>
       ) : favoriteList.length === 0 ? (
         <View style={styles.emptyState}>
           <Text style={styles.emptyText}>No favorite list exists</Text>
