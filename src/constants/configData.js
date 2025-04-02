@@ -1,5 +1,5 @@
 const configData={
-    devAPIUrl:"http://61.91.120.28:8080/api/",
+    devAPIUrl:"https://c9bc-149-88-103-47.ngrok-free.app/api/",
     isProduction:false,
     headers:{
         'Content-Type':"application/json"

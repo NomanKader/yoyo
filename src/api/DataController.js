@@ -15,11 +15,4 @@ export const GetPropertyListByCityId = async cityId => {
   return res;
 };
 
-export const AddToFavourite = async (type,postBody) => {
-  const toOrFrom = type === 'add' ? 'to' : 'from';
-  const res = await PostAPI(
-    `properties/${type}-${toOrFrom}-favorites`,
-    postBody,
-  );
-  return res;
-};
+

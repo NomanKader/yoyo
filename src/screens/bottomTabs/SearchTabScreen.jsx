@@ -2,99 +2,140 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   FlatList,
   Image,
   StyleSheet,
-  Modal,
-  Button,
   ActivityIndicator,
 } from 'react-native';
-import backIcon from '../../assets/icons/back.png';
-import filterIcon from '../../assets/icons/filter.png';
-import theme from '../../styles/colors';
 import Icon from 'react-native-vector-icons/Feather';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import theme from '../../styles/colors';
 import FilterModalComponent from '../../components/filterModal/FilterModalComponent';
+import FilterSearchComponent from '../../components/Filter/FilterSearchComponent';
 import {GetExploreList, GetPropertyTypes} from '../../api/DataController';
+
+const STORAGE_KEY = 'RECENT_SEARCHES';
 
 const SearchTabScreen = ({navigation}) => {
   const [searchText, setSearchText] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const [recentSearches, setRecentSearches] = useState([
-    'Bangkok',
-    'Ao Noi',
-    'Ari',
-    'Thong Lo',
-    'BTS Ekkamai',
-  ]);
+  const [recentSearches, setRecentSearches] = useState([]);
   const [propertyTypes, setPropertyType] = useState([]);
   const [isLoadingExplore, setIsLoadingExplore] = useState(true);
   const [exploreData, setExploreData] = useState([]);
+  const [allExploreData, setAllExploreData] = useState([]);
 
+  // Initial data load
   useEffect(() => {
-    const getDataList = async () => {
+    const getData = async () => {
       try {
-        // Wait for both API calls to resolve
         setIsLoadingExplore(true);
-
-        const [propertyTypeList, exploreTypeList] = await Promise.all([
+        const [propertyTypeList, exploreList] = await Promise.all([
           GetPropertyTypes(),
           GetExploreList(),
         ]);
 
-        const names = propertyTypeList.data.map(item => item.name);
-        const exploreData = exploreTypeList.data.map(item => ({
+        const propertyNames = propertyTypeList.data.map(item => item.name);
+        const exploreItems = exploreList.data.map(item => ({
           id: item.id,
-          name: item.name,
+          name: item.name.trim(),
           image: item.imagePath.trim(),
         }));
-        console.log('Explore Data:', exploreData);
 
-        setExploreData(exploreData);
-        setPropertyType(names);
+        setPropertyType(propertyNames);
+        setAllExploreData(exploreItems);
+        setExploreData(exploreItems);
       } catch (error) {
-        console.error('Error fetching property types:', error);
+        console.error('Error loading data:', error);
       } finally {
         setIsLoadingExplore(false);
       }
     };
 
-    getDataList();
+    const loadRecentSearches = async () => {
+      try {
+        const stored = await AsyncStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          setRecentSearches(JSON.parse(stored));
+        }
+      } catch (error) {
+        console.error('Error loading recent searches:', error);
+      }
+    };
+
+    getData();
+    loadRecentSearches();
   }, []);
 
-  const removeSearch = item => {
-    setRecentSearches(prevSearches => {
-      const updatedSearches = prevSearches.filter(search => search !== item);
-      return [...updatedSearches];
-    });
+  // Reset filtered data when search is cleared
+  useEffect(() => {
+    if (searchText.trim() === '') {
+      setExploreData(allExploreData);
+    }
+  }, [searchText]);
+
+  const saveRecentSearches = async newSearches => {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newSearches));
+    } catch (error) {
+      console.error('Error saving recent searches:', error);
+    }
   };
 
-  const handleSearchSubmit = () => {
-    if (searchText.trim() !== '') {
-      setRecentSearches(prevSearches => {
-        const updatedSearches = [
-          searchText,
-          ...prevSearches.filter(item => item !== searchText),
-        ];
-        return updatedSearches.slice(0, 5);
-      });
+  const handleSearchSubmit = async () => {
+    const trimmed = searchText.trim();
+    if (trimmed === '') {
+      setExploreData(allExploreData);
+      return;
+    }
 
-      setSearchText('');
+    const updatedSearches = [
+      trimmed,
+      ...recentSearches.filter(item => item !== trimmed),
+    ].slice(0, 5);
+
+    setRecentSearches(updatedSearches);
+    await saveRecentSearches(updatedSearches);
+
+    const filtered = allExploreData.filter(item =>
+      item.name
+        .toLowerCase()
+        .replace(/\s+/g, '')
+        .includes(trimmed.toLowerCase().replace(/\s+/g, '')),
+    );
+
+    setExploreData(filtered);
+  };
+
+  const removeSearch = async item => {
+    const updated = recentSearches.filter(search => search !== item);
+    setRecentSearches(updated);
+    await saveRecentSearches(updated);
+  };
+
+  const clearAllRecentSearches = async () => {
+    try {
+      await AsyncStorage.removeItem(STORAGE_KEY);
+      setRecentSearches([]);
+    } catch (error) {
+      console.error('Error clearing recent searches:', error);
     }
   };
 
   const renderExploreItem = ({item}) => (
     <TouchableOpacity
       style={styles.exploreCard}
-      onPress={() => {
+      onPress={() =>
         navigation.navigate('AppStack', {
           screen: 'searchDetailScreen',
           params: {
             cityId: item.id,
+            cityName: item.name,
           },
-        });
-      }}>
+        })
+      }>
       <Image source={{uri: item.image}} style={styles.exploreImage} />
       <View style={styles.textOverlay}>
         <Text style={styles.exploreText}>{item.name}</Text>
@@ -104,39 +145,29 @@ const SearchTabScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={backIcon}
-            style={{width: 35, height: 35, justifyContent: 'center'}}
-          />
-        </TouchableOpacity>
+      {/* Search Header */}
+      <FilterSearchComponent
+        searchText={searchText}
+        onChangeText={setSearchText}
+        showFilterIcon={true}
+        onSubmitEditing={handleSearchSubmit}
+        onPressBack={() => navigation.goBack()}
+        onPressFilter={() => setModalVisible(true)}
+      />
 
-        <View style={styles.searchBar}>
-          <Icon
-            name="search"
-            size={20}
-            color="#666"
-            style={styles.searchIcon}
-          />
-
-          <TextInput
-            placeholder="Search here"
-            style={styles.searchInput}
-            onSubmitEditing={handleSearchSubmit} // Add function to handle submission
-          />
-        </View>
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Image
-            source={filterIcon}
-            style={{width: 40, height: 40, justifyContent: 'center'}}
-          />
-        </TouchableOpacity>
-      </View>
       <View style={{flex: 1, padding: 20}}>
+        {/* Recent Searches */}
         {recentSearches.length > 0 && (
           <>
-            <Text style={styles.sectionTitle}>Recent Searched</Text>
+            <View style={styles.recentHeader}>
+              <Text style={styles.sectionTitle}>Recent Searched</Text>
+              <TouchableOpacity onPress={clearAllRecentSearches}>
+                <Text style={[styles.sectionTitle, styles.clearAll]}>
+                  Clear All
+                </Text>
+              </TouchableOpacity>
+            </View>
+
             <View style={styles.recentSearchContainer}>
               {recentSearches.map((item, index) => (
                 <View key={index} style={styles.chip}>
@@ -152,23 +183,27 @@ const SearchTabScreen = ({navigation}) => {
           </>
         )}
 
+        {/* Explore List */}
         <Text style={styles.sectionTitle}>Explore</Text>
         {isLoadingExplore ? (
-          <ActivityIndicator
-            size="large"
-            color="#007bff"
-            style={{marginTop: 20}}
-          />
+          <ActivityIndicator size="large" color="#007bff" style={{marginTop: 20}} />
+        ) : exploreData.length === 0 ? (
+          <Text style={styles.emptyText}>No results found.</Text>
         ) : (
           <FlatList
             data={exploreData}
             renderItem={renderExploreItem}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.id.toString()}
             numColumns={2}
-            columnWrapperStyle={styles.exploreGrid}
+            columnWrapperStyle={
+              exploreData.length > 1 ? styles.exploreGrid : null
+            }
+            contentContainerStyle={{paddingBottom: 30}}
           />
         )}
       </View>
+
+      {/* Filter Modal */}
       <FilterModalComponent
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
@@ -181,74 +216,54 @@ const SearchTabScreen = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#fff'},
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 20,
-    paddingHorizontal: 10,
-  },
-  modalContainer: {flex: 1, padding: 20},
-  modalTitle: {fontSize: 18, fontWeight: 'bold'},
-  searchBar: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    borderRadius: 10,
-    marginHorizontal: 10,
-  },
-
-  searchInput: {flex: 1, fontSize: 16},
-
   sectionTitle: {fontSize: 18, fontWeight: 'bold', marginBottom: 10},
-
+  clearAll: {fontSize: 14, color: '#007bff'},
+  recentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   recentSearchContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 15,
     marginBottom: 20,
   },
-
   chip: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.textLight,
     borderWidth: 1,
     borderColor: theme.colors.chipBorderColor,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 5,
   },
-
   chipText: {fontSize: 14, color: '#333'},
-
-  chipClose: {fontSize: 16, marginLeft: 10, color: '#888'},
-
-  exploreGrid: {justifyContent: 'space-between'},
-
+  chipClose: {
+    fontSize: 16,
+    marginLeft: 6,
+    justifyContent: 'center',
+  },
+  exploreGrid: {
+    justifyContent: 'space-between',
+  },
   exploreCard: {
-    flex: 1,
+    width: '48%',
     marginBottom: 15,
-    marginRight: 10,
     alignItems: 'center',
   },
-
   exploreImage: {
     width: '100%',
     height: 50,
     borderRadius: 10,
     backgroundColor: '#ddd',
   },
-
   textOverlay: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   exploreText: {
     color: '#fff',
     fontSize: 16,
@@ -256,6 +271,11 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.6)',
     textShadowOffset: {width: 1, height: 1},
     textShadowRadius: 2,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#999',
+    marginTop: 20,
   },
 });
 
