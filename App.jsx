@@ -34,7 +34,6 @@ export default function App() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider style={{ flexGrow: 1 }}>
           <TranslationProvider>
-            {/* ✅ Add status bar here for both platforms */}
             <StatusBar
               barStyle={Platform.OS === 'ios' ? 'light-content' : 'light-content'}
               backgroundColor="#2979FF"

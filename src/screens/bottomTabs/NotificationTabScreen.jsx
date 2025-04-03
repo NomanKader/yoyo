@@ -1,86 +1,129 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  FlatList,
+  SectionList,
   TouchableOpacity,
   StyleSheet,
   Image,
-} from "react-native";
-import Icon from "react-native-vector-icons/Feather";
+  ActivityIndicator,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
+import moment from 'moment';
+import {GetNotificationList} from '../../api/DataController';
+import theme from '../../styles/colors';
 
-// Dummy Notification Data
-const notifications = [
-  {
-    id: "1",
-    title: "New Listing",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Amet fringilla pulvinar purus convallis",
-    date: "Today",
-    iconColor: "#1E4DB7", // Blue
-  },
-  {
-    id: "2",
-    title: "New Listing",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Amet fringilla pulvinar purus convallis",
-    date: "Today",
-    iconColor: "#229E46", // Green
-  },
-  {
-    id: "3",
-    title: "New Listing",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Amet fringilla pulvinar purus convallis",
-    date: "Yesterday",
-    iconColor: "#229E46", // Green
-  },
-  
-];
+export default function NotificationTabScreen({navigation}) {
+  const [sections, setSections] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-export default function NotificationTabScreen({ navigation }) {
-  const [activeTab, setActiveTab] = useState("Notification");
+  useEffect(() => {
+    getNotificationList();
+  }, []);
+
+  const getIconColor = type => {
+    switch (type) {
+      case 'info':
+        return '#2563EB'; 
+      case 'alert':
+        return '#F59E0B'; 
+      case 'promo':
+        return '#10B981';
+      case 'warning':
+        return '#DC2626'; 
+      case 'security':
+        return '#7C3AED'; 
+      default:
+        return '#6B7280'; 
+    }
+  };
+
+  const formatDateLabel = isoDateStr => {
+    const today = moment();
+    const date = moment(isoDateStr);
+    if (today.isSame(date, 'day')) return 'Today';
+    if (today.clone().subtract(1, 'day').isSame(date, 'day'))
+      return 'Yesterday';
+    return date.format('MMMM D, YYYY');
+  };
+
+  const getNotificationList = async () => {
+    try {
+      setLoading(true);
+      const response = await GetNotificationList();
+      const notificationData = response.data.map(item => ({
+        id: item.id,
+        title: item.title,
+        description: item.message,
+        dateLabel: formatDateLabel(item.dateCreated),
+        iconColor: getIconColor(item.type.toLowerCase()),
+        icon: item.icon,
+      }));
+
+      // Group by dateLabel
+      const grouped = notificationData.reduce((acc, item) => {
+        const group = acc.find(g => g.title === item.dateLabel);
+        if (group) {
+          group.data.push(item);
+        } else {
+          acc.push({title: item.dateLabel, data: [item]});
+        }
+        return acc;
+      }, []);
+
+      setSections(grouped);
+    } catch (error) {
+      console.log('Error fetching notification list:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderItem = ({item}) => (
+    <View style={styles.notificationItem}>
+      <View style={styles.iconCircle}>
+        <Image
+          source={{uri: item.icon}}
+          style={[styles.iconImage, {tintColor: item.iconColor}]}
+        />
+      </View>
+      <View style={styles.notificationText}>
+        <Text style={styles.notificationTitle}>{item.title}</Text>
+        <Text style={styles.notificationDescription}>{item.description}</Text>
+      </View>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Notification</Text>
         <TouchableOpacity>
-          {/* <Icon name="shuffle" size={24} color="#000" /> */}
-          <Image source={require("../../assets/icons/arrowupdownIcon.png")} style={{width:30,height:30}} />
+          <Image
+            source={require('../../assets/icons/arrowupdownIcon.png')}
+            style={{width: 30, height: 30}}
+          />
         </TouchableOpacity>
       </View>
-      {/* Notifications List */}
-      <FlatList
-        data={notifications}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item, index }) => (
-          <View>
-            {/* Show section headers for "Today" and "Yesterday" */}
-            {index === 0 || notifications[index - 1].date !== item.date ? (
-              <Text style={styles.sectionTitle}>{item.date}</Text>
-            ) : null}
 
-            <View style={styles.notificationItem}>
-              <View
-                style={[styles.iconCircle, { backgroundColor: item.iconColor }]}
-              >
-                <Icon name="bell" size={20} color="#FFF" />
-              </View>
-              <View style={styles.notificationText}>
-                <Text style={styles.notificationTitle}>{item.title}</Text>
-                <Text style={styles.notificationDescription}>
-                  {item.description}
-                </Text>
-              </View>
-            </View>
-          </View>
-        )}
-      />
+      {loading ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" color={theme.colors.primary} />
+        </View>
+      ) : (
+        <SectionList
+          sections={sections}
+          keyExtractor={item => item.id.toString()}
+          renderItem={renderItem}
+          renderSectionHeader={({section: {title}}) => (
+            <Text style={styles.sectionTitle}>{title}</Text>
+          )}
+          contentContainerStyle={{paddingBottom: 20}}
+        />
+      )}
     </View>
   );
 }
@@ -88,71 +131,53 @@ export default function NotificationTabScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     paddingHorizontal: 20,
     paddingTop: 40,
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 20,
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: "bold",
-  },
-  tabContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginBottom: 5,
-  },
-  tabText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  activeTab: {
-    color: "#000",
-  },
-  inactiveTab: {
-    color: "#A0A0A0",
-  },
-  tabIndicator: {
-    width: "25%",
-    height: 2,
-    backgroundColor: "#000",
-    marginLeft: 20,
+    fontWeight: 'bold',
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginTop: 20,
     marginBottom: 10,
   },
   notificationItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 15,
   },
   iconCircle: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 15,
+  },
+  iconImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   notificationText: {
     flex: 1,
   },
   notificationTitle: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   notificationDescription: {
     fontSize: 12,
-    color: "#555",
+    color: '#555',
   },
 });
-
-

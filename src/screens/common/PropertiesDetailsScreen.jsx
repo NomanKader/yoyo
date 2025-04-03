@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,15 +6,18 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  FlatList,
   Modal,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import theme from '../../styles/colors';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import {useFocusEffect} from '@react-navigation/native';
+import { GetPorpertiesDetailById } from '../../api/DataController';
 
 const PropertiesDetailsScreen = ({navigation, route}) => {
+  const {propertyId} = route.params || {};
+  const [loading, setLoading] = useState(false);
+  const [propertiesDetail, setPropertiesDetail] = useState({});
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   useFocusEffect(
     React.useCallback(() => {
@@ -26,6 +29,23 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
       }
     }, [route.params]),
   );
+
+  useEffect(() => {
+     getPropertiesDetail()
+  },[])
+
+  const getPropertiesDetail = async () => {
+    try {
+      setLoading(true)
+      const response = await GetPorpertiesDetailById(1)
+      setPropertiesDetail(response?.data?.data)
+    }catch {
+      console.log('error', error)
+    }finally {
+      setLoading(false)
+    }
+  }
+
   const availableUnits = [
     {
       id: '1',
@@ -79,14 +99,14 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
 
         <View style={styles.headerContainer}>
           <View style={styles.titleContainer}>
-            <Text style={styles.propertyTitle}>Skyview Residence 18</Text>
+            <Text style={styles.propertyTitle}>{propertiesDetail?.propertyName}</Text>
             <View style={styles.locationContainer}>
               <Ionicons name="location-outline" size={16} color="gray" />
-              <Text style={styles.locationText}>Phrom Phong, Bangkok</Text>
+              <Text style={styles.locationText}>{propertiesDetail?.location}</Text>
             </View>
           </View>
           <View style={styles.priceContainer}>
-            <Text style={styles.priceText}>$176.00</Text>
+            <Text style={styles.priceText}>MMK {propertiesDetail?.pricePerMonth?.toLocaleString()}</Text>
             <Text style={styles.priceSubText}>/month</Text>
           </View>
         </View>
@@ -94,7 +114,7 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
         <View style={styles.featuresContainer}>
           <View style={styles.featureThreeItem}>
             <Ionicons name="business-outline" size={20} color="black" />
-            <Text style={styles.featureText}>Condo</Text>
+            <Text style={styles.featureText}>{propertiesDetail?.propertyTypeName}</Text>
           </View>
 
           <View style={styles.divider} />
@@ -495,6 +515,7 @@ const styles = StyleSheet.create({
   },
   priceContainer: {
     backgroundColor: '#F5F5F5',
+    paddingHorizontal:6,
     paddingVertical: 6,
     borderRadius: 8,
     alignItems: 'center',

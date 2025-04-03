@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,74 +6,69 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-} from "react-native";
-import Icon from "react-native-vector-icons/Feather";
+  ActivityIndicator,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
+import {GetFAQList} from '../../api/DataController';
 
-// Sample FAQ Data
-const faqs = [
-  {
-    id: "1",
-    question: "What are the benefits of using this app to find properties?",
-    answer:
-      "Our app provides easy access to thousands of properties with advanced search features to ensure you find properties that suit your needs.",
-  },
-  {
-    id: "2",
-    question: "How do I search for properties on this app?",
-    answer:
-      "You can use our search feature to filter properties based on location, price, property type, number of rooms, and more. Use filters to get results that match your preferences.",
-  },
-  {
-    id: "3",
-    question: "How do I save my favorite properties?",
-    answer:
-      'Once logged into your account, you can find the "Save" button on the property detail page. Click this button to save properties to your favorites list.',
-  },
-  {
-    id: "4",
-    question: "How do I contact the agent or property owner?",
-    answer:
-      "You can contact an agent or property owner via the contact details provided on the property listing page.",
-  },
-  {
-    id: "5",
-    question: "What are the steps to rent or buy a property?",
-    answer:
-      "The steps to rent or buy a property include browsing listings, contacting the owner or agent, negotiating the terms, and completing the paperwork.",
-  },
-  {
-    id: "6",
-    question: "How can I review an agent or property owner?",
-    answer:
-      "After a transaction is complete, you can leave a review on the property listing page to share your experience with the agent or property owner.",
-  },
-];
+// Enable animation on Android
+if (
+  Platform.OS === 'android' &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
-export default function FAQScreen({ navigation }) {
+export default function FAQScreen({navigation}) {
   const [expandedIndex, setExpandedIndex] = useState(null);
-  const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Toggle FAQ Item
-  const toggleExpand = (index) => {
+  useEffect(() => {
+    fetchFAQData();
+  }, []);
+
+  const fetchFAQData = async () => {
+    try {
+      setLoading(true);
+      const response = await GetFAQList();
+      if (response?.status) {
+        setFaqs(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching FAQs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleExpand = index => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
-  // Filter FAQs based on search query
-  const filteredFAQs = faqs.filter(
-    (faq) =>
-      faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const normalize = text => text.toLowerCase().replace(/\s+/g, '');
+
+  const filteredFAQs = faqs.filter(faq =>
+    normalize(faq.question).includes(normalize(searchQuery)) ||
+    normalize(faq.answer).includes(normalize(searchQuery))
+  ); 
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>FAQ</Text>
-        <View style={{ width: 24 }} />
+        <View style={{width: 24}} />
       </View>
 
       {/* Search Bar */}
@@ -83,22 +78,29 @@ export default function FAQScreen({ navigation }) {
           placeholder="Search using keywords"
           style={styles.searchInput}
           value={searchQuery}
-          onChangeText={setSearchQuery} // Update search state
+          onChangeText={setSearchQuery}
         />
       </View>
 
-      {/* FAQ List */}
-      {filteredFAQs.length > 0 ? (
+      {/* Content */}
+      {loading ? (
+        <ActivityIndicator size="large" color="#007bff" />
+      ) : filteredFAQs.length > 0 ? (
         filteredFAQs.map((faq, index) => (
-          <View key={faq.id} style={styles.faqItem}>
+          <View key={faq.id} style={styles.card}>
             <TouchableOpacity
-              style={styles.faqHeader}
               onPress={() => toggleExpand(index)}
-            >
+              style={styles.cardHeader}>
               <Text style={styles.questionText}>{faq.question}</Text>
-              <Icon name={expandedIndex === index ? "chevron-up" : "chevron-down"} size={20} color="#000" />
+              <Icon
+                name={expandedIndex === index ? 'chevron-up' : 'chevron-down'}
+                size={20}
+                color="#000"
+              />
             </TouchableOpacity>
-            {expandedIndex === index && <Text style={styles.answerText}>{faq.answer}</Text>}
+            {expandedIndex === index && (
+              <Text style={styles.answerText}>{faq.answer}</Text>
+            )}
           </View>
         ))
       ) : (
@@ -111,28 +113,32 @@ export default function FAQScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: "#FFF",
-    paddingHorizontal: 20,
+    backgroundColor: '#f8f8f8',
+    paddingHorizontal: 16,
     paddingTop: 40,
+    paddingBottom: 20,
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 20,
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#222',
   },
   searchBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F5F5F5",
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    paddingVertical:10,
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#E0E0E0', // light border instead of shadow
   },
   searchIcon: {
     marginRight: 10,
@@ -140,31 +146,38 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
+    color: '#333',
   },
-  faqItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#EAEAEA",
-    paddingVertical: 12,
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#E0E0E0', // light border instead of shadow
   },
-  faqHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   questionText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
+    color: '#333',
     flex: 1,
+    marginRight: 10,
   },
   answerText: {
     fontSize: 14,
-    color: "#555",
-    marginTop: 8,
+    color: '#555',
+    marginTop: 10,
+    lineHeight: 20,
   },
   noResultsText: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 16,
-    color: "#777",
-    marginTop: 20,
+    color: '#777',
+    marginTop: 40,
   },
 });

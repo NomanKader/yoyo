@@ -10,13 +10,19 @@ const PropertiesCardComponent = ({
   onToggleFavorite,
   isFavorite,
   icon,
+  layout = 'vertical', // 'vertical' or 'horizontal'
 }) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
+    <TouchableOpacity
+      style={[
+        styles.card,
+        layout === 'horizontal' && styles.cardHorizontal,
+        layout === 'vertical' && styles.cardVertical,
+      ]}
+      onPress={onPress}>
       {/* Image Section */}
       <View style={styles.imageWrapper}>
         <Image source={item.imagePath} style={styles.propertyImage} />
-
         <View style={styles.topIcons}>
           <TouchableOpacity
             style={styles.iconCircle}
@@ -27,22 +33,35 @@ const PropertiesCardComponent = ({
               color={isFavorite ? '#e63946' : '#999'}
             />
           </TouchableOpacity>
-
-          <TouchableOpacity style={styles.iconCircle}>
-            <Icon name={icon} size={16} color="#999" />
-          </TouchableOpacity>
+          {icon && (
+            <TouchableOpacity style={styles.iconCircle}>
+              <Icon name={icon} size={16} color="#999" />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 
       {/* Content Section */}
       <View style={styles.cardContent}>
-        <Text style={styles.title}>{item.name}</Text>
-        <Text style={styles.location}>{item.location}</Text>
+        <Text style={styles.title} numberOfLines={1}>
+          {item.name}
+        </Text>
+        <Text style={styles.location} numberOfLines={1}>
+          {item.location}
+        </Text>
         <Text style={styles.price}>{item.pricePerMonth}</Text>
 
         <View style={styles.divider} />
 
-        <View style={styles.details}>
+        <View
+          style={[
+            styles.details,
+            {
+              justifyContent:
+                layout === 'horizontal' ? 'space-between' : 'flex-start',
+              flexWrap: layout === 'vertical' ? 'wrap' : 'nowrap', // 👈 wrap for vertical
+            },
+          ]}>
           {item.propertyType && (
             <View style={styles.detailItem}>
               <Icon name="home" size={12} color="#555" />
@@ -69,18 +88,22 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     borderRadius: 12,
-    marginBottom: 12,
-    width: '48%',
     borderWidth: 1,
-    borderColor: '#eee', // light border
+    borderColor: '#eee',
     overflow: 'hidden',
+  },
+  cardVertical: {
+    width: '49%', 
+    marginBottom: 12,
+  },
+  cardHorizontal: {
+    width: 240, 
+    marginRight: 12,
   },
   imageWrapper: {
     position: 'relative',
     width: '100%',
     height: 120,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
     overflow: 'hidden',
   },
   propertyImage: {
@@ -129,7 +152,6 @@ const styles = StyleSheet.create({
   details: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
     flexWrap: 'nowrap',
   },
 
@@ -137,6 +159,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 8,
+    marginBottom: 4,
+    maxWidth: '100%',
   },
 
   detailText: {

@@ -11,10 +11,10 @@ import {
 import Icon from 'react-native-vector-icons/Feather';
 
 import {GetPropertyListByCityId} from '../../api/DataController';
-import {AddOrRemoveController} from '../../api/Favourite/FavouriteController';
 
 import PropertiesCardComponent from '../../components/Property/PropertiesCardComponent';
 import FilterSearchComponent from '../../components/Filter/FilterSearchComponent';
+import {toggleFavorite} from '../../components/utils/FavouriteUtils';
 
 const SearchDetailScreen = ({navigation, route}) => {
   const {cityId, cityName} = route?.params || {};
@@ -71,38 +71,13 @@ const SearchDetailScreen = ({navigation, route}) => {
     setProperties(filtered);
   };
 
-  const toggleFavorite = async propertyId => {
-    const postBody = {
-      customerId: 1,
-      propertyId,
-    };
-
-    const isFavorite = favorites[propertyId];
-    const action = isFavorite ? 'remove' : 'add';
-
-    try {
-      const response = await AddOrRemoveController(action, postBody);
-
-      if (!response.status) {
-        Alert.alert('Error', response.message);
-      } else {
-        setFavorites(prev => ({
-          ...prev,
-          [propertyId]: !isFavorite,
-        }));
-      }
-    } catch (error) {
-      console.error(`Failed to ${action} favorite:`, error);
-      Alert.alert('Error', `Failed to ${action} favorite`);
-    }
-  };
-
   const renderPropertyItem = ({item}) => (
     <PropertiesCardComponent
       item={item}
       isFavorite={favorites[item.id]}
-      onToggleFavorite={toggleFavorite}
-      icon={'share-2'}
+      onToggleFavorite={() => toggleFavorite(item.id, favorites, setFavorites)}
+      icon="share-2"
+      layout="vertical"
       onPress={() =>
         navigation.navigate('AppStack', {
           screen: 'propertiesDetailsScreen',

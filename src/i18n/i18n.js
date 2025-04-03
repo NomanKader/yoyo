@@ -8,7 +8,7 @@ import en from '../languages/en.json';
 import mm from "../languages/mm.json"
 const getSavedLanguage = async () => {
   const savedLanguage = await AsyncStorage.getItem('userLanguage');
-  return savedLanguage || 'en';
+  return savedLanguage || 'mm';
 };
 
 (async () => {
