@@ -10,6 +10,8 @@ import { ThemeProvider } from './src/context/ThemeContext';
 import { TranslationProvider } from './src/context/TranslationContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ActivityIndicator, StatusBar, Platform } from 'react-native';
+import Toast from 'react-native-toast-message';
+
 
 const Stack = createStackNavigator();
 
@@ -48,6 +50,7 @@ export default function App() {
                 <Stack.Screen name="TabStack" component={TabStack} />
               </Stack.Navigator>
             </NavigationContainer>
+            <Toast /> 
           </TranslationProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>

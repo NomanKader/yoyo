@@ -84,7 +84,9 @@ export default function NotificationTabScreen({navigation}) {
       <View style={styles.iconCircle}>
         <Image
           source={{uri: item.icon}}
-          style={[styles.iconImage, {tintColor: item.iconColor}]}
+          style={[styles.iconImage, 
+            {tintColor: item.iconColor}
+          ]}
         />
       </View>
       <View style={styles.notificationText}>
