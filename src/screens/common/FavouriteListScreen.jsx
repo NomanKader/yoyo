@@ -19,6 +19,7 @@ import PropertiesCardComponent from '../../components/Property/PropertiesCardCom
 const FavouriteListScreen = ({navigation}) => {
   const [favoriteList, setFavoriteList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchFavouriteList();
@@ -27,6 +28,7 @@ const FavouriteListScreen = ({navigation}) => {
   const fetchFavouriteList = async () => {
     try {
       setIsLoading(true);
+      setError('');
       const response = await GetFavoriteList(1); // Always use customerId = 1
 
       if (response?.status) {
@@ -43,10 +45,12 @@ const FavouriteListScreen = ({navigation}) => {
 
         setFavoriteList(propertyList);
       } else {
-        setFavoriteList([])
+        setFavoriteList([]);
+        setError('Failed to load favorite list.');
       }
     } catch (error) {
       console.error('Error fetching favorite list:', error);
+      setError('An error occurred while loading favorites.');
     } finally {
       setIsLoading(false);
     }
@@ -101,7 +105,13 @@ const FavouriteListScreen = ({navigation}) => {
       </View>
 
       {isLoading ? (
-        <ActivityIndicator size="large" color="#007bff"  style={{flex:1,justifyContent:'center',alignContent:'center'}}/>
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color="#007bff" />
+        </View>
+      ) : error ? (
+        <View style={styles.centered}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
       ) : favoriteList.length === 0 ? (
         <View style={styles.emptyState}>
           <Text style={styles.emptyText}>No favorite list exists</Text>
@@ -149,11 +159,23 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   emptyText: {
     fontSize: 16,
     color: '#777',
     fontStyle: 'italic',
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    fontSize: 16,
+    color: 'red',
+    textAlign: 'center',
+    paddingHorizontal: 20,
   },
 });

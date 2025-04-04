@@ -27,6 +27,7 @@ export default function FAQScreen({navigation}) {
   const [searchQuery, setSearchQuery] = useState('');
   const [faqs, setFaqs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchFAQData();
@@ -35,12 +36,16 @@ export default function FAQScreen({navigation}) {
   const fetchFAQData = async () => {
     try {
       setLoading(true);
+      setError('');
       const response = await GetFAQList();
       if (response?.status) {
         setFaqs(response.data);
+      } else {
+        setError('Failed to load FAQs. Please try again later.');
       }
-    } catch (error) {
-      console.error('Error fetching FAQs:', error);
+    } catch (err) {
+      console.error('Error fetching FAQs:', err);
+      setError('An error occurred while fetching FAQs.');
     } finally {
       setLoading(false);
     }
@@ -85,6 +90,8 @@ export default function FAQScreen({navigation}) {
       {/* Content */}
       {loading ? (
         <ActivityIndicator size="large" color="#007bff" />
+      ) : error ? (
+        <Text style={styles.errorText}>{error}</Text>
       ) : filteredFAQs.length > 0 ? (
         filteredFAQs.map((faq, index) => (
           <View key={faq.id} style={styles.card}>
@@ -138,7 +145,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#E0E0E0', // light border instead of shadow
+    borderColor: '#E0E0E0',
   },
   searchIcon: {
     marginRight: 10,
@@ -154,7 +161,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#E0E0E0', // light border instead of shadow
+    borderColor: '#E0E0E0',
   },
   cardHeader: {
     flexDirection: 'row',
@@ -178,6 +185,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     color: '#777',
+    marginTop: 40,
+  },
+  errorText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: 'red',
     marginTop: 40,
   },
 });

@@ -177,7 +177,7 @@ const FilterModalComponent = ({modalVisible, setModalVisible, navigation,propert
           <TouchableOpacity
             style={styles.applyButton}
             onPress={() => {
-              navigation.navigate("AppStack",{screen:'searchDetailScreen'});
+              console.log('Filters applied:', filters)
               setModalVisible(false);
             }}>
             <Text style={styles.buttonText}>View Properties</Text>

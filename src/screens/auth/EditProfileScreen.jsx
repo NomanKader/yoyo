@@ -46,7 +46,7 @@ export default function EditProfileScreen({navigation}) {
     country: '',
     userType: '',
   });
-  const [countryCode, setCountryCode] = useState('+66');
+  const [countryCode, setCountryCode] = useState('');
 
   useEffect(() => {
     fetchProfile();

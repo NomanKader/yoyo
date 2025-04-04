@@ -16,6 +16,7 @@ import theme from '../../styles/colors';
 export default function NotificationTabScreen({navigation}) {
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     getNotificationList();
@@ -24,17 +25,17 @@ export default function NotificationTabScreen({navigation}) {
   const getIconColor = type => {
     switch (type) {
       case 'info':
-        return '#2563EB'; 
+        return '#2563EB';
       case 'alert':
-        return '#F59E0B'; 
+        return '#F59E0B';
       case 'promo':
         return '#10B981';
       case 'warning':
-        return '#DC2626'; 
+        return '#DC2626';
       case 'security':
-        return '#7C3AED'; 
+        return '#7C3AED';
       default:
-        return '#6B7280'; 
+        return '#6B7280';
     }
   };
 
@@ -50,6 +51,7 @@ export default function NotificationTabScreen({navigation}) {
   const getNotificationList = async () => {
     try {
       setLoading(true);
+      setError('');
       const response = await GetNotificationList();
       const notificationData = response.data.map(item => ({
         id: item.id,
@@ -74,6 +76,7 @@ export default function NotificationTabScreen({navigation}) {
       setSections(grouped);
     } catch (error) {
       console.log('Error fetching notification list:', error);
+      setError('Failed to load notifications. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -84,9 +87,8 @@ export default function NotificationTabScreen({navigation}) {
       <View style={styles.iconCircle}>
         <Image
           source={{uri: item.icon}}
-          style={[styles.iconImage, 
-            {tintColor: item.iconColor}
-          ]}
+          resizeMode="stretch"
+          style={[styles.iconImage, {tintColor: item.iconColor}]}
         />
       </View>
       <View style={styles.notificationText}>
@@ -98,6 +100,7 @@ export default function NotificationTabScreen({navigation}) {
 
   return (
     <View style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={24} color="#000" />
@@ -111,10 +114,15 @@ export default function NotificationTabScreen({navigation}) {
         </TouchableOpacity>
       </View>
 
+      {/* Loading / Error / Content */}
       {loading ? (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <ActivityIndicator size="large" color={theme.colors.primary} />
         </View>
+      ) : error ? (
+        <Text style={styles.errorText}>{error}</Text>
+      ) : sections.length === 0 ? (
+        <Text style={styles.emptyText}>No notifications available.</Text>
       ) : (
         <SectionList
           sections={sections}
@@ -162,14 +170,15 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+    borderColor: '#E0E0E0',
+    borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,
   },
   iconImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 23,
+    height: 23,
   },
   notificationText: {
     flex: 1,
@@ -181,5 +190,17 @@ const styles = StyleSheet.create({
   notificationDescription: {
     fontSize: 12,
     color: '#555',
+  },
+  errorText: {
+    textAlign: 'center',
+    color: 'red',
+    fontSize: 14,
+    marginTop: 20,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#555',
+    fontSize: 14,
+    marginTop: 20,
   },
 });

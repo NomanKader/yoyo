@@ -20,8 +20,8 @@ export default function HomeTabScreen({navigation}) {
   const [categoriesList, setCategoriesList] = useState([]);
   const [recentlyList, setRecentlyList] = useState([]);
   const [favorites, setFavorites] = useState({});
-
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchHomeData();
@@ -30,6 +30,7 @@ export default function HomeTabScreen({navigation}) {
   const fetchHomeData = async () => {
     try {
       setLoading(true);
+      setError('');
       const [categoryRes, recentRes] = await Promise.all([
         GetExploreList(),
         GetRecentProperties(),
@@ -58,6 +59,7 @@ export default function HomeTabScreen({navigation}) {
       setRecentlyList(recently);
     } catch (error) {
       console.error('Error fetching home data:', error);
+      setError('Failed to load data. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -140,29 +142,46 @@ export default function HomeTabScreen({navigation}) {
           <View style={styles.loaderContainer}>
             <ActivityIndicator size="large" color="#007bff" />
           </View>
+        ) : error ? (
+          <View style={styles.loaderContainer}>
+            <Text style={{textAlign: 'center', color: 'red'}}>{error}</Text>
+          </View>
         ) : (
           <>
             {/* Categories Section */}
             <Text style={styles.sectionTitle}>Categories</Text>
-            <FlatList
-              data={categoriesList}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{paddingHorizontal: 16}}
-              keyExtractor={item => item.id.toString()}
-              renderItem={renderCategoryItem}
-            />
+            {categoriesList.length === 0 ? (
+              <Text style={styles.emptyText}>No categories available.</Text>
+            ) : (
+              <FlatList
+                data={categoriesList}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{paddingHorizontal: 16}}
+                keyExtractor={item => item.id.toString()}
+                renderItem={renderCategoryItem}
+              />
+            )}
 
             {/* Recently Added Section */}
             <Text style={styles.sectionTitle}>Recently Added</Text>
-            <FlatList
-              data={recentlyList}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{paddingHorizontal: 16, marginBottom: 10}}
-              keyExtractor={item => item.id.toString()}
-              renderItem={renderPropertyItem}
-            />
+            {recentlyList.length === 0 ? (
+              <Text style={styles.emptyText}>
+                No recently added properties.
+              </Text>
+            ) : (
+              <FlatList
+                data={recentlyList}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  paddingHorizontal: 16,
+                  marginBottom: 10,
+                }}
+                keyExtractor={item => item.id.toString()}
+                renderItem={renderPropertyItem}
+              />
+            )}
           </>
         )}
       </View>
@@ -181,7 +200,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minHeight: 400,
   },
-
+  emptyText: {
+    textAlign: 'center',
+    color: '#555',
+    marginBottom: 10,
+  },
   headerBackground: {
     width: '100%',
     height: 300,
@@ -191,9 +214,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     paddingHorizontal: 16,
-  },
-  menuButton: {
-    padding: 10,
   },
   profileImage: {
     width: 40,
@@ -257,49 +277,5 @@ const styles = StyleSheet.create({
     color: '#007BFF',
     textAlign: 'center',
     marginBottom: 5,
-  },
-  propertyCard: {
-    width: 160,
-    marginRight: 15,
-    borderRadius: 10,
-    backgroundColor: '#FFF',
-    padding: 10,
-    marginBottom: 20,
-  },
-  propertyImage: {
-    width: '100%',
-    height: 100,
-    borderRadius: 10,
-  },
-  propertyIcons: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    flexDirection: 'row',
-    gap: 8,
-  },
-  iconCircle: {
-    backgroundColor: '#FFF',
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 3,
-    marginLeft: 5,
-  },
-  propertyName: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginTop: 5,
-  },
-  propertyLocation: {
-    fontSize: 12,
-    color: '#777',
-  },
-  propertyPrice: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#007BFF',
   },
 });
