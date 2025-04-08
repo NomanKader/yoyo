@@ -1,4 +1,4 @@
-import {GetAPI, PostAPI} from './CommonController';
+import {GetAPI, PostAPI, PutAPI} from './CommonController';
 
 export const GetPropertyTypes = async () => {
   const res = GetAPI('PropertyType/property-types');
@@ -37,5 +37,20 @@ export const GetFAQList = async () => {
 
 export const GetProfile = async customerId => {
   const res = await GetAPI(`customers/profile/${customerId}`);
+  return res;
+};
+
+export const SaveProfile = async postBody => {
+  const res = await PutAPI('customers/edit-profile', postBody);
+  return res;
+};
+
+export const GetPropertiesbyFilter = async postBody => {
+  const res = await PostAPI('properties/filter', postBody);
+  return res;
+};
+
+export const GetLocationList = async cityId => {
+  const res = await GetAPI('location/location-search/' + cityId);
   return res;
 };

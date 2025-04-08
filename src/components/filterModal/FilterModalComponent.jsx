@@ -9,12 +9,17 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import theme from '../../styles/colors';
 
-const FilterModalComponent = ({modalVisible, setModalVisible, navigation,propertyTypes}) => {
+const FilterModalComponent = ({
+  modalVisible,
+  setModalVisible,
+  propertyTypes,
+  handleFilter,
+  handleResetFilter,
+}) => {
   const initialState = {
     selectedSort: 'Recommendations',
-    selectedPropertyType: 'Apartments',
+    selectedPropertyTypeIds: [],
     minPrice: '',
     maxPrice: '',
     bedroom: null,
@@ -23,26 +28,36 @@ const FilterModalComponent = ({modalVisible, setModalVisible, navigation,propert
 
   const [filters, setFilters] = useState(initialState);
 
-  const resetFilters = () => {
-    setFilters(initialState);
-  };
-
   const sortOptions = [
     'Recommendations',
     'Newest',
     'Lowest Price',
     'Highest Price',
   ];
-  // const propertyTypes = [
-  //   'Apartments',
-  //   'Shop-houses',
-  //   'Condominiums',
-  //   'Houses',
-  //   'Warehouses',
-  //   'Villas',
-  //   'Land',
-  // ];
   const numbers = [1, 2, 3, 4, '5+'];
+
+  const toggleMultiSelect = (key, id) => {
+    const isSelected = filters[key].includes(id);
+    const updated = isSelected
+      ? filters[key].filter(item => item !== id)
+      : [...filters[key], id];
+    setFilters({...filters, [key]: updated});
+  };
+
+  const updateSingleValue = (key, value) => {
+    setFilters({...filters, [key]: value});
+  };
+
+  const onReset = () => {
+    setFilters(initialState);
+    handleResetFilter();
+    setModalVisible(false);
+  };
+
+  const onApply = () => {
+    handleFilter(filters);
+    setModalVisible(false);
+  };
 
   return (
     <Modal visible={modalVisible} animationType="slide" transparent={false}>
@@ -55,8 +70,8 @@ const FilterModalComponent = ({modalVisible, setModalVisible, navigation,propert
         </TouchableOpacity>
       </View>
 
-      {/* Sort By */}
       <ScrollView contentContainerStyle={styles.container}>
+        {/* Sort By */}
         <Text style={styles.sectionTitle}>Sort By</Text>
         <View style={styles.optionsContainer}>
           {sortOptions.map(option => (
@@ -66,7 +81,7 @@ const FilterModalComponent = ({modalVisible, setModalVisible, navigation,propert
                 styles.optionButton,
                 filters.selectedSort === option && styles.selectedButton,
               ]}
-              onPress={() => setFilters({...filters, selectedSort: option})}>
+              onPress={() => updateSingleValue('selectedSort', option)}>
               <Text
                 style={
                   filters.selectedSort === option
@@ -87,40 +102,41 @@ const FilterModalComponent = ({modalVisible, setModalVisible, navigation,propert
             placeholder="Min"
             keyboardType="numeric"
             value={filters.minPrice}
-            onChangeText={value => setFilters({...filters, minPrice: value})}
+            onChangeText={value => updateSingleValue('minPrice', value)}
           />
           <TextInput
             style={styles.priceInput}
             placeholder="Max"
             keyboardType="numeric"
             value={filters.maxPrice}
-            onChangeText={value => setFilters({...filters, maxPrice: value})}
+            onChangeText={value => updateSingleValue('maxPrice', value)}
           />
         </View>
 
-        {/* Property Type */}
-        <Text style={styles.sectionTitle}>Property Type</Text>
+        {/* Property Types (multi-select) */}
+        <Text style={styles.sectionTitle}>Property Types</Text>
         <View style={styles.optionsContainer}>
-          {propertyTypes.map(type => (
-            <TouchableOpacity
-              key={type}
-              style={[
-                styles.optionButton,
-                filters.selectedPropertyType === type && styles.selectedButton,
-              ]}
-              onPress={() =>
-                setFilters({...filters, selectedPropertyType: type})
-              }>
-              <Text
-                style={
-                  filters.selectedPropertyType === type
-                    ? styles.selectedText
-                    : styles.optionText
+          {propertyTypes.map(type => {
+            const isSelected = filters.selectedPropertyTypeIds.includes(
+              type.id,
+            );
+            return (
+              <TouchableOpacity
+                key={type.id}
+                style={[
+                  styles.optionButton,
+                  isSelected && styles.selectedButton,
+                ]}
+                onPress={() =>
+                  toggleMultiSelect('selectedPropertyTypeIds', type.id)
                 }>
-                {type}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text
+                  style={isSelected ? styles.selectedText : styles.optionText}>
+                  {type.name}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
         {/* Bedroom */}
@@ -133,7 +149,7 @@ const FilterModalComponent = ({modalVisible, setModalVisible, navigation,propert
                 styles.optionButton,
                 filters.bedroom === num && styles.selectedButton,
               ]}
-              onPress={() => setFilters({...filters, bedroom: num})}>
+              onPress={() => updateSingleValue('bedroom', num)}>
               <Text
                 style={
                   filters.bedroom === num
@@ -156,7 +172,7 @@ const FilterModalComponent = ({modalVisible, setModalVisible, navigation,propert
                 styles.optionButton,
                 filters.bathroom === num && styles.selectedButton,
               ]}
-              onPress={() => setFilters({...filters, bathroom: num})}>
+              onPress={() => updateSingleValue('bathroom', num)}>
               <Text
                 style={
                   filters.bathroom === num
@@ -171,15 +187,10 @@ const FilterModalComponent = ({modalVisible, setModalVisible, navigation,propert
 
         {/* Buttons */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>
+          <TouchableOpacity style={styles.resetButton} onPress={onReset}>
             <Text style={styles.buttonText}>Reset Filter</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.applyButton}
-            onPress={() => {
-              console.log('Filters applied:', filters)
-              setModalVisible(false);
-            }}>
+          <TouchableOpacity style={styles.applyButton} onPress={onApply}>
             <Text style={styles.buttonText}>View Properties</Text>
           </TouchableOpacity>
         </View>
@@ -256,6 +267,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
+    marginBottom: 40,
   },
   resetButton: {
     backgroundColor: '#ccc',

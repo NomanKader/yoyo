@@ -39,3 +39,23 @@ export const PostAPI = async (apiPath,postBody) => {
     };
   }
 };
+
+export const PutAPI = async (apiPath, putBody) => {
+  try {
+    console.log("apiPath", apiPath);
+    console.log("PutBody", putBody);
+    const res = await axios.put(`${apiUrl}` + apiPath, putBody);
+    return {
+      status: res?.data?.success,
+      message: res?.data?.message,
+      data: res?.data?.data,
+    };
+  } catch (err) {
+    console.error('PUT Error:', err?.response?.data);
+    return {
+      status: err?.response?.data?.success || false,
+      message: err?.response?.data?.message || 'An error occurred',
+    };
+  }
+};
+

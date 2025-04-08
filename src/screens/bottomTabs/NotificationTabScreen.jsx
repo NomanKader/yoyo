@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,16 +10,17 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import moment from 'moment';
-import {GetNotificationList} from '../../api/DataController';
+import { GetNotificationList } from '../../api/DataController';
 import theme from '../../styles/colors';
 
-export default function NotificationTabScreen({navigation}) {
+export default function NotificationTabScreen({ navigation }) {
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [sortOrder, setSortOrder] = useState('desc'); // 'asc' or 'desc'
 
   useEffect(() => {
-    getNotificationList();
+    getNotificationList(sortOrder);
   }, []);
 
   const getIconColor = type => {
@@ -43,24 +44,33 @@ export default function NotificationTabScreen({navigation}) {
     const today = moment();
     const date = moment(isoDateStr);
     if (today.isSame(date, 'day')) return 'Today';
-    if (today.clone().subtract(1, 'day').isSame(date, 'day'))
-      return 'Yesterday';
+    if (today.clone().subtract(1, 'day').isSame(date, 'day')) return 'Yesterday';
     return date.format('MMMM D, YYYY');
   };
 
-  const getNotificationList = async () => {
+  const getNotificationList = async (order = 'desc') => {
     try {
       setLoading(true);
       setError('');
+
       const response = await GetNotificationList();
-      const notificationData = response.data.map(item => ({
+
+      let notificationData = response.data.map(item => ({
         id: item.id,
         title: item.title,
         description: item.message,
+        date: item.dateCreated,
         dateLabel: formatDateLabel(item.dateCreated),
         iconColor: getIconColor(item.type.toLowerCase()),
         icon: item.icon,
       }));
+
+      // Sort by date
+      notificationData.sort((a, b) =>
+        order === 'asc'
+          ? new Date(a.date) - new Date(b.date)
+          : new Date(b.date) - new Date(a.date)
+      );
 
       // Group by dateLabel
       const grouped = notificationData.reduce((acc, item) => {
@@ -68,7 +78,7 @@ export default function NotificationTabScreen({navigation}) {
         if (group) {
           group.data.push(item);
         } else {
-          acc.push({title: item.dateLabel, data: [item]});
+          acc.push({ title: item.dateLabel, data: [item] });
         }
         return acc;
       }, []);
@@ -82,13 +92,19 @@ export default function NotificationTabScreen({navigation}) {
     }
   };
 
-  const renderItem = ({item}) => (
+  const toggleSortOrder = () => {
+    const newOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+    setSortOrder(newOrder);
+    getNotificationList(newOrder);
+  };
+
+  const renderItem = ({ item }) => (
     <View style={styles.notificationItem}>
       <View style={styles.iconCircle}>
         <Image
-          source={{uri: item.icon}}
+          source={{ uri: item.icon }}
           resizeMode="stretch"
-          style={[styles.iconImage, {tintColor: item.iconColor}]}
+          style={[styles.iconImage, { tintColor: item.iconColor }]}
         />
       </View>
       <View style={styles.notificationText}>
@@ -106,17 +122,17 @@ export default function NotificationTabScreen({navigation}) {
           <Icon name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Notification</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={toggleSortOrder}>
           <Image
             source={require('../../assets/icons/arrowupdownIcon.png')}
-            style={{width: 30, height: 30}}
+            style={{ width: 30, height: 30 }}
           />
         </TouchableOpacity>
       </View>
 
       {/* Loading / Error / Content */}
       {loading ? (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color={theme.colors.primary} />
         </View>
       ) : error ? (
@@ -128,10 +144,10 @@ export default function NotificationTabScreen({navigation}) {
           sections={sections}
           keyExtractor={item => item.id.toString()}
           renderItem={renderItem}
-          renderSectionHeader={({section: {title}}) => (
+          renderSectionHeader={({ section: { title } }) => (
             <Text style={styles.sectionTitle}>{title}</Text>
           )}
-          contentContainerStyle={{paddingBottom: 20}}
+          contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
     </View>

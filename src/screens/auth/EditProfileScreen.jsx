@@ -9,11 +9,13 @@ import {
   ScrollView,
   Modal,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {Picker} from '@react-native-picker/picker';
-import {GetProfile} from '../../api/DataController';
+import {GetProfile, SaveProfile} from '../../api/DataController';
+import CustomModalAlert from '../../components/Modal/CustomModalAlert';
 
 const DROPDOWN_FIELDS = [
   {
@@ -39,7 +41,13 @@ export default function EditProfileScreen({navigation}) {
   );
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [profileInfo, setProfileInfo] = useState({
+    name: '',
+    userType: '',
+  });
+
   const [formData, setFormData] = useState({
+    customerId: 2,
     name: '',
     email: '',
     phone: '',
@@ -56,12 +64,47 @@ export default function EditProfileScreen({navigation}) {
     try {
       setLoading(true);
       const response = await GetProfile(2);
-      const {name, email, phone, country, userType} = response.data;
+      console.log('Profile response:', response);
+      const {customerId, name, email, phone, country, userType} = response.data;
       const {countryCode, phoneNumber} = splitPhoneNumber(phone);
       setCountryCode(countryCode);
-      setFormData({name, email, phone: phoneNumber, country, userType});
+      setProfileInfo({name, userType});
+
+      setFormData({
+        customerId: 2,
+        name,
+        email,
+        phone: phoneNumber,
+        country,
+        userType,
+      });
     } catch (error) {
       console.error('Failed to fetch profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      const payload = {
+        ...formData,
+        phone: `${countryCode} ${formData.phone}`,
+      };
+      const response = await SaveProfile(payload);
+      if (response.status) {
+        Alert.alert(
+          'Success',
+          'Profile updated successfully!',
+          [{text: 'OK', onPress: () => navigation.goBack()}],
+          {cancelable: false},
+        );
+      } else {
+        console.error('Failed to save profile:', response.message);
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error);
     } finally {
       setLoading(false);
     }
@@ -93,8 +136,8 @@ export default function EditProfileScreen({navigation}) {
       <ScrollView contentContainerStyle={styles.container}>
         <Header navigation={navigation} />
         <ProfileSection
-          name={formData.name}
-          role={formData.userType}
+          name={profileInfo.name}
+          role={profileInfo.userType}
           profilePic={profilePic}
           onEdit={() => setModalVisible(true)}
         />
@@ -131,7 +174,7 @@ export default function EditProfileScreen({navigation}) {
             />
           ))}
 
-          <TouchableOpacity style={styles.saveButton}>
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
             <Text style={styles.saveButtonText}>Save Profile</Text>
           </TouchableOpacity>
         </View>
@@ -153,7 +196,6 @@ export default function EditProfileScreen({navigation}) {
   );
 }
 
-// Sub-components
 const Header = ({navigation}) => (
   <View style={styles.header}>
     <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -225,7 +267,6 @@ const PhotoPickerModal = ({visible, onClose, onSelect}) => (
   </Modal>
 );
 
-// Styles
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,

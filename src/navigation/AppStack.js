@@ -11,6 +11,7 @@ import FAQScreen from '../screens/common/FAQScreen';
 import CompareScreen from '../screens/common/CompareScreen';
 import PropertiesDetailsScreen from '../screens/common/PropertiesDetailsScreen';
 import EnquiryScreen from '../screens/common/EnquiryScreen';
+import SearchScreen from '../screens/common/SearchScreen';
 export default function AppStack() {
   const Stack = createStackNavigator();
   const hiddenOptions = {
@@ -35,6 +36,7 @@ export default function AppStack() {
       <Stack.Screen name="transactionHistoryScreen" component={TransactionHistoryScreen} options={hiddenOptions} />
       <Stack.Screen name="faqScreen" component={FAQScreen} options={hiddenOptions} />
       <Stack.Screen name="compareScreen" component={CompareScreen} options={hiddenOptions} />
+      <Stack.Screen name="searchScreen" component={SearchScreen} options={hiddenOptions} />
       <Stack.Screen
         name="propertiesDetailsScreen"
         component={PropertiesDetailsScreen}

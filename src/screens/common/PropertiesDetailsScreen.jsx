@@ -7,18 +7,22 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
+  Linking,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import theme from '../../styles/colors';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import {useFocusEffect} from '@react-navigation/native';
-import { GetPorpertiesDetailById } from '../../api/DataController';
+import {GetPorpertiesDetailById} from '../../api/DataController';
+import {toggleFavorite} from '../../components/utils/FavouriteUtils';
 
 const PropertiesDetailsScreen = ({navigation, route}) => {
   const {propertyId} = route.params || {};
   const [loading, setLoading] = useState(false);
   const [propertiesDetail, setPropertiesDetail] = useState({});
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [favorites, setFavorites] = useState({});
+
   useFocusEffect(
     React.useCallback(() => {
       if (route.params?.submitted) {
@@ -31,20 +35,20 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
   );
 
   useEffect(() => {
-     getPropertiesDetail()
-  },[])
+    getPropertiesDetail();
+  }, []);
 
   const getPropertiesDetail = async () => {
     try {
-      setLoading(true)
-      const response = await GetPorpertiesDetailById(1)
-      setPropertiesDetail(response?.data?.data)
-    }catch {
-      console.log('error', error)
-    }finally {
-      setLoading(false)
+      setLoading(true);
+      const response = await GetPorpertiesDetailById(1);
+      setPropertiesDetail(response?.data?.data);
+    } catch {
+      console.log('error', error);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   const availableUnits = [
     {
@@ -84,8 +88,13 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
 
         <Text style={styles.headerTitle}>Home Detail</Text>
 
-        <TouchableOpacity onPress={() => console.log('Favorite Toggled')}>
-          <Ionicons name="heart-outline" size={24} color="black" />
+        <TouchableOpacity
+          onPress={() => toggleFavorite(propertyId, favorites, setFavorites)}>
+          <Ionicons
+            name={favorites[propertyId] ? 'heart' : 'heart-outline'}
+            size={24}
+            color={favorites[propertyId] ? 'red' : 'black'}
+          />
         </TouchableOpacity>
       </View>
       <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
@@ -99,14 +108,20 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
 
         <View style={styles.headerContainer}>
           <View style={styles.titleContainer}>
-            <Text style={styles.propertyTitle}>{propertiesDetail?.propertyName}</Text>
+            <Text style={styles.propertyTitle}>
+              {propertiesDetail?.propertyName}
+            </Text>
             <View style={styles.locationContainer}>
               <Ionicons name="location-outline" size={16} color="gray" />
-              <Text style={styles.locationText}>{propertiesDetail?.location}</Text>
+              <Text style={styles.locationText}>
+                {propertiesDetail?.location}
+              </Text>
             </View>
           </View>
           <View style={styles.priceContainer}>
-            <Text style={styles.priceText}>MMK {propertiesDetail?.pricePerMonth?.toLocaleString()}</Text>
+            <Text style={styles.priceText}>
+              MMK {propertiesDetail?.pricePerMonth?.toLocaleString()}
+            </Text>
             <Text style={styles.priceSubText}>/month</Text>
           </View>
         </View>
@@ -114,7 +129,9 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
         <View style={styles.featuresContainer}>
           <View style={styles.featureThreeItem}>
             <Ionicons name="business-outline" size={20} color="black" />
-            <Text style={styles.featureText}>{propertiesDetail?.propertyTypeName}</Text>
+            <Text style={styles.featureText}>
+              {propertiesDetail?.propertyTypeName}
+            </Text>
           </View>
 
           <View style={styles.divider} />
@@ -151,7 +168,8 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
           {/* Call Icon */}
           <TouchableOpacity
             style={styles.callIcon}
-            onPress={() => console.log('Call Agent')}>
+            onPress={() => Linking.openURL('tel:09987654321')} 
+          >
             <Ionicons name="call-outline" size={24} color="black" />
           </TouchableOpacity>
         </View>
@@ -315,7 +333,9 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
                 <Image source={{uri: item.image}} style={styles.unitImage} />
 
                 {/* Heart Icon */}
-                <TouchableOpacity style={styles.heartIcon}>
+                <TouchableOpacity
+                  style={styles.heartIcon}
+                  onPress={() => console.log('Favorite Toggled')}>
                   <Ionicons name="heart-outline" size={20} color="red" />
                 </TouchableOpacity>
 
@@ -515,7 +535,7 @@ const styles = StyleSheet.create({
   },
   priceContainer: {
     backgroundColor: '#F5F5F5',
-    paddingHorizontal:6,
+    paddingHorizontal: 6,
     paddingVertical: 6,
     borderRadius: 8,
     alignItems: 'center',

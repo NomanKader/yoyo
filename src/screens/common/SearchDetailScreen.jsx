@@ -11,6 +11,8 @@ import {
 import Icon from 'react-native-vector-icons/Feather';
 
 import {
+  GetLocationList,
+  GetPropertiesbyFilter,
   GetPropertyListByCityId,
   GetPropertyTypes,
 } from '../../api/DataController';
@@ -22,9 +24,10 @@ import {toggleFavorite} from '../../components/utils/FavouriteUtils';
 
 const SearchDetailScreen = ({navigation, route}) => {
   const {cityId, cityName} = route?.params || {};
+
   const [filters, setFilters] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
   const [propertyTypes, setPropertyTypes] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [activeFilter, setActiveFilter] = useState(0);
   const [isSortSelected, setIsSortSelected] = useState(false);
@@ -34,38 +37,28 @@ const SearchDetailScreen = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchData();
+    fetchInitialData();
   }, []);
 
-  const fetchData = async () => {
+  const fetchInitialData = async () => {
     try {
       setIsLoading(true);
+
       const [propertyResponse, typesResponse] = await Promise.all([
         GetPropertyListByCityId(cityId),
         GetPropertyTypes(),
       ]);
-      const propertyType = typesResponse?.data?.map(item => ({
+
+      const propertyTypeList = typesResponse?.data?.map(item => ({
         id: item.id,
         name: item.name,
       }));
 
-      setFilters([{id: 0, name: 'All'}, ...propertyType]);
-      setPropertyTypes(typesResponse?.data?.map(item => item.name));
+      setFilters([{id: 0, name: 'All'}, ...propertyTypeList]);
+      setPropertyTypes(propertyTypeList);
 
       if (propertyResponse?.status) {
-        const mapped = propertyResponse.data.map(item => ({
-          id: item.id,
-          name: item.name,
-          location: item.location,
-          price: Number(item.pricePerMonth),
-          pricePerMonth: `$${Number(
-            item.pricePerMonth,
-          ).toLocaleString()} / month`,
-          imagePath: {uri: item.imagePath.trim()},
-          bedroom: item.bedroom,
-          bathroom: item.bathroom,
-          propertyType: item.propertyType,
-        }));
+        const mapped = mapProperties(propertyResponse.data);
         setProperties(mapped);
         setAllProperties(mapped);
       } else {
@@ -81,6 +74,19 @@ const SearchDetailScreen = ({navigation, route}) => {
     }
   };
 
+  const mapProperties = data =>
+    data.map(item => ({
+      id: item.id,
+      name: item.name,
+      location: item.location,
+      price: Number(item.pricePerMonth),
+      pricePerMonth: `$${Number(item.pricePerMonth).toLocaleString()} / month`,
+      imagePath: {uri: item.imagePath?.trim()},
+      bedroom: item.bedroom,
+      bathroom: item.bathroom,
+      propertyType: item.propertyType,
+    }));
+
   const handleSearch = text => {
     setSearchText(text);
     const filtered = allProperties.filter(property =>
@@ -93,46 +99,79 @@ const SearchDetailScreen = ({navigation, route}) => {
     toggleFavorite(id, favorites, setFavorites);
   };
 
-  const handleSlectedActiveFilter = item => {
-    setActiveFilter(item.id);
+  const applyFilterChip = filterItem => {
+    setActiveFilter(filterItem.id);
 
-    let filtered;
+    let filteredList =
+      filterItem.id === 0
+        ? [...allProperties]
+        : allProperties.filter(p => p.propertyType === filterItem.name);
 
-    if (item.id === 0) {
-      // All properties
-      filtered = [...allProperties];
-    } else {
-      // Filter by selected property type
-      filtered = allProperties.filter(
-        property => property.propertyType === item.name,
-      );
-    }
-
-    // If sort is ON, sort the filtered list
     if (isSortSelected) {
-      filtered = filtered.sort((a, b) => a.price - b.price);
+      filteredList = filteredList.sort((a, b) => a.price - b.price);
     }
 
-    setProperties(filtered);
+    setProperties(filteredList);
   };
 
-  const handleSortToggle = () => {
-    const toggled = !isSortSelected;
-    setIsSortSelected(toggled);
+  const toggleSort = () => {
+    const newSortState = !isSortSelected;
+    setIsSortSelected(newSortState);
 
-    if (toggled) {
+    if (newSortState) {
       const sorted = [...properties].sort((a, b) => a.price - b.price);
       setProperties(sorted);
     } else {
-      if (activeFilter === 0) {
-        setProperties(allProperties);
+      applyFilterChip(filters.find(f => f.id === activeFilter));
+    }
+  };
+
+  const handleFilter = async item => {
+    const body = {
+      city: cityName,
+      minPrice: item.minPrice,
+      maxPrice: item.maxPrice,
+      propertyType: item.selectedPropertyTypeIds,
+      bedrooms: item.bedroom,
+      bathrooms: item.bathroom,
+      sortBy: item.selectedSort,
+    };
+
+    try {
+      const response = await GetPropertiesbyFilter(body);
+      if (response?.status) {
+        const mapped = mapProperties(response.data);
+        setProperties(mapped);
+        setAllProperties(mapped);
       } else {
-        const selectedFilter = filters.find(f => f.id === activeFilter);
-        const filtered = allProperties.filter(
-          property => property.propertyType === selectedFilter.name,
-        );
-        setProperties(filtered);
+        Alert.alert('Information', 'This city has no properties yet!', [
+          {text: 'OK', onPress: () => navigation.goBack()},
+        ]);
       }
+    } catch (error) {
+      console.log('Filter fetch error', error);
+    }
+  };
+
+  const handleResetFilter = () => {
+    fetchInitialData();
+    setActiveFilter(0);
+    setIsSortSelected(false);
+    setSearchText('');
+  };
+
+  const handleSearchLocation = async () => {
+    try {
+      const response = await GetLocationList(cityId);
+      if (response?.status) {
+        navigation.navigate('searchScreen', {
+          locations: response.data,
+        });
+      } else {
+        Alert.alert('Failed', 'Could not load locations');
+      }
+    } catch (error) {
+      console.log('Location fetch error', error);
     }
   };
 
@@ -153,11 +192,10 @@ const SearchDetailScreen = ({navigation, route}) => {
 
   const renderFilterButtons = ({item}) => {
     const isSelected = activeFilter === item.id;
-
     return (
       <TouchableOpacity
         key={item.id}
-        onPress={() => handleSlectedActiveFilter(item)}
+        onPress={() => applyFilterChip(item)}
         style={[styles.filterButton, isSelected && styles.filterButtonActive]}>
         <Text
           style={[styles.filterText, isSelected && styles.filterTextActive]}>
@@ -169,14 +207,12 @@ const SearchDetailScreen = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      {/* Loading Overlay */}
       {isLoading && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color="#007bff" />
         </View>
       )}
 
-      {/* Search Bar */}
       <FilterSearchComponent
         searchText={searchText}
         onChangeText={handleSearch}
@@ -186,12 +222,13 @@ const SearchDetailScreen = ({navigation, route}) => {
         onPressFilter={() => setModalVisible(true)}
       />
 
-      {/* Header Info */}
       <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>
           Property rent on {cityName || 'Unknown'}
         </Text>
-        <TouchableOpacity style={styles.mapButton}>
+        <TouchableOpacity
+          style={styles.mapButton}
+          onPress={handleSearchLocation}>
           <Icon name="map" size={16} color="#333" style={styles.mapIcon} />
           <Text style={styles.mapText}>Maps</Text>
         </TouchableOpacity>
@@ -201,10 +238,9 @@ const SearchDetailScreen = ({navigation, route}) => {
         {properties.length} Properties found
       </Text>
 
-      {/* Filter chips and sort button */}
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <TouchableOpacity
-          onPress={handleSortToggle}
+          onPress={toggleSort}
           style={[
             styles.sortButton,
             isSortSelected && styles.sortButtonActive,
@@ -227,7 +263,6 @@ const SearchDetailScreen = ({navigation, route}) => {
         />
       </View>
 
-      {/* Properties List */}
       <FlatList
         data={properties}
         keyExtractor={item => item.id.toString()}
@@ -244,12 +279,13 @@ const SearchDetailScreen = ({navigation, route}) => {
         }
       />
 
-      {/* Filter Modal */}
       <FilterModalComponent
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         navigation={navigation}
         propertyTypes={propertyTypes}
+        handleFilter={handleFilter}
+        handleResetFilter={handleResetFilter}
       />
     </View>
   );
@@ -257,6 +293,7 @@ const SearchDetailScreen = ({navigation, route}) => {
 
 export default SearchDetailScreen;
 
+// ✅ Styles (unchanged)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -275,16 +312,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 16,
-  },
-  emptyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 40,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: '#777',
-    textAlign: 'center',
   },
   headerTitle: {
     fontSize: 20,
@@ -353,5 +380,15 @@ const styles = StyleSheet.create({
   },
   row: {
     justifyContent: 'space-between',
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#777',
+    textAlign: 'center',
   },
 });
