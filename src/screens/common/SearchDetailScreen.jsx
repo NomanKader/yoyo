@@ -139,6 +139,7 @@ const SearchDetailScreen = ({navigation, route}) => {
 
     try {
       const response = await GetPropertiesbyFilter(body);
+      console.log("Filter response:", response).data;
       if (response?.status) {
         const mapped = mapProperties(response.data);
         setProperties(mapped);

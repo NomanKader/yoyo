@@ -54,3 +54,7 @@ export const GetLocationList = async cityId => {
   const res = await GetAPI('location/location-search/' + cityId);
   return res;
 };
+export const GetTransactionHistory = async customerId => {
+  const res = await GetAPI(`transaction/history/${customerId}`);
+  return res;
+};
