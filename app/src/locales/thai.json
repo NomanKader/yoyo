@@ -1,0 +1,17 @@
+{
+    "settings": "การตั้งค่า",
+    "general": "ทั่วไป",
+    "applicationSettings": "การตั้งค่าแอปพลิเคชัน",
+    "language": "ภาษา",
+    "theme": "ธีม",
+    "chooseLanguage": "เลือกภาษา",
+    "cancel": "ยกเลิก",
+    "logout": "ออกจากระบบ",
+    "setting": {
+      "myProfile": "โปรไฟล์ของฉัน",
+      "propertyDashboard": "แดชบอร์ดอสังหาริมทรัพย์ของฉัน",
+      "transactionHistory": "ประวัติการทำธุรกรรม",
+      "faq": "คำถามที่พบบ่อย"
+    }
+  }
+  

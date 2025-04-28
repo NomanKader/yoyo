@@ -1,0 +1,16 @@
+{
+  "settings": "Settings",
+  "general": "General",
+  "applicationSettings": "Application Settings",
+  "language": "Language",
+  "theme": "Theme",
+  "chooseLanguage": "Choose Language",
+  "cancel": "Cancel",
+  "logout": "Logout",
+  "setting": {
+    "myProfile": "My Profile",
+    "propertyDashboard": "My Property Dashboard",
+    "transactionHistory": "Transaction History",
+    "faq": "FAQ"
+  }
+}

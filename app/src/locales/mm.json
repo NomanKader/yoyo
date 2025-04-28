@@ -1,0 +1,17 @@
+{
+    "settings": "ဆက်တင်များ",
+    "general": "ယေဘုယျ",
+    "applicationSettings": "အက်ပ်ဆော့ဖ်ဝဲ ဆက်တင်များ",
+    "language": "ဘာသာစကား",
+    "theme": "အပြင်အဆင်",
+    "chooseLanguage": "ဘာသာစကားရွေးချယ်ပါ",
+    "cancel": "ပယ်ဖျက်ပါ",
+    "logout": "ထွက်မည်",
+    "setting": {
+      "myProfile": "ကိုယ်ရေးအချက်အလက်",
+      "propertyDashboard": "ပိုင်ဆိုင်မှု စီမံခန့်ခွဲမှု",
+      "transactionHistory": "ငွေလွှဲမှတ်တမ်း",
+      "faq": "မေးလေ့ရှိသောမေးခွန်းများ"
+    }
+  }
+  
