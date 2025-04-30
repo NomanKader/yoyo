@@ -1,17 +1,37 @@
 {
-    "settings": "การตั้งค่า",
-    "general": "ทั่วไป",
-    "applicationSettings": "การตั้งค่าแอปพลิเคชัน",
-    "language": "ภาษา",
-    "theme": "ธีม",
-    "chooseLanguage": "เลือกภาษา",
-    "cancel": "ยกเลิก",
-    "logout": "ออกจากระบบ",
-    "setting": {
-      "myProfile": "โปรไฟล์ของฉัน",
-      "propertyDashboard": "แดชบอร์ดอสังหาริมทรัพย์ของฉัน",
-      "transactionHistory": "ประวัติการทำธุรกรรม",
-      "faq": "คำถามที่พบบ่อย"
-    }
+  "settings": "การตั้งค่า",
+  "general": "ทั่วไป",
+  "applicationSettings": "การตั้งค่าแอปพลิเคชัน",
+  "language": "ภาษา",
+  "theme": "ธีม",
+  "chooseLanguage": "เลือกภาษา",
+  "cancel": "ยกเลิก",
+  "logout": "ออกจากระบบ",
+  "login": "เข้าสู่ระบบ",
+  "email": "อีเมล",
+  "pin": "รหัส PIN",
+  "enterEmail": "กรอกอีเมลของคุณ",
+  "enterPin": "กรอกรหัส PIN ของคุณ",
+  "forgotPin": "ลืมรหัส PIN?",
+  "noAccount": "ยังไม่มีบัญชี?",
+  "signUp": "สมัครสมาชิก",
+  "register": "ลงทะเบียน",
+  "otp": "กรอกรหัส OTP",
+  "forgetPin": "ลืมรหัส PIN",  
+  "username": "ชื่อผู้ใช้",
+  "enterUsername": "กรอกชื่อผู้ใช้ของคุณ",    
+  "phone": "เบอร์โทรศัพท์",
+  "createPin": "สร้างรหัส PIN",  
+  "referralCode": "รหัสแนะนำ (ไม่จำเป็น)",
+  "enterReferral": "กรอกรหัสแนะนำ",
+  "alreadyAccount": "มีบัญชีอยู่แล้ว?",
+  "signIn": "เข้าสู่ระบบ",  
+  "enterEmailToReset": "กรุณากรอกอีเมลของคุณเพื่อรีเซ็ตรหัส PIN",
+  "sendEmail": "ส่งอีเมล",
+  "setting": {
+    "myProfile": "โปรไฟล์ของฉัน",
+    "propertyDashboard": "แดชบอร์ดอสังหาริมทรัพย์ของฉัน",
+    "transactionHistory": "ประวัติการทำธุรกรรม",
+    "faq": "คำถามที่พบบ่อย"
   }
-  
+}

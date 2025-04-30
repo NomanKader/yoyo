@@ -13,7 +13,11 @@ const theme = {
     warning: '#FFC107',           // Yellow warning color
     info: '#17A2B8',              // Light blue info color
     placeholder: '#A0A0A0',       // Input placeholder text color
-    disabled: '#EAEAEA',          // Disabled button background
+    disabled: '#EAEAEA',
+    borderColor:"#E0E0E0" ,
+    backgroundColor:'#F9F9F9' ,
+    socialBackgroundColor:'#F2F2F2',
+    dividerColor:'#e7e7e7'        // Disabled button background
   },
 
   fontSizes: {
