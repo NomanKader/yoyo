@@ -1,25 +1,141 @@
-import React from 'react';
-import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import BackIcon from '../../assets/icons/backIcon.png';
+import {OtpInput} from 'react-native-otp-entry';
+import theme from '../../style/colors';
+import DividerComponent from '../../components/Divider/DividerComponent';
 
-export default function OTPScreen() {
-  const { t } = useTranslation();
+const OTPScreen = () => {
+  const [otpCode, setOtpCode] = useState('');
+  const handleOTPChange = code => {
+    setOtpCode(code);
+  };
 
   return (
-    <View style={styles.container}>
-      <Image source={BackIcon} style={styles.backIcon} />
-      <Text style={styles.title}>{t('otpVerification')}</Text>
+    <SafeAreaView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image source={BackIcon} style={styles.backIcon} />
+        </TouchableOpacity>
+        <Text style={styles.title}>OTP Verification</Text>
+        <View style={styles.headerSpacer} />
+      </View>
+      <View style={{marginHorizontal: -20, marginTop: 20}}>
+        <DividerComponent />
+      </View>
 
-      <TextInput style={styles.input} placeholder={t('enterOTP')} keyboardType="number-pad" />
+      {/* OTP Input */}
+      <Text style={styles.label}>OTP Code</Text>
+      <OtpInput
+        numberOfDigits={6}
+        onTextChange={handleOTPChange}
+        focusColor={theme.colors.primary}
+        focusStickBlinkingDuration={500}
+        theme={{
+          containerStyle: styles.otpContainer,
+          pinCodeContainerStyle: styles.otpBox,
+          pinCodeTextStyle: styles.otpText,
+          focusStickStyle: styles.focusStick,
+        }}
+        secureTextEntry={true}
+      />
 
-      <DefaultButtonComponent title={t('verifyOTP')} />
+      {/* Bottom Section */}
+      <View style={styles.bottomSection}>
+        <TouchableOpacity style={styles.resendContainer}>
+          <Text style={styles.noOtpText}>No OTP yet? </Text>
+          <Text style={styles.link}>Resend OTP</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.centerRow}>
-        <Text>{t('noOTP')} </Text>
-        <Text style={styles.link}>{t('resendOTP')}</Text>
-      </TouchableOpacity>
-    </View>
+        <DefaultButtonComponent title="Verify OTP" />
+      </View>
+    </SafeAreaView>
   );
-}
+};
+
+export default OTPScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+    justifyContent: 'space-between',
+  },
+  backIcon: {
+    width: 35,
+    height: 35,
+    resizeMode: 'contain',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    flex: 1,
+    color: '#000',
+  },
+  headerSpacer: {
+    width: 24,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#000',
+    marginTop: 40,
+    marginBottom: 10,
+  },
+  otpContainer: {
+    justifyContent: 'space-between',
+  },
+  otpBox: {
+    width: 50,
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#999',
+    borderRadius: 10,
+    marginHorizontal: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  otpText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  focusStick: {
+    width: 2,
+    height: 24,
+    backgroundColor: '#00CFC8',
+  },
+  bottomSection: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginBottom: 20,
+  },
+  resendContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  noOtpText: {
+    color: '#888',
+  },
+  link: {
+    color: '#007BFF',
+    fontWeight: '500',
+  },
+});

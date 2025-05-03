@@ -9,7 +9,7 @@ import AuthStack from './app/src/navigation/AuthStack'; // ✅ Import
 import theme from './app/src/style/colors';
 
 // Create Auth Context
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 

@@ -18,7 +18,7 @@ import BackIcon from '../../assets/icons/backIcon.png';
 import RegisterImage from '../../assets/images/loginImage.png';
 import DividerComponent from '../../components/Divider/DividerComponent';
 
-export default function RegisterScreen() {
+export default function RegisterScreen({navigation}) {
   const {t} = useTranslation();
 
   return (
@@ -31,7 +31,7 @@ export default function RegisterScreen() {
           keyboardShouldPersistTaps="handled">
           {/* Header with back icon and title */}
           <View style={styles.header}>
-            <TouchableOpacity style={styles.backIconWrapper}>
+            <TouchableOpacity style={styles.backIconWrapper} onPress={() => navigation.goBack()}>
               <Image source={BackIcon} style={styles.backIcon} />
             </TouchableOpacity>
             <Text style={styles.title}>{t('register')}</Text>
@@ -86,7 +86,7 @@ export default function RegisterScreen() {
 
           {/* Register Button */}
           <View style={{marginBottom: 20}}>
-            <DefaultButtonComponent title={t('register')} />
+            <DefaultButtonComponent title={t('register')} onPress={() => navigation.navigate("OTP")} />
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>

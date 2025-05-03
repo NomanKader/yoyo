@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -20,8 +20,10 @@ import Icon from 'react-native-vector-icons/Feather';
 import {commonStyle} from '../../style/commonStyle';
 import theme from '../../style/colors';
 import DividerComponent from '../../components/Divider/DividerComponent';
+import { AuthContext } from '../../../../App';
 
 export default function LoginScreen({navigation}) {
+  const {setIsAuthenticated} = useContext(AuthContext); // 🔐 use context for auth
   const {t} = useTranslation();
   const [showPin, setShowPin] = useState(false); // ✅ required state
   const [pin, setPin] = useState('');
@@ -74,7 +76,8 @@ export default function LoginScreen({navigation}) {
           <Text style={styles.linkBlue}>{t('forgotPin')}</Text>
         </TouchableOpacity>
 
-        <DefaultButtonComponent title={t('login')} />
+        <DefaultButtonComponent title={t('login')}   onPress={() =>setIsAuthenticated(true)} />
+        
 
         <TouchableOpacity
           style={styles.centerRow}

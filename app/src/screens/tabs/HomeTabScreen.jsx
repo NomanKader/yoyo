@@ -14,9 +14,21 @@ import {useTranslation} from 'react-i18next';
 // Components
 import PropertyCardComponent from '../../components/Card/PropertyCardComponent';
 import CardSkeletonComponent from '../../components/Skeleton/CardSkeletonComponent';
-import { commonStyle } from '../../style/commonStyle';
+import {commonStyle} from '../../style/commonStyle';
+import {Dropdown} from 'react-native-element-dropdown';
 
 // Dummy Property Data
+const propertyTypeOptions = [
+  {label: 'Condo', value: 'Condo'},
+  {label: 'House', value: 'House'},
+  {label: 'Apartment', value: 'Apartment'},
+];
+
+const statusOptions = [
+  {label: 'Available', value: 'Available'},
+  {label: 'Not Available', value: 'Not Available'},
+];
+
 const properties = [
   {
     id: '1',
@@ -62,6 +74,14 @@ export default function HomeTabScreen() {
   const [loading, setLoading] = useState(true);
   const [sortOption, setSortOption] = useState('Recommendation');
   const [sortModalVisible, setSortModalVisible] = useState(false);
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
+  const [selectedBeds, setSelectedBeds] = useState('');
+  const [selectedBaths, setSelectedBaths] = useState('');
+  const [selectedPropertyType, setSelectedPropertyType] = useState('Condo');
+  const [selectedStatus, setSelectedStatus] = useState('Available');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [keywords, setKeywords] = useState('');
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -107,7 +127,9 @@ export default function HomeTabScreen() {
         </View>
 
         <View style={styles.filterSortRow}>
-          <TouchableOpacity style={styles.filterButton}>
+          <TouchableOpacity
+            style={styles.filterButton}
+            onPress={() => setFilterModalVisible(true)}>
             <Icon name="sliders" size={20} color="#000" />
             <Text style={styles.filterButtonText}>Filter</Text>
           </TouchableOpacity>
@@ -185,6 +207,108 @@ export default function HomeTabScreen() {
           </View>
         </View>
       </Modal>
+
+      <Modal
+        isVisible={filterModalVisible}
+        onBackdropPress={() => setFilterModalVisible(false)}
+        backdropOpacity={0.4}
+        style={{margin: 0}}
+        animationIn="slideInUp"
+        animationOut="slideOutDown"
+        propagateSwipe={true}>
+        <View style={styles.filterModalContainer}>
+          <Text style={styles.modalTitle}>Filter Properties</Text>
+          <TextInput value={keywords} onChangeText={(text) => setKeywords(text)} placeholder="Keywords" style={styles.inputBox} />
+          <Text style={styles.modalTitle}>Price range</Text>
+
+          <View style={styles.row}>
+            <TextInput
+            value={minPrice}
+            onChangeText={(text) => setMinPrice(text)}
+              placeholder="Min"
+              style={[styles.inputBox, styles.half]}
+            />
+            <TextInput
+            value={maxPrice}
+            onChangeText={(text) => setMaxPrice(text)}
+              placeholder="Max"
+              style={[styles.inputBox, styles.half]}
+            />
+          </View>
+          <Text style={styles.label}>Beds</Text>
+          <View style={styles.row}>
+            {['Studio', '1+', '2+'].map(label => (
+              <TouchableOpacity
+                key={label}
+                onPress={() => setSelectedBeds(label)}
+                style={[
+                  styles.optionBox,
+                  selectedBeds === label && styles.selectedOptionBox,
+                ]}>
+                <Text
+                  style={{
+                    fontWeight: selectedBeds === label ? 'bold' : 'normal',
+                  }}>
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={styles.label}>Baths</Text>
+          <View style={styles.row}>
+            {['1', '1+', '2+'].map(label => (
+              <TouchableOpacity
+                key={label}
+                onPress={() => setSelectedBaths(label)}
+                style={[
+                  styles.optionBox,
+                  selectedBaths === label && styles.selectedOptionBox,
+                ]}>
+                <Text
+                  style={{
+                    fontWeight: selectedBaths === label ? 'bold' : 'normal',
+                  }}>
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={styles.label}>Property Type</Text>
+          <Dropdown
+            style={styles.dropdown}
+            data={propertyTypeOptions}
+            labelField="label"
+            valueField="value"
+            placeholder="Select type"
+            value={selectedPropertyType}
+            onChange={item => {
+              setSelectedPropertyType(item.value);
+            }}
+          />
+
+          <Text style={styles.label}>Status</Text>
+          <Dropdown
+            style={styles.dropdown}
+            data={statusOptions}
+            labelField="label"
+            valueField="value"
+            placeholder="Select status"
+            value={selectedStatus}
+            onChange={item => {
+              setSelectedStatus(item.value);
+            }}
+          />
+
+          <View style={styles.buttonRow}>
+            <TouchableOpacity style={styles.resetButton}>
+              <Text style={{color: '#000'}}>Reset</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.applyButton}>
+              <Text style={{color: '#FFF'}}>Apply</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -214,6 +338,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     alignItems: 'center',
   },
+  dropdown: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+  },
+
   filterButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -275,7 +408,7 @@ const styles = StyleSheet.create({
   },
   modalOuterContainer: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
 
   modalInnerContent: {
@@ -283,5 +416,64 @@ const styles = StyleSheet.create({
     padding: 20,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
+  },
+  modalTitle: {fontSize: 18, fontWeight: 'bold', marginBottom: 15},
+  modalOption: {paddingVertical: 10},
+  modalItemText: {fontSize: 16, color: '#333'},
+  filterModalContainer: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+  },
+  inputBox: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    height: 40,
+    marginBottom: 15,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 15,
+  },
+  half: {width: '48%'},
+  label: {fontWeight: '600', marginBottom: 5, color: '#333'},
+  optionBox: {
+    width: 100,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 6,
+    marginRight: 10,
+    marginBottom: 10,
+  },
+
+  selectedOptionBox: {
+    borderColor: '#007BFF', // or your primary color
+  },
+
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  resetButton: {
+    padding: 10,
+    borderRadius: 6,
+    backgroundColor: '#f0f0f0',
+    width: '48%',
+    alignItems: 'center',
+  },
+  applyButton: {
+    padding: 10,
+    borderRadius: 6,
+    backgroundColor: '#007BFF',
+    width: '48%',
+    alignItems: 'center',
   },
 });
