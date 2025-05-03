@@ -96,6 +96,17 @@ export default function HomeTabScreen() {
     item.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  const resetFilters = () => {
+    setKeywords('');
+    setMinPrice('');
+    setMaxPrice('');
+    setSelectedBeds('');
+    setSelectedBaths('');
+    setSelectedPropertyType('Condo'); // or '' if you want nothing selected
+    setSelectedStatus('Available');   // or '' if you want nothing selected
+  };
+  
+
   // Sorting
   if (sortOption === 'Price(low to high)') {
     filteredProperties = filteredProperties.sort((a, b) => a.price - b.price);
@@ -305,7 +316,7 @@ export default function HomeTabScreen() {
           />
 
           <View style={styles.buttonRow}>
-            <TouchableOpacity style={styles.resetButton}>
+            <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>
               <Text style={{color: '#000'}}>Reset</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.applyButton}>
@@ -428,8 +439,8 @@ const styles = StyleSheet.create({
   filterModalContainer: {
     backgroundColor: '#fff',
     padding: 20,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
+    borderRadius: 15,
+    marginHorizontal: 10,
   },
   inputBox: {
     borderWidth: 1,
