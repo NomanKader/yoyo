@@ -103,9 +103,8 @@ export default function HomeTabScreen() {
     setSelectedBeds('');
     setSelectedBaths('');
     setSelectedPropertyType('Condo'); // or '' if you want nothing selected
-    setSelectedStatus('Available');   // or '' if you want nothing selected
+    setSelectedStatus('Available'); // or '' if you want nothing selected
   };
-  
 
   // Sorting
   if (sortOption === 'Price(low to high)') {
@@ -228,7 +227,12 @@ export default function HomeTabScreen() {
         animationOut="slideOutDown"
         propagateSwipe={true}>
         <View style={styles.filterModalContainer}>
-          <Text style={styles.modalTitle}>Filter Properties</Text>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Filter Properties</Text>
+            <TouchableOpacity onPress={() => setFilterModalVisible(false)}>
+              <Icon name="x" size={24} color="#000" />
+            </TouchableOpacity>
+          </View>
           <TextInput
             value={keywords}
             onChangeText={text => setKeywords(text)}
@@ -422,6 +426,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+
   modalOuterContainer: {
     flex: 1,
     justifyContent: 'center',
