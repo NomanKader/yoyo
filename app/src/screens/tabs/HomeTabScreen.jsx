@@ -218,19 +218,24 @@ export default function HomeTabScreen() {
         propagateSwipe={true}>
         <View style={styles.filterModalContainer}>
           <Text style={styles.modalTitle}>Filter Properties</Text>
-          <TextInput value={keywords} onChangeText={(text) => setKeywords(text)} placeholder="Keywords" style={styles.inputBox} />
+          <TextInput
+            value={keywords}
+            onChangeText={text => setKeywords(text)}
+            placeholder="Keywords"
+            style={styles.inputBox}
+          />
           <Text style={styles.modalTitle}>Price range</Text>
 
           <View style={styles.row}>
             <TextInput
-            value={minPrice}
-            onChangeText={(text) => setMinPrice(text)}
+              value={minPrice}
+              onChangeText={text => setMinPrice(text)}
               placeholder="Min"
               style={[styles.inputBox, styles.half]}
             />
             <TextInput
-            value={maxPrice}
-            onChangeText={(text) => setMaxPrice(text)}
+              value={maxPrice}
+              onChangeText={text => setMaxPrice(text)}
               placeholder="Max"
               style={[styles.inputBox, styles.half]}
             />
