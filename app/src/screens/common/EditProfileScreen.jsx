@@ -110,7 +110,7 @@ export default function EditProfileScreen({navigation}) {
     <SafeAreaView style={{flex: 1}}>
       <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerStyle={styles.container}>
-          <HeaderComponent title={'Edit Profile'} onPress={() => navigation.goBack()} />        
+          <HeaderComponent title={'Edit Profile'} navigation={navigation} onPress={() => navigation.goBack()} />        
           <View style={styles.profileSection}>
             <Image source={profilePic} style={styles.profileImage} />
             <TouchableOpacity style={styles.editIcon} onPress={() => setPhotoModalVisible(true)}>
