@@ -13,28 +13,28 @@ export default function ProfileTabScreen({ navigation }) {
       icon: "user",
       label: t("setting.myProfile"),
       backgroundColor: "#FFECEC",
-      onPress: () => navigation.navigate("EditProfileScreen"), 
+      onPress: () => navigation.navigate("EditProfile"), 
     },
     {
       id: 2,
       icon: "grid",
       label: t("setting.propertyDashboard"),
       backgroundColor: "#EEF3FF",
-      onPress: () => navigation.navigate("PropertyDashboardScreen"),
+      onPress: () => navigation.navigate("Dashboard"),
     },
     {
       id: 3,
       icon: "file-text",
       label: t("setting.transactionHistory"),
       backgroundColor: "#ECFAEF",
-      onPress: () => navigation.navigate("TransactionHistoryScreen"),
+      onPress: () => navigation.navigate("TransactionHistory"),
     },
     {
       id: 4,
       icon: "help-circle",
       label: t("setting.faq"),
       backgroundColor: "#F5F5F5",
-      onPress: () => navigation.navigate("FAQScreen"),
+      onPress: () => navigation.navigate("FAQ"),
     }
   ];
 

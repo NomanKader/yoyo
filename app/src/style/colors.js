@@ -1,49 +1,69 @@
 const theme = {
   colors: {
-    primary: '#0047AB',           // Main brand color (blue)
-    secondary: '#00CFC8',         // Secondary color (teal)
-    background: '#FFFFFF',        // Main background color (white)
-    backgroundLight: '#F8F8F8',   // Light background color
-    textDark: '#000000',          // Main dark text
-    textLight: '#FFFFFF',         // Light text
-    textGray: '#777777',          // Normal gray text
-    borderColor: '#EAEAEA',       // Border color
-    success: '#28A745',           // Green success color
-    danger: '#DC3545',            // Red danger color
-    warning: '#FFC107',           // Yellow warning color
-    info: '#17A2B8',              // Light blue info color
-    placeholder: '#A0A0A0',       // Input placeholder text color
-    disabled: '#EAEAEA',
-    borderColor:"#E0E0E0" ,
-    backgroundColor:'#F9F9F9' ,
-    socialBackgroundColor:'#F2F2F2',
-    dividerColor:'#e7e7e7'        // Disabled button background
+    primary: '#2979FF',
+    secondary: '#183488',
+    success: '#3bbc39',
+    danger: '#ff5252',
+    warning: '#ffcc00',
+    accent: '#e8edf9',
+    light: '#f7f7f7',
+    white: '#fff',
+    green: '#008000',
+    darkBlue: '#2e6eb5',
+    chipBorderColor:"#D4D4D4",
+    darkGray: '#888',
+    darkCyan: '#507571',
+    green_grey: '#808c42',
+    darkCharcoal: '#333',
+    whitesmoke: '#f9f9fb',
+    textTransferColor: '#AFCBFF',
+    textDark: '#000',
+    textLight: '#fff',
+    cardTextColor: '#707070',
+    cardTopBgColor: '#F5F9FD',
+    formBorderColor: '#C4C4C4',
+    textGray: '#656565',
+    textColor: '#49C78D',
+    textLightGray: '#E0E0E0',
+    textDarkGray: '#666',
+    lightBlue: '#a0c4ff',
+    switchGreen: '#2BA74D',
+    lightGrey: '#F8FAFF',
+    textBlack: '#000000',
+    textLightBrown: '#4B4B4B',
+    paraText: '#E53535',
+    titleBackgroundColor: '#F2F2F2',
+    lightGrey: '#F8FAFF',
+    textBlack: '#000000',
+    textLightBrown: '#4B4B4B',
+    paraText: '#E53535',
+    ratingBackground: '#0000001A',
+    greyBlue: '#ebf3f7',
+    royalBlue: '#3366CC',
+    doveGray: '#666666',
+    mediumGray: '#999999',
+    thaiQR: '#173C65',
+    footerBarColor: '#D5D5D5',
+    whiteTransparent: 'rgba(255, 255, 255, 0.96)',
+    blackTransparent: 'rgba(0,0,0,0.65)',
+    outlineBtnBorder: '#505A76',
+    disabledGray: '#cccccc',
+    googleIconColor:'#DB4437',
+    facebookIconColor:"#1877F2",
+    carousel: {
+      activDotColor: '#ffffff',
+      inActiveDotColor: '#E0EBF6',
+    },
+    complainStatus: {
+      pending: '#ED8787',
+      success: '#3EBA39',
+    },
   },
-
-  fontSizes: {
-    tiny: 10,
-    small: 12,
-    regular: 14,
-    medium: 16,
-    large: 18,
-    xLarge: 22,
-    xxLarge: 26,
-  },
-
-  spacing: {
-    xs: 5,
-    sm: 10,
-    md: 15,
-    lg: 20,
-    xl: 30,
-  },
-
-  radii: {
-    small: 5,
-    medium: 8,
-    large: 12,
-    full: 999, // for full rounded buttons or images
+  customfonts: {
+    regular: 'Kanit-Regular',
+    bold: 'Kanit-Bold',
+    medium: 'Kanit-Medium',
+    light: 'Kanit-Light',
   },
 };
-
 export default theme;
