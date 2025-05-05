@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import DefaultButtonComponent from "../../components/Button/DefaultButtonComponent";
 import theme from "../../style/colors";
 
-export default function SettingScreen({ navigation }) {
+export default function SettingTabScreen({ navigation }) {
   const { language, changeLanguage } = useContext(LanguageContext);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -28,10 +28,7 @@ export default function SettingScreen({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={24} color="#000" />
-        </TouchableOpacity>
+      <View style={styles.header}>        
         <Text style={styles.headerTitle}>{t('settings')}</Text>
         <View style={{ width: 24 }} />
       </View>
@@ -135,12 +132,12 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
     marginBottom: 20,
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "bold"    
   },
   sectionTitle: {
     fontSize: 14,

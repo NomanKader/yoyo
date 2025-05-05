@@ -7,7 +7,7 @@ import Icon from "react-native-vector-icons/Feather"; // Using Feather icons
 import HomeTabScreen from "../screens/tabs/HomeTabScreen";
 import NotiTabScreen from "../screens/tabs/NotiTabScreen";
 import ProfileTabScreen from "../screens/tabs/ProfileTabScreen";
-import SettingScreen from "../screens/common/SettingScreen";
+import SettingTabScreen from "../screens/tabs/SettingTabScreen";
 
 
 const Tab = createBottomTabNavigator();
@@ -50,7 +50,7 @@ export default function TabStack() {
       <Tab.Screen name="Home" component={HomeTabScreen} />      
       <Tab.Screen name="Notification" component={NotiTabScreen} />
       <Tab.Screen name="Profile" component={ProfileTabScreen} />
-      <Tab.Screen name="Setting" component={SettingScreen} />
+      <Tab.Screen name="Setting" component={SettingTabScreen} />
     </Tab.Navigator>
   );
 }
