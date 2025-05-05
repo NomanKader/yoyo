@@ -13,7 +13,7 @@ import {OtpInput} from 'react-native-otp-entry';
 import theme from '../../style/colors';
 import DividerComponent from '../../components/Divider/DividerComponent';
 
-const OTPScreen = () => {
+const OTPScreen = ({navigation}) => {
   const [otpCode, setOtpCode] = useState('');
   const handleOTPChange = code => {
     setOtpCode(code);

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
@@ -42,7 +43,7 @@ const properties = [
     type: 'Condo',
     status: 'Available',
     createdAt: '2024-05-01',
-    image: Hotel1Image
+    image: Hotel1Image,
   },
   {
     id: '2',
@@ -54,7 +55,7 @@ const properties = [
     type: 'Condo',
     status: 'Available',
     createdAt: '2024-04-25',
-    image: Hotel2Image
+    image: Hotel2Image,
   },
   {
     id: '3',
@@ -66,11 +67,11 @@ const properties = [
     type: 'Condo',
     status: 'Not Available',
     createdAt: '2024-03-10',
-    image: Hotel3Image
+    image: Hotel3Image,
   },
 ];
 
-export default function HomeTabScreen() {
+export default function HomeTabScreen({navigation}) {
   const {t} = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -121,7 +122,11 @@ export default function HomeTabScreen() {
   // Recommendation => no sorting (default)
 
   const renderPropertyItem = ({item}) => (
-    <PropertyCardComponent item={{...item, price: `$${item.price} / month`}} />
+    <TouchableOpacity key={item.id} onPress={() => navigation.navigate('HomeDetailScreen', {item})}>
+      <PropertyCardComponent
+        item={{...item, price: `$${item.price} / month`}}
+      />
+    </TouchableOpacity>
   );
 
   return (
