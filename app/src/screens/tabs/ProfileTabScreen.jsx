@@ -2,9 +2,9 @@ import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { useTranslation } from "react-i18next";
 import Icon from "react-native-vector-icons/Feather"; // Using Feather icons
+import profileImage from '../../assets/images/profileImage.png'; // Placeholder for profile image
 
-
-export default function SettingTabScreen({ navigation }) {
+export default function ProfileTabScreen({ navigation }) {
   const { t } = useTranslation();
 
   const settingOptions = [
@@ -35,21 +35,14 @@ export default function SettingTabScreen({ navigation }) {
       label: t("setting.faq"),
       backgroundColor: "#F5F5F5",
       onPress: () => navigation.navigate("FAQScreen"),
-    },
-    {
-      id: 5,
-      icon: "settings",
-      label: t("settings"),
-      backgroundColor: "#F5F5F5",
-      onPress: () => navigation.navigate('SettingScreen')
-    },
+    }
   ];
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Profile Section */}
       <View style={styles.profileContainer}>
-        <Image source={{uri:'https://randomuser.me/api/portraits/men/32.jpg'}} style={styles.profileImage} />
+        <Image source={profileImage} style={styles.profileImage} />
         <Text style={styles.profileName}>William</Text>
         <Text style={styles.profileRole}>Landlord</Text>
       </View>

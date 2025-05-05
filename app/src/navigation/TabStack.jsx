@@ -5,9 +5,9 @@ import Icon from "react-native-vector-icons/Feather"; // Using Feather icons
 
 // Screens
 import HomeTabScreen from "../screens/tabs/HomeTabScreen";
-import SearchTabScreen from "../screens/tabs/SearchTabScreen";
 import NotiTabScreen from "../screens/tabs/NotiTabScreen";
-import SettingTabScreen from "../screens/tabs/SettingTabScreen";
+import ProfileTabScreen from "../screens/tabs/ProfileTabScreen";
+import SettingScreen from "../screens/common/SettingScreen";
 
 
 const Tab = createBottomTabNavigator();
@@ -30,11 +30,11 @@ export default function TabStack() {
 
           if (route.name === "Home") {
             iconName = "home";
-          } else if (route.name === "Search") {
-            iconName = "search";
           } else if (route.name === "Notification") {
             iconName = "bell";
-          } else if (route.name === "Setting") {
+          } else if (route.name === "Profile") {
+            iconName = "user";
+          }else if (route.name === "Setting") {
             iconName = "settings";
           }
 
@@ -47,10 +47,10 @@ export default function TabStack() {
         ),
       })}
     >
-      <Tab.Screen name="Home" component={HomeTabScreen} />
-      <Tab.Screen name="Search" component={SearchTabScreen} />
+      <Tab.Screen name="Home" component={HomeTabScreen} />      
       <Tab.Screen name="Notification" component={NotiTabScreen} />
-      <Tab.Screen name="Setting" component={SettingTabScreen} />
+      <Tab.Screen name="Profile" component={ProfileTabScreen} />
+      <Tab.Screen name="Setting" component={SettingScreen} />
     </Tab.Navigator>
   );
 }

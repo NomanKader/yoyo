@@ -16,7 +16,9 @@ import PropertyCardComponent from '../../components/Card/PropertyCardComponent';
 import CardSkeletonComponent from '../../components/Skeleton/CardSkeletonComponent';
 import {commonStyle} from '../../style/commonStyle';
 import {Dropdown} from 'react-native-element-dropdown';
-
+import Hotel1Image from '../../assets/images/hotel1.png';
+import Hotel2Image from '../../assets/images/hotel2.png';
+import Hotel3Image from '../../assets/images/hotel3.png';
 // Dummy Property Data
 const propertyTypeOptions = [
   {label: 'Condo', value: 'Condo'},
@@ -40,7 +42,7 @@ const properties = [
     type: 'Condo',
     status: 'Available',
     createdAt: '2024-05-01',
-    image: {uri: 'https://picsum.photos/200/300?random=1'},
+    image: Hotel1Image
   },
   {
     id: '2',
@@ -52,7 +54,7 @@ const properties = [
     type: 'Condo',
     status: 'Available',
     createdAt: '2024-04-25',
-    image: {uri: 'https://picsum.photos/200/300?random=2'},
+    image: Hotel2Image
   },
   {
     id: '3',
@@ -64,7 +66,7 @@ const properties = [
     type: 'Condo',
     status: 'Not Available',
     createdAt: '2024-03-10',
-    image: {uri: 'https://picsum.photos/200/300?random=3'},
+    image: Hotel3Image
   },
 ];
 
