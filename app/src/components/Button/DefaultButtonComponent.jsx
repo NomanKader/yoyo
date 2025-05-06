@@ -5,7 +5,7 @@ import theme from '../../style/colors';
 
 export default function DefaultButtonComponent({
   title,
-  titleKey, // 🔵 optional: if you want translation key like 'setting.save'
+  titleKey, 
   onPress,
   backgroundColor = theme.colors.primary,
   textColor = '#FFF',
@@ -13,14 +13,20 @@ export default function DefaultButtonComponent({
   disabled = false,
   buttonStyle,
   textStyle,
+  borderColor,          
+  borderWidth = 0,      
 }) {
-  const { t } = useTranslation(); // 🌎 using i18n translation
+  const { t } = useTranslation();
 
   return (
     <TouchableOpacity
       style={[
         styles.button,
-        { backgroundColor: disabled ? '#EAEAEA' : backgroundColor },
+        {
+          backgroundColor: disabled ? '#EAEAEA' : backgroundColor,
+          borderColor: borderColor || 'transparent',
+          borderWidth: borderWidth,
+        },
         buttonStyle,
       ]}
       onPress={onPress}
@@ -47,7 +53,6 @@ export default function DefaultButtonComponent({
 const styles = StyleSheet.create({
   button: {
     height: 50,
-    backgroundColor: theme.colors.primary,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',

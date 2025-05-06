@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
@@ -85,6 +86,8 @@ export default function HomeTabScreen({navigation}) {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [keywords, setKeywords] = useState('');
+  const [showLoading, setShowLoading] = useState(false);
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -122,12 +125,21 @@ export default function HomeTabScreen({navigation}) {
   // Recommendation => no sorting (default)
 
   const renderPropertyItem = ({item}) => (
-    <TouchableOpacity key={item.id} onPress={() => navigation.navigate('HomeDetailScreen', {item})}>
+    <TouchableOpacity
+      key={item.id}
+      onPress={() => navigation.navigate('HomeDetailScreen', {item})}>
       <PropertyCardComponent
         item={{...item, price: `$${item.price} / month`}}
       />
     </TouchableOpacity>
   );
+  const handleNavigate = () => {
+    setShowLoading(true);
+    setTimeout(() => {
+      setShowLoading(false);
+      navigation.navigate('CreateNewProperty');
+    }, 1000); // or replace with real logic
+  };
 
   return (
     <View style={commonStyle.container}>
@@ -178,8 +190,12 @@ export default function HomeTabScreen({navigation}) {
       </View>
 
       {/* Floating Button */}
-      <TouchableOpacity style={styles.addButton}>
-        <Icon name="plus" size={24} color="#FFF" />
+      <TouchableOpacity style={styles.addButton} onPress={handleNavigate}>
+        {showLoading ? (
+          <ActivityIndicator color="#FFF" size="small" />
+        ) : (
+          <Icon name="plus" size={24} color="#FFF" />
+        )}
       </TouchableOpacity>
 
       {/* Sort Modal */}

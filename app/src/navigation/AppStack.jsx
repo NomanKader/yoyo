@@ -11,6 +11,7 @@ import FAQScreen from '../screens/common/FAQScreen';
 import TransactionHistoryScreen from '../screens/common/TransactionHistoryScreen';
 import DashboardScreen from '../screens/common/DashboardScreen';
 import ManageBookingScreen from '../screens/common/ManageBookingScreen';
+import CreateNewPropertyScreen from '../screens/common/CreateNewPropertyScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,7 @@ export default function AppStack() {
       <Stack.Screen name="TransactionHistory" component={TransactionHistoryScreen}/>
       <Stack.Screen name="Dashboard" component={DashboardScreen}/>
       <Stack.Screen name="ManageBooking" component={ManageBookingScreen}/>
+      <Stack.Screen name="CreateNewProperty" component={CreateNewPropertyScreen}/>
     </Stack.Navigator>
   );
 }
