@@ -113,7 +113,8 @@ dependencies {
     implementation project(':react-native-vector-icons')
     implementation("androidx.activity:activity:1.9.+")
     implementation ('com.facebook.react:react-native:+')
-    
+    implementation project(':react-native-linear-gradient')
+
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {

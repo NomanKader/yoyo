@@ -1,0 +1,18 @@
+[
+  {
+    "email": "hotel@gmail.com",
+    "pin": "123",
+    "role": "hotel"
+  },
+    {
+      "email": "apartment@gmail.com",
+      "pin": "123",
+      "role": "apartment"
+    },
+    {
+      "email": "both@gmail.com",
+      "pin": "123",
+      "role": "both"
+    }
+  ]
+  
