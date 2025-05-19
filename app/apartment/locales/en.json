@@ -32,6 +32,7 @@
     "myProfile": "My Profile",
     "propertyDashboard": "My Property Dashboard",
     "transactionHistory": "Transaction History",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "manageBookings":"Manage Bookings"
   }
 }

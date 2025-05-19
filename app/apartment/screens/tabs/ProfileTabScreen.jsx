@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { useTranslation } from "react-i18next";
-import Icon from "react-native-vector-icons/Feather"; // Using Feather icons
-import profileImage from '../../assets/images/profileImage.png'; // Placeholder for profile image
+import Icon from "react-native-vector-icons/Feather"; 
+import profileImage from '../../assets/images/profileImage.png'; 
 
 export default function ProfileTabScreen({ navigation }) {
   const { t } = useTranslation();
@@ -35,6 +35,13 @@ export default function ProfileTabScreen({ navigation }) {
       label: t("setting.faq"),
       backgroundColor: "#F5F5F5",
       onPress: () => navigation.navigate("FAQ"),
+    },
+    {
+      id: 5,
+      icon: "check-circle",
+      label: t("setting.manageBookings"),
+      backgroundColor: "#F5F5F5",
+      onPress: () => navigation.navigate("ManageBooking"),
     }
   ];
 

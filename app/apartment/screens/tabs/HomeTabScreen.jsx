@@ -20,6 +20,7 @@ import {Dropdown} from 'react-native-element-dropdown';
 import Hotel1Image from '../../assets/images/hotel1.png';
 import Hotel2Image from '../../assets/images/hotel2.png';
 import Hotel3Image from '../../assets/images/hotel3.png';
+import { ScrollView } from 'react-native-gesture-handler';
 // Dummy Property Data
 const propertyTypeOptions = [
   {label: 'Condo', value: 'Condo'},
@@ -207,7 +208,7 @@ export default function HomeTabScreen({navigation}) {
         animationOut="slideOutDown"
         propagateSwipe={true} // ✅
       >
-        <View style={styles.modalOuterContainer}>
+        <ScrollView contentContainerStyle={styles.modalOuterContainer}>
           <View style={styles.modalInnerContent}>
             <Text style={styles.modalTitle}>Sort By</Text>
 
@@ -237,7 +238,7 @@ export default function HomeTabScreen({navigation}) {
               </TouchableOpacity>
             ))}
           </View>
-        </View>
+        </ScrollView>
       </Modal>
 
       <Modal

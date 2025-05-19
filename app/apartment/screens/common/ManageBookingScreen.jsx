@@ -17,7 +17,7 @@ const bookingsData = [
   {
     id: '1',
     customerName: 'Moe Thandar',
-    roomType: 'Deluxe Room',
+    roomType: 'Skyview Residence',
     bookingDate: '30 Apr 2025',
     paymentScreenshot: require('../../assets/images/payment.png'),
     phone: '09-123456789',

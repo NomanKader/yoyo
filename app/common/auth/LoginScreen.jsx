@@ -25,7 +25,7 @@ import { AuthContext } from '../../../App';
 export default function LoginScreen({navigation}) {
   const {t} = useTranslation();
   const [showPin, setShowPin] = useState(false); // ✅ required state
-  const [email,setEmail] = useState('hotel@gmail.com'); // ✅ required state
+  const [email,setEmail] = useState('apartment@gmail.com'); // ✅ required state
   const [pin, setPin] = useState('123');
   const {setIsAuthenticated,setUserRole}=useContext(AuthContext);
   return (
