@@ -16,6 +16,7 @@ import theme from '../../style/colors';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import {useFocusEffect} from '@react-navigation/native';
 import DividerComponent from '../../components/Divider/DividerComponent';
+import OccupiedCalendarModal from '../../../common/components/OccupiedCalenderModal';
 
 const amenityIcons = {
   TV: 'tv-outline',
@@ -73,6 +74,16 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const amenities = property.amenities || [];
   const projectDetailFeatures = property.projectDetailFeatures || [];
+  const [calendarVisible, setCalendarVisible] = useState(false);
+
+  const today = new Date();
+
+  // Generate next 3 future dates (excluding today)
+  const occupiedDates = Array.from({length: 3}, (_, i) => {
+    const date = new Date(today);
+    date.setDate(date.getDate() + i + 1); // start from tomorrow
+    return date.toISOString().split('T')[0]; // format as yyyy-mm-dd
+  });
 
   useFocusEffect(
     React.useCallback(() => {
@@ -96,8 +107,16 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
           style={styles.backIcon}>
           <Ionicons name="chevron-back-outline" size={24} color="black" />
         </TouchableOpacity>
+
         <Text style={styles.headerTitle}>Home Detail</Text>
+
+        <TouchableOpacity
+          onPress={() => setCalendarVisible(true)}
+          style={styles.calendarIcon}>
+          <Ionicons name="calendar-outline" size={24} color="black" />
+        </TouchableOpacity>
       </View>
+
       <View style={{marginBottom: 20}}>
         <DividerComponent />
       </View>
@@ -279,12 +298,20 @@ const PropertiesDetailsScreen = ({navigation, route}) => {
           </TouchableOpacity>
           <DefaultButtonComponent
             title="Request Info"
-            onPress={() => Alert.alert("Reuqest Info requested")}
+            onPress={() => Alert.alert('Reuqest Info requested')}
             backgroundColor="#1E40AF"
             buttonStyle={styles.requestButton}
           />
         </View>
       </ScrollView>
+
+      {/* calender Modal */}
+
+      <OccupiedCalendarModal
+        visible={calendarVisible}
+        onClose={() => setCalendarVisible(false)}
+        occupiedDates={occupiedDates}
+      />
 
       {/* Inquiry Modal */}
       <Modal visible={showSuccessModal} transparent animationType="fade">
@@ -385,18 +412,26 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 20,
+    justifyContent: 'center',
+    height: 56,
+    position: 'relative',
   },
   backIcon: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    left: 0,
   },
+  calendarIcon: {
+    position: 'absolute',
+    right: 0,
+  },
+
   headerTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#000',
   },
+
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',

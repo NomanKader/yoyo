@@ -1,25 +1,35 @@
-import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-export default function HeaderComponent({navigation,title}) {
+
+export default function HeaderComponent({ navigation, title }) {
   return (
     <View style={styles.header}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backIcon}
+      >
         <Icon name="arrow-left" size={24} color="#000" />
       </TouchableOpacity>
       <Text style={styles.headerTitle}>{title}</Text>
-      <View style={{width: 24}} />
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   header: {
-    flexDirection: 'row',
+    height: 56,
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    position: 'relative',
     marginBottom: 20,
+  },
+  backIcon: {
+    position: 'absolute',
+    left: 0,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#000',
   },
 });
