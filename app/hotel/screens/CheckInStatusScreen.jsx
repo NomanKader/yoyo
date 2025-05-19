@@ -38,7 +38,7 @@ export default function CheckInStatusScreen({navigation}) {
         <Text style={styles.subheader}>Check in for Room 406 is successful and the   ID is CAL7394748</Text>
       </View>
       <View style={CommonStyles.defaultButtonContainer}>
-        <DefaultButtonComponent title={"Back to booking detail"} backgroundColor={theme.colors.primary} onPress={()=>navigation.navigate("Booking")}/>
+        <DefaultButtonComponent title={"Back to booking detail"} backgroundColor={theme.colors.primary} onPress={()=>navigation.navigate("TabStack")}/>
       </View>
     </ScrollView>
   );

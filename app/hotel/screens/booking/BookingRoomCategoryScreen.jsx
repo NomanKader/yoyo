@@ -31,7 +31,7 @@ export default function BookingRoomCategoryScreen({ navigation }) {
 
   return (
     <View style={CommonStyles.scrollViewContainer}>
-      <DetailAppBarComponent title={'Room Type'} navigation={navigation} />
+      <DetailAppBarComponent title={'Choose Room Type'} navigation={navigation} />
       <DividerComponent />
 
       {showLoading ? (
