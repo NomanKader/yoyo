@@ -1,10 +1,11 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Image,
-  Dimensions  
+  Dimensions,
+  BackHandler
 } from 'react-native';
 import theme from '../../style/colors';
 import RoundButtonComponent from '../Button/RoundButtonComponent';
@@ -19,7 +20,19 @@ const SuccessScreenComponent = ({route}) => {
   // Extract parameters from route.params
   const navigation=useNavigation();
   const {header, subheader, nextScreen, nextScreenParams, icon,isShowingIllustration, buttonText,color} = route.params;
+  useEffect(() => {
+    const backAction = () => {
+      navigation.goBack(); // or navigation.navigate('YourPreviousScreen')
+      return true;
+    };
 
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
   return (
     <View
       style={[
@@ -51,10 +64,16 @@ const SuccessScreenComponent = ({route}) => {
           />
         </>
       ) : (
+        <>
         <RoundButtonComponent
           label="Add Room"
           onPress={() => navigation.navigate(nextScreen, nextScreenParams)}
         />
+        {/* <RoundButtonComponent 
+          label="Back"
+          onPress={() => navigation.goBack()}
+        /> */}
+        </>
       )}
 
       {/* DefaultButtonComponent placed at the bottom */}

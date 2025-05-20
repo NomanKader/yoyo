@@ -38,6 +38,7 @@ import BookingCancelSettingScreen from '../screens/account/BookingCancelSettingS
 import AddOnPriceFeatureSettingScreen from '../screens/account/AddOnPriceFeatureSettingScreen';
 import HistoryScreen from '../screens/account/HistoryScreen';
 import QRScanScreen from '../screens/booking/QRScanScreen';
+import BottomTabStack from './TabStack';
 
 
 
@@ -48,6 +49,7 @@ const AppStack = () => {
 
   return (
     <Stack.Navigator>
+      <Stack.Screen name='TabStack' component={BottomTabStack} options={hiddenHeaderOptions} />
       <Stack.Screen name='Home' component={HomeScreen} options={{ headerTitle: 'Welcome To YoYo' }} />
       <Stack.Screen name='Unauthorized' component={UnauthorizedScreen} options={hiddenHeaderOptions} />
       {/* Room */}

@@ -66,11 +66,19 @@ export default function PaymentScreen({navigation}) {
           backgroundColor={theme.colors.primary}
           onPress={() => {
             navigation.navigate('SuccessScreen', {
+              isShowingIllustration: true,
+              buttonText: 'Proceed to check in',
+              color: theme.colors.primary,
               header: 'Payment Successful',
               subheader:
                 'Payment for Room 406 is successful and the ID is CAL7394748',
-              nextScreen: 'AppStack', // Pass the screen name as a string
-              nextScreenParams: {screen: 'RoomCategoryCreateScreen'},
+                nextScreen: 'AppStack',
+                nextScreenParams: {
+                  screen: 'CheckInStatusScreen',
+                  params: {
+                    roomId: '406',
+                  },
+                },
               navigation: navigation,
               icon:paymentSuccessIcon
             });

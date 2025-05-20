@@ -10,7 +10,7 @@ import DatePickerComponent from '../../components/DatePicker/DatePickerComponent
 import {ScrollView} from 'react-native-gesture-handler';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import theme from '../../style/colors';
-import createIcon from '../../assets/icons/createIcon.png';
+import reservatedIcon from '../../assets/icons/reservatedIcon.png';
 
 export default function CreateBookingScreen({navigation}) {
   const [name, setName] = useState('');
@@ -132,16 +132,20 @@ export default function CreateBookingScreen({navigation}) {
           title={'Continue'}
           backgroundColor={theme.colors.primary}
           onPress={() =>
-            navigation.navigate('AppStack', {
+            navigation.push('AppStack', {
               screen: 'SuccessScreen',
               params: {
+                icon: reservatedIcon,
+                buttonText: 'Confirm Payment',
+                color: theme.colors.primary,
+                isShowingIllustration: true,  
                 header: 'Reservation Successful',
                 subheader : `Reservation for ${roomNumber} is successful and the ID is CAL7394748`,
-                nextScreen: 'HomeScreen', // Or any other screen you want to navigate to next
+                nextScreen: 'BookingDetailScreen', // Or any other screen you want to navigate to next
                 nextScreenParams: {
                   /* any parameters you want to pass to the next screen */
                 },
-                icon:createIcon
+                icon:reservatedIcon
               },
             })
           }

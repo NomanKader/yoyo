@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
 import { CommonStyles } from '../../style/CommonStyles';
@@ -43,7 +44,7 @@ export default function BookingDetailScreen({ navigation }) {
     setShowMoreActions(false);
   };
 
-  const handleOptionPress = option => {
+  const handleOptionPress = (option) => {
     setIsBottomSheetVisible(false);
     switch (option) {
       case 'viewDetails':
@@ -62,7 +63,7 @@ export default function BookingDetailScreen({ navigation }) {
 
   const closeAllBottomSheets = () => {
     setIsBottomSheetVisible(false);
-    setShowPaymentConfirmation(false);    
+    setShowPaymentConfirmation(false);
   };
 
   return (
@@ -112,14 +113,8 @@ export default function BookingDetailScreen({ navigation }) {
             />
           </>
         )}
-        {/* Overlay */}
-        {(isBottomSheetVisible || showPaymentConfirmation) && (
-          <TouchableOpacity
-            style={styles.overlay}
-            onPress={closeAllBottomSheets}
-          />
-        )}
       </View>
+
       {/* More Actions Bottom Sheet */}
       {showMoreActions && (
         <BookingDetailBottomSheetComponent
@@ -148,6 +143,7 @@ export default function BookingDetailScreen({ navigation }) {
           </View>
         </BookingDetailBottomSheetComponent>
       )}
+
       {/* Payment Confirmation Bottom Sheet */}
       {showPaymentConfirmation && (
         <BottomSheetComponent
@@ -161,10 +157,9 @@ export default function BookingDetailScreen({ navigation }) {
             <DefaultButtonComponent
               title={'Proceed'}
               backgroundColor={theme.colors.primary}
-              onPress={() => {
-                // Add your proceed logic here                
+              onPress={() => {                                
+                navigation.push('AppStack',{screen:'PaymentScreen'});
                 closeAllBottomSheets();
-                navigation.navigate("AppStack",{screen:'PaymentScreen'})
               }}
             />
           </View>
@@ -195,19 +190,7 @@ const styles = StyleSheet.create({
   infoCardContainer: {
     marginTop: 20,
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    zIndex: 1,
-  },
   bottomSheet: {
     zIndex: 2,
-  },
-  bottomSheetContent: {
-    padding: 20,
-  },
-  bottomSheetItem: {
-    paddingVertical: 15,
-    fontSize: 16,
   },
 });
