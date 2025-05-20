@@ -9,9 +9,10 @@ const CustomInput = ({
   keyboardType = 'default',
   multiline = false,
   numberOfLines = 1,
+  contentContainerStyle,
 }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,contentContainerStyle]}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         style={[styles.input, multiline && styles.multiline]}
