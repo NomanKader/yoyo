@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {useTranslation} from 'react-i18next';
 import DefaultButtonComponent from '../../apartment/components/Button/DefaultButtonComponent';
@@ -60,7 +61,7 @@ export default function ForgetPINScreen({navigation}) {
 
         {/* Fixed Button at Bottom */}
         <View style={styles.footer}>
-          <DefaultButtonComponent title={t('sendEmail')} />
+          <DefaultButtonComponent onPress={()=>Alert.alert('We have sent mail to '+email+' .Please check')} title={t('sendEmail')} />
         </View>
       </View>
     </KeyboardAvoidingView>

@@ -1,189 +1,281 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   TextInput,
-  Image,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
+  Image,
+  Dimensions,
 } from 'react-native';
-import {useTranslation} from 'react-i18next';
-import DefaultButtonComponent from '../../apartment/components/Button/DefaultButtonComponent';
-import LoginImage from '../../apartment/assets/images/loginImage.png';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Icon from 'react-native-vector-icons/Feather';
-import {commonStyle} from '../../apartment/style/commonStyle';
-import theme from '../../apartment/style/colors';
-import DividerComponent from '../../apartment/components/Divider/DividerComponent';
-import _LoginService from '../utils/authService';
-import { AuthContext } from '../../../App';
+import ModalDropdown from 'react-native-modal-dropdown';
+import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-export default function LoginScreen({navigation}) {
-  const {t} = useTranslation();
-  const [showPin, setShowPin] = useState(false); // ✅ required state
-  const [email,setEmail] = useState('apartment@gmail.com'); // ✅ required state
-  const [pin, setPin] = useState('123');
-  const {setIsAuthenticated,setUserRole}=useContext(AuthContext);
+const screenWidth = Dimensions.get('window').width;
+
+export default function LoginScreen() {
+  const navigation = useNavigation();
+  const [phone, setPhone] = useState('');
+  const [pin, setPin] = useState('');
+  const [showPin, setShowPin] = useState(false);
+  const [countryCode, setCountryCode] = useState('+95');
+
+  const isValid = phone.length >= 7 && pin.length === 4;
+
   return (
-    <KeyboardAvoidingView
-      style={{flex: 1, backgroundColor: '#FFFFFF'}}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView
-        contentContainerStyle={styles.container}
-        showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View style={styles.headerRow}>          
-          <Text style={styles.title}>{t('login')}</Text>
-        </View>
-        <View style={{marginHorizontal: -20}}>
-          <DividerComponent />
-        </View>
-        <Image source={LoginImage} style={commonStyle.loginImage} />
-
-        <Text style={styles.label}>{t('email')}</Text>
-        <TextInput style={styles.input} placeholder={t('enterEmail')} value={email} onChangeText={setEmail} />
-
-        <Text style={styles.label}>{t('pin')}</Text>
-        <View style={{position: 'relative'}}>
-          <TextInput
-            style={styles.input}
-            value={pin}
-            onChangeText={setPin}
-            placeholder={t('enterPin')}
-            secureTextEntry={!showPin}
-            keyboardType="number-pad"
-            maxLength={6}
-          />
-          <TouchableOpacity
-            onPress={() => setShowPin(!showPin)}
-            style={{
-              position: 'absolute',
-              right: 10,
-              top: 12,
-            }}>
-            <Icon name={showPin ? 'eye-off' : 'eye'} size={20} color="#999" />
-          </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity style={styles.linkRight} onPress={()=>navigation.navigate('ForgetPin')}>
-          <Text style={styles.linkBlue}>{t('forgotPin')}</Text>
-        </TouchableOpacity>
-
-        <DefaultButtonComponent title={t('login')}   onPress={() =>_LoginService(email,pin,setIsAuthenticated,setUserRole)} />
-        
-
+    <View style={styles.container}>
+      {/* Header Row */}
+      <View style={styles.headerRow}>
         <TouchableOpacity
-          style={styles.centerRow}
-          onPress={() => navigation.navigate('Register')}>
-          <Text>{t('noAccount')} </Text>
-          <Text style={styles.linkBlue}>{t('signUp')}</Text>
+          onPress={() => navigation.goBack()}
+          style={styles.backWrapper}>
+          <Image
+            source={require('../assets/backIcon.png')}
+            style={styles.backIcon}
+          />
         </TouchableOpacity>
+        <Text style={styles.title}>Login</Text>
+        <View style={styles.placeholder} /> 
+      </View>
 
-        <Text style={styles.dividerText}>Or sign up with</Text>
+      {/* Phone number */}
+      <Text style={styles.label}>Phone number</Text>
+      <View style={styles.phoneRow}>
+      <ModalDropdown
+  key={countryCode}
+  options={['+95', '+66']}
+  value={countryCode}
+  onSelect={(index, value) => setCountryCode(value)}
+  style={styles.dropdownWrapper}
+  dropdownStyle={styles.dropdownMenu}  
+  renderRow={(option, index, isSelected) => (
+    <View style={styles.dropdownRow}>
+      <Text style={styles.dropdownItem}>{option}</Text>
+    </View>
+  )}
+  adjustFrame={style => ({
+    ...style,
+    top: style.top - 22, // remove space
+  })}
+>
+  <View style={styles.dropdown}>
+    <Text style={styles.dropdownText}>{countryCode}</Text>
+    <Icon name="arrow-drop-down" size={18} color="#555" />
+  </View>
+</ModalDropdown>
 
-        <View style={styles.socialRow}>
-          <TouchableOpacity style={styles.socialCircle}>
-            <AntDesign name="google" size={24} color="#DB4437" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.socialCircle}>
-            <FontAwesome name="facebook" size={24} color="#1877F2" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.socialCircle}>
-            <FontAwesome name="apple" size={24} color="#000" />
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+
+
+        <TextInput
+          placeholder="000 0000 000"
+          style={styles.input}
+          keyboardType="phone-pad"
+          value={phone}
+          onChangeText={setPhone}
+        />
+      </View>
+
+      {/* Pin */}
+      <Text style={styles.label}>Pin</Text>
+      <View style={styles.inputWrapper}>
+  <TextInput
+    placeholder="Enter your 4 digit pin"
+    style={styles.inputWithIcon}
+    keyboardType="number-pad"
+    maxLength={4}
+    secureTextEntry={!showPin}
+    value={pin}
+    onChangeText={setPin}
+  />
+  <TouchableOpacity
+    style={styles.iconInsideInput}
+    onPress={() => setShowPin(!showPin)}
+  >
+    <Icon name={showPin ? 'visibility-off' : 'visibility'} size={22} color="#888" />
+  </TouchableOpacity>
+</View>
+
+      {/* Forgot Pin */}
+      <TouchableOpacity onPress={() => navigation.navigate('ForgetPin')}>
+        <Text style={styles.forgotText}>Forgot Pin</Text>
+      </TouchableOpacity>
+
+      {/* Login Button */}
+      <TouchableOpacity
+        style={[styles.loginButton, !isValid && styles.loginButtonDisabled]}
+        disabled={!isValid}>
+        <Text style={styles.loginText}>Login</Text>
+      </TouchableOpacity>
+
+      {/* Sign Up */}
+      <Text style={styles.signupText}>
+        Don’t have an account ?{' '}
+        <Text
+          style={styles.signupLink}
+          onPress={() => navigation.navigate('TypeOfProperty')}>
+          Sign Up
+        </Text>
+      </Text>
+    </View>
   );
 }
-
-// Keep your styles as-is
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.textLight,
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingHorizontal: screenWidth * 0.06,
+    paddingTop: 50,
+    backgroundColor: '#fff',
   },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    marginBottom: 20,
+    justifyContent: 'space-between',
+    marginBottom: 25,
   },
-
-  backIconWrapper: {
-    position: 'absolute',
-    left: 0,
+  backWrapper: {
+    width: 40,
+    alignItems: 'flex-start',
   },
-
   backIcon: {
-    width: 35,
-    height: 35,
+    width: 30,
+    height: 30,
+    resizeMode: 'contain',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    flex: 1,
+  },
+  placeholder: {
+    width: 40, // same width as backWrapper
   },
 
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: theme.colors.textDark,
   },
   label: {
     fontSize: 14,
-    fontWeight: '500',
-    color: theme.colors.textGray,
-    marginBottom: 5,
+    color: '#333',
+    marginTop: 10,
   },
-  input: {
-    height: 45,
-    borderWidth: 1,
-    borderColor: theme.colors.borderColor,
-    borderRadius: 8,
+  inputWrapper: {
+    position: 'relative',
+    marginVertical: 8,
+  },
+  phoneRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+  
+  inputWithIcon: {
+    backgroundColor: '#f3f3f3',
+    borderRadius: 6,
     paddingHorizontal: 10,
-    marginBottom: 15,
-    backgroundColor: theme.colors.backgroundColor,
-    fontSize: 14,
-    color: theme.colors.textDark,
-  },
-  linkRight: {
-    alignSelf: 'flex-end',
-    marginBottom: 30,
-  },
-  linkBlue: {
-    color: theme.colors.primary,
-    fontWeight: '600',
-  },
-  centerRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  dividerText: {
-    textAlign: 'center',
-    marginVertical: 20,
-    color: '#888',
-  },
-  socialRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 20,
-  },
-  socialCircle: {
-    width: 48,
+    paddingRight: 40, // leave space for icon
+    fontSize: 16,
     height: 48,
-    borderRadius: 24,
-    backgroundColor: theme.colors.socialBackgroundColor,
+  },
+  
+  iconInsideInput: {
+    position: 'absolute',
+    right: 12,
+    top: 12,
+  },
+  
+  dropdownRow: {
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  
+  dropdownItem: {
+    fontSize: 18,
+    color: '#000',
+  },
+  
+  dropdownWrapper: {
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: '#f3f3f3',
+    marginRight: 10,
     justifyContent: 'center',
+    height: 48,
+  },
+
+  dropdown: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    width: 80,
+    height: '100%',
+  },
+
+  dropdownText: {
+    fontSize: 16,
+    color: '#000',
+  },
+
+  dropdownMenu: {
+    width: 80,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 6,
+    paddingVertical: 4,
+    elevation: 6, // Android shadow
+    zIndex: 9999, // iOS layer priority
+    overflow: 'visible',
+  },
+  
+
+  input: {
+    flex: 1,
+    backgroundColor: '#f3f3f3',
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    fontSize: 16,
+    height: 48,
+  },
+
+  pinRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+  forgotText: {
+    color: '#007AFF',
+    alignSelf: 'flex-end',
+    marginBottom: 20,
+  },
+  loginButton: {
+    backgroundColor: '#000',
+    paddingVertical: 12,
+    borderRadius: 6,
     alignItems: 'center',
   },
-  socialIcon: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
+  loginButtonDisabled: {
+    backgroundColor: '#ccc',
+  },
+  loginText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  signupText: {
+    marginTop: 20,
+    alignSelf: 'center',
+    color: '#444',
+  },
+  signupLink: {
+    color: '#007AFF',
+    fontWeight: 'bold',
   },
 });

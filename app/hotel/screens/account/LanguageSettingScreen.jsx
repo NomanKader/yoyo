@@ -17,9 +17,9 @@ const LanguageSettingsScreen = ({ navigation }) => {
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    GetLanguageListAPI(setLanguages, setLoading);
+  useEffect(() => {    
     const fetchLanguagePreference = async () => {
+      await GetLanguageListAPI(setLanguages, setLoading);      
       const storedLanguage = await AsyncStorage.getItem('language_preference');
       if (storedLanguage) {
         setSelectedLanguage(storedLanguage);

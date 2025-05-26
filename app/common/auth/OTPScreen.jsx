@@ -1,141 +1,141 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
-  Image,
+  TextInput,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
+  Dimensions,
 } from 'react-native';
-import DefaultButtonComponent from '../../apartment/components/Button/DefaultButtonComponent';
-import BackIcon from '../../apartment/assets/icons/backIcon.png';
-import {OtpInput} from 'react-native-otp-entry';
-import theme from '../../apartment/style/colors';
-import DividerComponent from '../../apartment/components/Divider/DividerComponent';
+import HeaderComponent from '../../apartment/components/Divider/HeaderComponent';
+import { useNavigation } from '@react-navigation/native';
+import ProgressBar from '../components/ProgessBarComponent';
 
-const OTPScreen = ({navigation}) => {
+const screenWidth = Dimensions.get('window').width;
+
+export default function OTPScreen() {
+  const navigation = useNavigation();
   const [otpCode, setOtpCode] = useState('');
-  const handleOTPChange = code => {
-    setOtpCode(code);
-  };
+
+  const isValid = otpCode.length === 6;
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={BackIcon} style={styles.backIcon} />
-        </TouchableOpacity>
-        <Text style={styles.title}>OTP Verification</Text>
-        <View style={styles.headerSpacer} />
-      </View>
-      <View style={{marginHorizontal: -20, marginTop: 20}}>
-        <DividerComponent />
-      </View>
+<View style={styles.container}>
+  <HeaderComponent title="OTP Verification" navigation={navigation} />
+  <ProgressBar currentStep={2} totalSteps={5} />
+  <Text style={styles.label}>OTP Code</Text>
+  <TextInput
+    style={styles.input}
+    placeholder="Enter 6 digit otp code"
+    keyboardType="number-pad"
+    maxLength={6}
+    value={otpCode}
+    onChangeText={setOtpCode}
+  />
 
-      {/* OTP Input */}
-      <Text style={styles.label}>OTP Code</Text>
-      <OtpInput
-        numberOfDigits={6}
-        onTextChange={handleOTPChange}
-        focusColor={theme.colors.primary}
-        focusStickBlinkingDuration={500}
-        theme={{
-          containerStyle: styles.otpContainer,
-          pinCodeContainerStyle: styles.otpBox,
-          pinCodeTextStyle: styles.otpText,
-          focusStickStyle: styles.focusStick,
-        }}
-        secureTextEntry={true}
-      />
+  {/* Spacer to push content down */}
+  <View style={{ flex: 1 }} />
 
-      {/* Bottom Section */}
-      <View style={styles.bottomSection}>
-        <TouchableOpacity style={styles.resendContainer}>
-          <Text style={styles.noOtpText}>No OTP yet? </Text>
-          <Text style={styles.link}>Resend OTP</Text>
-        </TouchableOpacity>
+  <View style={styles.bottomSection}>
+    <View style={styles.resendContainer}>
+      <Text style={styles.resendText}>No OTP yet?</Text>
+      <TouchableOpacity>
+        <Text style={styles.resendLink}> Resend OTP</Text>
+      </TouchableOpacity>
+    </View>
 
-        <DefaultButtonComponent title="Verify OTP" />
-      </View>
-    </SafeAreaView>
+    <TouchableOpacity
+      disabled={!isValid}
+      style={[styles.button, !isValid && styles.buttonDisabled]}
+      onPress={() => {
+       navigation.navigate('CreatePin');
+      }}
+    >
+      <Text style={styles.buttonText}>Verify OTP</Text>
+    </TouchableOpacity>
+  </View>
+</View>
+
   );
-};
+}
 
-export default OTPScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: screenWidth * 0.06,
+    paddingTop: 50,
     backgroundColor: '#fff',
   },
-  header: {
+  progressBar: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20,
-    justifyContent: 'space-between',
+    height: 4,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 2,
+    marginTop: 10,
+    marginBottom: 20,
+    overflow: 'hidden',
   },
-  backIcon: {
-    width: 35,
-    height: 35,
-    resizeMode: 'contain',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+  
+  progressSegment: {
     flex: 1,
-    color: '#000',
   },
-  headerSpacer: {
-    width: 24,
+  
+  progressStepFilled: {
+    backgroundColor: '#007bff',
+  },
+  
+  progressStepEmpty: {
+    backgroundColor: '#e0e0e0',
   },
   label: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#000',
-    marginTop: 40,
-    marginBottom: 10,
+    marginTop: 12,
+    marginBottom: 4,
+    color: '#333',
   },
-  otpContainer: {
-    justifyContent: 'space-between',
-  },
-  otpBox: {
-    width: 50,
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#999',
-    borderRadius: 10,
-    marginHorizontal: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  otpText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  focusStick: {
-    width: 2,
-    height: 24,
-    backgroundColor: '#00CFC8',
-  },
-  bottomSection: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    marginBottom: 20,
+  input: {
+    backgroundColor: '#f2f2f2',
+    borderRadius: 6,
+    padding: 12,
+    fontSize: 16,
   },
   resendContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    marginTop: 10,
+  },
+  resendText: {
+    fontSize: 14,
+    color: '#555',
+  },
+  resendLink: {
+    fontSize: 14,
+    color: '#007bff',
+    fontWeight: 'bold',
+  },
+  button: {
+    backgroundColor: '#007bff',
+    marginTop: 30,
+    paddingVertical: 14,
+    borderRadius: 6,
+    alignItems: 'center',
+  },
+  buttonDisabled: {
+    backgroundColor: '#ccc',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  bottomSection: {
     marginBottom: 20,
   },
-  noOtpText: {
-    color: '#888',
+  
+  resendContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 12,
   },
-  link: {
-    color: '#007BFF',
-    fontWeight: '500',
-  },
+  
 });
