@@ -1,158 +1,214 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   TextInput,
-  StyleSheet,
   TouchableOpacity,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
-import {useTranslation} from 'react-i18next';
-import DefaultButtonComponent from '../../apartment/components/Button/DefaultButtonComponent';
-import BackIcon from '../../apartment/assets/icons/backIcon.png';
-import RegisterImage from '../../apartment/assets/images/loginImage.png';
-import DividerComponent from '../../apartment/components/Divider/DividerComponent';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native';
+import ModalDropdown from 'react-native-modal-dropdown';
+import HeaderComponent from '../../apartment/components/Divider/HeaderComponent';
+import ProgressBar from '../components/ProgessBarComponent';
 
-export default function RegisterScreen({navigation}) {
-  const {t} = useTranslation();
+const screenWidth = Dimensions.get('window').width;
+
+export default function RegisterScreen() {
+  const navigation = useNavigation();
+  const [hotelName, setHotelName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [countryCode, setCountryCode] = useState('+95');
+
+  const isValid = hotelName && email && phone;
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView
-          contentContainerStyle={styles.container}
-          keyboardShouldPersistTaps="handled">
-          {/* Header with back icon and title */}
-          <View style={styles.header}>
-            <TouchableOpacity style={styles.backIconWrapper} onPress={() => navigation.goBack()}>
-              <Image source={BackIcon} style={styles.backIcon} />
-            </TouchableOpacity>
-            <Text style={styles.title}>{t('register')}</Text>
+    <View style={styles.container}>
+      {/* Header with back and progress bar */}
+      <HeaderComponent title={'Basic Information'} navigation={navigation} />
+      <ProgressBar currentStep={1} totalSteps={5} />
+
+      {/* Input Fields */}
+      <Text style={styles.label}>Name of Hotel</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter hotel name"
+        value={hotelName}
+        onChangeText={setHotelName}
+      />
+
+      <Text style={styles.label}>Email Address</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter email address"
+        value={email}
+        keyboardType="email-address"
+        onChangeText={setEmail}
+      />
+
+      <Text style={styles.label}>Phone Number</Text>
+      <View style={styles.phoneRow}>
+        <ModalDropdown
+          key={countryCode}
+          options={['+95', '+66']}
+          value={countryCode}
+          onSelect={(index, value) => setCountryCode(value)}
+          style={styles.dropdownWrapper}
+          dropdownStyle={styles.dropdownMenu}
+          renderRow={(option, index, isSelected) => (
+            <View style={styles.dropdownRow}>
+              <Text style={styles.dropdownItem}>{option}</Text>
+            </View>
+          )}
+          adjustFrame={style => ({
+            ...style,
+            top: style.top - 22, // remove space
+          })}>
+          <View style={styles.dropdown}>
+            <Text style={styles.dropdownText}>{countryCode}</Text>
+            <Icon name="arrow-drop-down" size={18} color="#555" />
           </View>
-          <View style={{marginHorizontal: -20}}>
-            <DividerComponent />
-          </View>
+        </ModalDropdown>
+        <TextInput
+          placeholder="000 0000 000"
+          style={styles.phoneInput}
+          keyboardType="phone-pad"
+          value={phone}
+          onChangeText={setPhone}
+        />
+      </View>
 
-          {/* Illustration */}
-          <Image source={RegisterImage} style={styles.image} />
+      <View style={styles.bottomSection}>
+        <TouchableOpacity
+          disabled={!isValid}
+          style={[styles.button, !isValid && styles.buttonDisabled]}
+          onPress={() => navigation.navigate('OTP')}>
+          <Text style={styles.buttonText}>Proceed</Text>
+        </TouchableOpacity>
 
-          {/* Form Fields */}
-          <Text style={styles.label}>{t('username')}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder={t('enterUsername')}
-            keyboardType="default"
-            returnKeyType="next"
-          />
-
-          <Text style={styles.label}>{t('email')}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder={t('enterEmail')}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-
-          <Text style={styles.label}>{t('phone')}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="+95 09..."
-            keyboardType="phone-pad"
-          />
-
-          <Text style={styles.label}>{t('createPin')}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder={t('enterPin')}
-            secureTextEntry
-            keyboardType="number-pad"
-          />
-
-          <Text style={styles.label}>{t('referralCode')}</Text>
-          <TextInput style={styles.input} placeholder={t('enterReferral')} />
-
-          {/* Already have account */}
-          <View style={styles.bottomText}>
-            <Text>{t('alreadyAccount')} </Text>
-            <Text style={styles.link}>{t('signIn')}</Text>
-          </View>
-
-          {/* Register Button */}
-          <View style={{marginBottom: 20}}>
-            <DefaultButtonComponent title={t('register')} onPress={() => navigation.navigate("OTP")} />
-          </View>
-        </ScrollView>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+        <Text style={styles.footer}>
+          Already have an account? <Text style={styles.signIn}>Sign In</Text>
+        </Text>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    backgroundColor: '#FFFFFF',
-    flexGrow: 1,
-    paddingTop:20
+    flex: 1,
+    paddingHorizontal: screenWidth * 0.06,
+    backgroundColor: '#fff',
+    paddingTop: 50,
   },
   header: {
-    position: 'relative',
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
-  },
-  backIconWrapper: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-  },
-  backIcon: {
-    width: 35,
-    height: 35,
+    gap: 10,
   },
   title: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#000',
-  },
-  image: {
-    height: 140,
-    width: '100%',
-    resizeMode: 'contain',
-    marginBottom: 20,
   },
   label: {
     fontSize: 14,
-    fontWeight: '500',
+    marginTop: 12,
+    marginBottom: 4,
     color: '#333',
-    marginBottom: 5,
   },
   input: {
-    height: 45,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 15,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: '#f2f2f2',
+    borderRadius: 6,
+    padding: 12,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#007bff',
+    marginTop: 20,
+    paddingVertical: 14,
+    borderRadius: 6,
+    alignItems: 'center',
+  },
+  buttonDisabled: {
+    backgroundColor: '#ccc',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  footer: {
+    marginTop: 20,
+    alignSelf: 'center',
     fontSize: 14,
+    color: '#555',
+  },
+  signIn: {
+    color: '#007bff',
+    fontWeight: 'bold',
+  },
+  phoneRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+
+  phoneInput: {
+    flex: 1,
+    backgroundColor: '#f3f3f3',
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    fontSize: 16,
+    height: 48,
+  },
+
+  dropdownWrapper: {
+    height: 48,
+    width: 80,
+    justifyContent: 'center',
+    backgroundColor: '#f3f3f3',
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginRight: 10,
+  },
+
+  dropdown: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+  },
+
+  dropdownText: {
+    fontSize: 16,
     color: '#000',
   },
-  bottomText: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 10,
-    marginBottom: 20,
+
+  dropdownItem: {
+    fontSize: 16,
+    color: '#000',
+    padding: 10,
   },
-  link: {
-    color: '#0047AB',
-    fontWeight: 'bold',
+
+  dropdownRow: {
+    backgroundColor: '#fff',
+  },
+
+  dropdownMenu: {
+    width: 100,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 6,
+    elevation: 4,
+    zIndex: 1000,
+  },
+  bottomSection: {
+    marginTop: 'auto',
+    marginBottom: 20,
   },
 });
