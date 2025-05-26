@@ -138,7 +138,7 @@ export default function HomeTabScreen({navigation}) {
     setTimeout(() => {
       setShowLoading(false);
       navigation.navigate('CreateNewProperty');
-    }, 1000); // or replace with real logic
+    }, 1000); 
   };
 
   return (

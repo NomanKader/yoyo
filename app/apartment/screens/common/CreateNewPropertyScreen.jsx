@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef} from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -6,7 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import OptionSelector from '../../components/Option/OptionSelector';
 import CustomDropdown from '../../components/Dropdown/CustomDropDown';
 import CustomInput from '../../components/Input/CustomInput';
@@ -15,9 +15,13 @@ import DefaultButtonComponent from '../../components/Button/DefaultButtonCompone
 import IconInput from '../../components/Input/IconInput';
 import PhotoUploadGallery from '../../components/photo/PhotoUploadGallery';
 import HeaderComponent from '../../components/Divider/HeaderComponent';
-import NominatimSearch from '../../components/Input/NominatimSearch';
+import AddressPickerWithMap from '../../../common/map/AddressPickerWithMap';
+import {
+  customeMapStyle,
+  customMapStyle,
+} from '../../../common/style/CustomMapStyle';
 
-const CreateNewPropertyScreen = ({ navigation }) => {
+const CreateNewPropertyScreen = ({navigation}) => {
   const [selectedType, setSelectedType] = useState('Hotel');
   const [selectedListingType, setSelectedListingType] = useState('Rent');
   const [selectedPropertyType, setSelectedPropertyType] = useState('Condo');
@@ -35,11 +39,20 @@ const CreateNewPropertyScreen = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [photos, setPhotos] = useState([]);
+
+  const mapRef = useRef();
+  const [marker, setMarker] = useState(null);
+  const [latLng, setLatLng] = useState({
+    lat: '',
+    lng: '',
+  });
   return (
     <KeyboardAvoidingView
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled">
         <HeaderComponent title={'Create Property'} navigation={navigation} />
 
         <OptionSelector
@@ -57,9 +70,9 @@ const CreateNewPropertyScreen = ({ navigation }) => {
         <CustomDropdown
           label="Property Type"
           data={[
-            { label: 'Condo', value: 'Condo' },
-            { label: 'House', value: 'House' },
-            { label: 'Apartment', value: 'Apartment' },
+            {label: 'Condo', value: 'Condo'},
+            {label: 'House', value: 'House'},
+            {label: 'Apartment', value: 'Apartment'},
           ]}
           value={selectedPropertyType}
           setValue={setSelectedPropertyType}
@@ -79,10 +92,17 @@ const CreateNewPropertyScreen = ({ navigation }) => {
           multiline
         />
 
-        {/* Location Search */}
-        <View style={{ zIndex: 10 }}>
-          <NominatimSearch/>
-        </View>
+        <AddressPickerWithMap
+          title={'Location'}
+          mapRef={mapRef}
+          marker={marker}
+          setMarker={setMarker}
+          customMapStyle={customMapStyle}
+          getLatLong={(lat, lng) => {
+            setLatLng({lat, lng});
+            console.log('LatLng:', lat, lng);
+          }}
+        />
 
         <TextInputWithDropdown
           label="Property Size"
@@ -91,8 +111,8 @@ const CreateNewPropertyScreen = ({ navigation }) => {
           dropdownValue={sizeUnit}
           setDropdownValue={setSizeUnit}
           dropdownData={[
-            { label: 'Sqm', value: 'Sqm' },
-            { label: 'Sqft', value: 'Sqft' },
+            {label: 'Sqm', value: 'Sqm'},
+            {label: 'Sqft', value: 'Sqft'},
           ]}
         />
         <TextInputWithDropdown
@@ -102,23 +122,31 @@ const CreateNewPropertyScreen = ({ navigation }) => {
           dropdownValue={unitPrice}
           setDropdownValue={setUnitPrice}
           dropdownData={[
-            { label: 'USD', value: 'USD' },
-            { label: 'MMK', value: 'MMK' },
-            { label: 'EUR', value: 'EUR' },
-            { label: 'SGD', value: 'SGD' },
-            { label: 'THB', value: 'THB' },
+            {label: 'USD', value: 'USD'},
+            {label: 'MMK', value: 'MMK'},
+            {label: 'EUR', value: 'EUR'},
+            {label: 'SGD', value: 'SGD'},
+            {label: 'THB', value: 'THB'},
           ]}
         />
         <CustomDropdown
           label="Bedrooms"
-          data={[{ label: '1', value: '1' }, { label: '2', value: '2' }, { label: '3', value: '3' }]}
+          data={[
+            {label: '1', value: '1'},
+            {label: '2', value: '2'},
+            {label: '3', value: '3'},
+          ]}
           value={bedRooms}
           setValue={setBedRooms}
           placeholder="Select"
         />
         <CustomDropdown
           label="Bathrooms"
-          data={[{ label: '1', value: '1' }, { label: '2', value: '2' }, { label: '3', value: '3' }]}
+          data={[
+            {label: '1', value: '1'},
+            {label: '2', value: '2'},
+            {label: '3', value: '3'},
+          ]}
           value={bathRooms}
           setValue={setBathRooms}
           placeholder="Select"
@@ -126,8 +154,14 @@ const CreateNewPropertyScreen = ({ navigation }) => {
         <OptionSelector
           label="Amenities"
           options={[
-            'TV', 'Refrigerator', 'Dryer', 'Washing Machine',
-            'Oven', 'Microwave', 'Stove', 'Heater',
+            'TV',
+            'Refrigerator',
+            'Dryer',
+            'Washing Machine',
+            'Oven',
+            'Microwave',
+            'Stove',
+            'Heater',
           ]}
           selected={selectedAmenities}
           setSelected={setselectedAmenities}
@@ -150,7 +184,10 @@ const CreateNewPropertyScreen = ({ navigation }) => {
         />
         <CustomDropdown
           label="Negotiable"
-          data={[{ label: 'Yes', value: 'Yes' }, { label: 'No', value: 'No' }]}
+          data={[
+            {label: 'Yes', value: 'Yes'},
+            {label: 'No', value: 'No'},
+          ]}
           value={negotiable}
           setValue={setNegotiable}
         />
@@ -170,7 +207,7 @@ const CreateNewPropertyScreen = ({ navigation }) => {
           textColor="#007AFF"
           borderColor="#007AFF"
           borderWidth={1}
-          buttonStyle={{ marginVertical: 10 }}
+          buttonStyle={{marginVertical: 10}}
         />
       </ScrollView>
     </KeyboardAvoidingView>
@@ -188,5 +225,4 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
-
 });
