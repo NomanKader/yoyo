@@ -53,7 +53,7 @@ export default function RegisterScreen({navigation}) {
     registerData.phone &&
     registerData.role &&
     registerData.hotelEmail &&
-    userPhoneRaw && 
+    userPhoneRaw &&
     hotelPhoneRaw &&
     registerData.hotelPhoneNumbers;
 
@@ -148,7 +148,7 @@ export default function RegisterScreen({navigation}) {
       />
 
       <CustomInput
-        label={'Email Address'}
+        label={'Email Address (OTP will be sent to this address)'}
         bgColor="#f2f2f2"
         placeholder={'Enter Email Address'}
         value={registerData?.email}

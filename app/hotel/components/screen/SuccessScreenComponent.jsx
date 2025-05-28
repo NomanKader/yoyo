@@ -12,6 +12,8 @@ import RoundButtonComponent from '../Button/RoundButtonComponent';
 import successIllustration from '../../assets/images/successIllustration.png';
 import DefaultButtonComponent from '../Button/DefaultButtonComponent';
 import {useNavigation} from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
+import animation from '../../../common/assets/animation.json';
 
 // Get the screen width
 const {width: screenWidth} = Dimensions.get('window');
@@ -31,7 +33,7 @@ const SuccessScreenComponent = ({route}) => {
   } = route.params;
   useEffect(() => {
     const backAction = () => {
-      navigation.goBack(); // or navigation.navigate('YourPreviousScreen')
+      navigation.goBack();
       return true;
     };
 
@@ -48,7 +50,12 @@ const SuccessScreenComponent = ({route}) => {
         styles.container,
         isShowingIllustration && {backgroundColor: theme.colors.info},
       ]}>
-      <Image source={icon} style={styles.icon} />
+      <LottieView
+        source={animation}
+        autoPlay
+        loop={true}
+        style={styles.icon}
+      />
       <Text
         style={[
           styles.header,
@@ -63,7 +70,6 @@ const SuccessScreenComponent = ({route}) => {
         ]}>
         {subheader}
       </Text>
-
       {isShowingIllustration ? (
         <>
           <Image
@@ -84,7 +90,6 @@ const SuccessScreenComponent = ({route}) => {
         /> */}
         </>
       )}
-
       {/* DefaultButtonComponent placed at the bottom */}
       {isShowingIllustration && (
         <View style={styles.buttonContainer}>
