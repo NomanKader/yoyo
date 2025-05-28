@@ -41,7 +41,7 @@ export default function AccountScreen({navigation}) {
       // Close bottom sheet and reset auth state
       setBottomSheetVisible(false);
       setIsAuthenticated(false);
-      setUserRole(null); // optional: reset role context
+      // setUserRole(null); // optional: reset role context
     } catch (error) {
       console.error('Logout failed:', error);
     }

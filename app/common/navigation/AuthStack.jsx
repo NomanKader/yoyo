@@ -10,7 +10,7 @@ import ForgetPinScreen from '../auth/ForgetPINScreen';
 import CreatePinScreen from '../auth/CreatePINScreen';
 import LocationInfoScreen from '../auth/LocationInfoScreen';
 import DocumentUploadScreen from '../auth/DocumentUploadScreen';
-import HotelAppStack from '../../hotel/navigation/AppStack';
+import HotelTabStack from '../../hotel/navigation/AppStack';
 import TypeOfPropertyScreen from '../auth/TypeOfPropertyScreen';
 import {RegisterProvider} from '../utils/RegisterProvider';
 import ResetOTPConfirmScreen from '../auth/ResetOTPConfirmScreen';
@@ -36,7 +36,7 @@ export default function AuthStack() {
         <Stack.Screen name="CreatePin" component={CreatePinScreen} />
         <Stack.Screen name="LocationInfo" component={LocationInfoScreen} />
         <Stack.Screen name="DocumentUpload" component={DocumentUploadScreen} />        
-        <Stack.Screen name="HotelAppStack" component={HotelAppStack} />
+        <Stack.Screen name="HotelTabStack" component={HotelTabStack} />
         <Stack.Screen name="ApartmentAppStack" component={ApartmentAppStack} />
         <Stack.Screen name="SelectProperty" component={SelectPropertyScreen} />
         <Stack.Screen
