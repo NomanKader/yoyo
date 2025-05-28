@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
   Switch,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import {LanguageContext} from '../../context/LanguageContext';
@@ -30,11 +31,18 @@ export default function SettingTabScreen({navigation}) {
     try {
       await AsyncStorage.multiRemove(['token', 'userRole']);
       setIsAuthenticated(false);
-      setUserRole(null); // optional reset if you track role
+      setUserRole(null);
+  
+      // 🧼 Reset navigation stack to AuthStack
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Login'}],
+      });
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

@@ -45,10 +45,11 @@ export default function LoginScreen() {
           'userRole',
           response.userInfo?.isApartment === true ? 'apartment' : 'hotel',
         );
-        setIsAuthenticated(true);
-        setUserRole(
-          response.userInfo?.isApartment === true ? 'apartment' : 'hotel',
-        );
+        // setIsAuthenticated(true);
+        // setUserRole(
+        //   response.userInfo?.isApartment === true ? 'apartment' : 'hotel',
+        // );
+        navigation.navigate('SelectProperty');
       } else {
         setErrorMessage(response.message || 'Login failed');
         setAlertVisible(true);
