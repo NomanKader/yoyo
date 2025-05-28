@@ -42,6 +42,17 @@ export default function AccountScreen({navigation}) {
       setBottomSheetVisible(false);
       setIsAuthenticated(false);
       // setUserRole(null); // optional: reset role context
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'AuthStack',
+            state: {
+              routes: [{name: 'Login'}],
+            },
+          },
+        ],
+      });
     } catch (error) {
       console.error('Logout failed:', error);
     }

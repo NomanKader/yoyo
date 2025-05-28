@@ -49,7 +49,10 @@ export default function LoginScreen() {
         // setUserRole(
         //   response.userInfo?.isApartment === true ? 'apartment' : 'hotel',
         // );
-        navigation.navigate('SelectProperty');
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'SelectProperty'}],
+        });
       } else {
         setErrorMessage(response.message || 'Login failed');
         setAlertVisible(true);
