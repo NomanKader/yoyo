@@ -10,23 +10,75 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import HeaderComponent from '../../apartment/components/Divider/HeaderComponent';
 import ProgressBar from '../components/ProgessBarComponent';
-import {RegisterContext} from '../utils/RegisterProvider';
+import {ResetPassword} from '../service/AuthService';
+import paymentSuccessIcon from '../assets/paymentSuccessIcon.png';
+import theme from '../../apartment/style/colors';
+import CustomAlert from '../alert/CustomAlert';
 
 const screenWidth = Dimensions.get('window').width;
 
-export default function CreatePinScreen({navigation}) {
-  const {updateRegisterData} = useContext(RegisterContext);
+export default function CreateNewPinScreen({navigation, route}) {
+  const {email, token} = route.params || {};
   const [pin, setPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
   const [showPin, setShowPin] = useState(false);
   const [showConfirmPin, setShowConfirmPin] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleChangePin = async () => {
+    setLoading(true);
+    try {
+      const postBody = {
+        otpToken: token,
+        email: email,
+        phone: null,
+        password: confirmPin,
+      };
+
+      const response = await ResetPassword(postBody);
+
+      if (response?.result) {
+        navigation.navigate('HotelAppStack', {
+          screen: 'SuccessScreen',
+          params: {
+            header: 'New Pin code is changed Successfully',
+            subheader: '',
+            nextScreen: 'Login',
+            icon: paymentSuccessIcon,
+            isShowingIllustration: true,
+            buttonText: 'Back to Login',
+            color: theme.colors.primary,
+          },
+        });
+      } else {
+        console.warn('Reset failed:', response?.message || 'Unknown error');
+        setErrorMessage(response?.message || 'Failed to reset pin');
+        setAlertVisible(true);
+      }
+    } catch (error) {
+      console.error('Reset error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const isValid =
     pin.length === 4 && confirmPin.length === 4 && pin === confirmPin;
 
   return (
     <View style={styles.container}>
-      <HeaderComponent title="Create Pin" onPress={() => navigation.goBack()} />
+      <CustomAlert
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
+        message={errorMessage}
+        title={"Something's Wrong!"}
+      />
+      <HeaderComponent
+        title="Create New PIN"
+        onPress={() => navigation.goBack()}
+      />
       <ProgressBar currentStep={3} totalSteps={5} />
 
       {/* Create Pin */}
@@ -78,13 +130,15 @@ export default function CreatePinScreen({navigation}) {
       {/* Bottom */}
       <View style={styles.bottomSection}>
         <TouchableOpacity
-          disabled={!isValid}
-          style={[styles.button, !isValid && styles.buttonDisabled]}
-          onPress={() => {
-            updateRegisterData('password', pin);
-            navigation.navigate('LocationInfo');
-          }}>
-          <Text style={styles.buttonText}>Proceed</Text>
+          disabled={!isValid || loading}
+          style={[
+            styles.button,
+            (!isValid || loading) && styles.buttonDisabled,
+          ]}
+          onPress={handleChangePin}>
+          <Text style={styles.buttonText}>
+            {loading ? 'Saving...' : 'Proceed'}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

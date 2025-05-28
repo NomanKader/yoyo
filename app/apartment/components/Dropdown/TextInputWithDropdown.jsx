@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
+import {View, Text, TextInput, StyleSheet} from 'react-native';
+import {Dropdown} from 'react-native-element-dropdown';
 
 const TextInputWithDropdown = ({
   label,
@@ -9,27 +9,56 @@ const TextInputWithDropdown = ({
   dropdownValue,
   setDropdownValue,
   dropdownData,
+  placeholer = 'Enter Size',
+  position = 'end',
+  bgColor = '#fff',
+  editable = true,
 }) => {
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
       <View style={styles.inputWrapper}>
+        {position === 'front' && (
+          <Dropdown
+            disabled={!editable}
+            style={[styles.dropdown, {backgroundColor: bgColor}]}
+            data={dropdownData}
+            labelField="label"
+            valueField="value"
+            value={dropdownValue}
+            onChange={item => setDropdownValue(item.value)}
+            placeholder=""
+          />
+        )}
+
         <TextInput
-          style={styles.textInput}
+          editable={editable}
+          style={[styles.textInput, {backgroundColor: bgColor}]}
           keyboardType="numeric"
-          placeholder="Enter size"
+          placeholder={placeholer}
           value={value}
           onChangeText={onChangeText}
         />
-        <Dropdown
-          style={styles.dropdown}
-          data={dropdownData}
-          labelField="label"
-          valueField="value"
-          value={dropdownValue}
-          onChange={item => setDropdownValue(item.value)}
-          placeholder=""
-        />
+
+        {position === 'end' && (
+          <Dropdown
+            style={[
+              styles.dropdown,
+              {
+                borderLeftWidth: 1,
+                borderTopLeftRadius: 5,
+                borderBottomLeftRadius: 5,
+                backgroundColor: bgColor,
+              },
+            ]}
+            data={dropdownData}
+            labelField="label"
+            valueField="value"
+            onChange={item => setDropdownValue(item.value)}
+            value={dropdownValue}
+            placeholder=""
+          />
+        )}
       </View>
     </View>
   );
@@ -51,6 +80,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     overflow: 'hidden',
+    height: 50,
   },
   textInput: {
     flex: 1,
@@ -59,9 +89,6 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     width: 90,
-    borderLeftWidth: 1,
-    borderTopLeftRadius:5,
-    borderBottomLeftRadius:5,
     borderColor: '#ccc',
     paddingHorizontal: 12,
     justifyContent: 'center',

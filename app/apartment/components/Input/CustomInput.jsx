@@ -1,5 +1,6 @@
+import { max } from 'moment';
 import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import {View, Text, TextInput, StyleSheet} from 'react-native';
 
 const CustomInput = ({
   label,
@@ -10,18 +11,28 @@ const CustomInput = ({
   multiline = false,
   numberOfLines = 1,
   contentContainerStyle,
+  bgColor = '#fff',
+  editable = true,
+  mv = 0,
+  maxLength,
 }) => {
   return (
-    <View style={[styles.container,contentContainerStyle]}>
+    <View style={[styles.container, contentContainerStyle]}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
-        style={[styles.input, multiline && styles.multiline]}
+        style={[
+          styles.input,
+          multiline && styles.multiline,
+          {backgroundColor: bgColor,marginVertical:mv},
+        ]}
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
         multiline={multiline}
         numberOfLines={numberOfLines}
+        editable={editable}
+        maxLength={maxLength}
       />
     </View>
   );

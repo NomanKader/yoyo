@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
@@ -7,31 +7,40 @@ import {
   StyleSheet,
   ScrollView,
   Switch,
-} from "react-native";
-import Icon from "react-native-vector-icons/Feather";
-import { LanguageContext } from "../../context/LanguageContext";
-import { useTranslation } from "react-i18next";
-import DefaultButtonComponent from "../../components/Button/DefaultButtonComponent";
-import theme from "../../style/colors";
-import { AuthContext } from "../../../../App";
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
+import {LanguageContext} from '../../context/LanguageContext';
+import {useTranslation} from 'react-i18next';
+import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
+import theme from '../../style/colors';
+import {AuthContext} from '../../../../App';
 
-export default function SettingTabScreen({ navigation }) {
-  const { language, changeLanguage } = useContext(LanguageContext);
+export default function SettingTabScreen({navigation}) {
+  const {language, changeLanguage} = useContext(LanguageContext);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const { t } = useTranslation();
-  const {setIsAuthenticated} = useContext(AuthContext);
+  const {t} = useTranslation();
+  const {setIsAuthenticated, setUserRole} = useContext(AuthContext);
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
     // Here you can extend logic to actually change app-wide theme
+  };
+  const handleLogoutPress = async () => {
+    try {
+      await AsyncStorage.multiRemove(['token', 'userRole']);
+      setIsAuthenticated(false);
+      setUserRole(null); // optional reset if you track role
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Header */}
-      <View style={styles.header}>        
+      <View style={styles.header}>
         <Text style={styles.headerTitle}>{t('settings')}</Text>
-        <View style={{ width: 24 }} />
+        <View style={{width: 24}} />
       </View>
 
       {/* General Settings */}
@@ -40,8 +49,7 @@ export default function SettingTabScreen({ navigation }) {
         {/* Language */}
         <TouchableOpacity
           style={styles.settingItem}
-          onPress={() => setLanguageModalVisible(true)}
-        >
+          onPress={() => setLanguageModalVisible(true)}>
           <Text style={styles.settingLabel}>{t('language')}</Text>
           <View style={styles.languageRow}>
             <Text style={styles.settingValue}>{language}</Text>
@@ -59,59 +67,56 @@ export default function SettingTabScreen({ navigation }) {
           <Switch
             value={isDarkMode}
             onValueChange={toggleTheme}
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={isDarkMode ? "#0047AB" : "#f4f3f4"}
+            trackColor={{false: '#767577', true: '#81b0ff'}}
+            thumbColor={isDarkMode ? '#0047AB' : '#f4f3f4'}
           />
         </View>
       </View>
 
       {/* Logout Button */}
       <DefaultButtonComponent
-        title={t("logout")}
+        title={t('logout')}
         backgroundColor={theme.colors.textLight}
         textColor={theme.colors.danger}
         buttonStyle={styles.logoutButton}
-        onPress={() => {
-          setIsAuthenticated(false)
-        }}
+        onPress={handleLogoutPress}
       />
 
       {/* Language Modal */}
-      <Modal animationType="slide" transparent={true} visible={languageModalVisible}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={languageModalVisible}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>{t('chooseLanguage')}</Text>
             <TouchableOpacity
               style={styles.modalOption}
               onPress={() => {
-                changeLanguage("en");
+                changeLanguage('en');
                 setLanguageModalVisible(false);
-              }}
-            >
+              }}>
               <Text style={styles.modalOptionText}>English</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalOption}
               onPress={() => {
-                changeLanguage("mm");
+                changeLanguage('mm');
                 setLanguageModalVisible(false);
-              }}
-            >
+              }}>
               <Text style={styles.modalOptionText}>Myanmar</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalOption}
               onPress={() => {
-                changeLanguage("th");
+                changeLanguage('th');
                 setLanguageModalVisible(false);
-              }}
-            >
+              }}>
               <Text style={styles.modalOptionText}>Thai</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalCancel}
-              onPress={() => setLanguageModalVisible(false)}
-            >
+              onPress={() => setLanguageModalVisible(false)}>
               <Text style={styles.modalCancelText}>{t('cancel')}</Text>
             </TouchableOpacity>
           </View>
@@ -124,78 +129,78 @@ export default function SettingTabScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     paddingHorizontal: 20,
     paddingTop: 40,
     paddingBottom: 30,
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 20,
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: "bold"    
+    fontWeight: 'bold',
   },
   sectionTitle: {
     fontSize: 14,
-    fontWeight: "600",
-    color: "#555",
+    fontWeight: '600',
+    color: '#555',
     marginTop: 20,
     marginBottom: 10,
   },
   settingCard: {
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#EAEAEA",
+    borderColor: '#EAEAEA',
     marginBottom: 20,
   },
   settingItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingVertical: 15,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#EAEAEA",
+    borderBottomColor: '#EAEAEA',
   },
   settingLabel: {
     fontSize: 16,
-    fontWeight: "500",
-    color: "#000",
+    fontWeight: '500',
+    color: '#000',
   },
   settingValue: {
     fontSize: 14,
-    color: "#777",
+    color: '#777',
   },
   languageRow: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 5,
   },
   logoutButton: {
-    borderColor: "#DC3545",
+    borderColor: '#DC3545',
     borderWidth: 1,
     marginTop: 30,
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.4)",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalContent: {
     width: 300,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     borderRadius: 10,
     padding: 20,
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 15,
   },
   modalOption: {
@@ -209,7 +214,7 @@ const styles = StyleSheet.create({
   },
   modalCancelText: {
     fontSize: 16,
-    color: "#FF0000",
-    textAlign: "center",
+    color: '#FF0000',
+    textAlign: 'center',
   },
 });

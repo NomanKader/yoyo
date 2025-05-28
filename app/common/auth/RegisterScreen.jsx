@@ -1,98 +1,230 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  ScrollView,
+  BackHandler,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useNavigation} from '@react-navigation/native';
-import ModalDropdown from 'react-native-modal-dropdown';
 import HeaderComponent from '../../apartment/components/Divider/HeaderComponent';
 import ProgressBar from '../components/ProgessBarComponent';
+import {RegisterContext} from '../utils/RegisterProvider';
+import CustomInput from '../../apartment/components/Input/CustomInput';
+import TextInputWithDropdown from '../../apartment/components/Dropdown/TextInputWithDropdown';
+import CustomDropdown from '../../apartment/components/Dropdown/CustomDropDown';
+import {RequestOTP} from '../service/AuthService';
 
 const screenWidth = Dimensions.get('window').width;
 
-export default function RegisterScreen() {
-  const navigation = useNavigation();
-  const [hotelName, setHotelName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [countryCode, setCountryCode] = useState('+95');
+const countryCodes = [
+  {label: '+95', value: '+95'},
+  {label: '+66', value: '+66'},
+];
 
-  const isValid = hotelName && email && phone;
+export default function RegisterScreen({navigation}) {
+  const {registerData, updateRegisterData} = useContext(RegisterContext);
+  const [hotelPhoneRaw, setHotelPhoneRaw] = useState('');
+  const [userPhoneRaw, setUserPhoneRaw] = useState('');
+  const [countryCode, setCountryCode] = useState('+95');
+  const [userCountryCode, setUserCountryCode] = useState('+95');
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const onBackPress = () => {
+      if (loading) return true; // block back
+      return false; // allow
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      onBackPress,
+    );
+    return () => backHandler.remove(); // cleanup
+  }, [loading]);
+
+  const isValid =
+    registerData.hotelName &&
+    registerData.username &&
+    registerData.idCardNo &&
+    registerData.fullName &&
+    registerData.email &&
+    registerData.phone &&
+    registerData.role &&
+    registerData.hotelEmail &&
+    userPhoneRaw && 
+    hotelPhoneRaw &&
+    registerData.hotelPhoneNumbers;
+
+  const handleChange = (key, value) => {
+    if (key === 'hotelPhoneNumbers') {
+      setHotelPhoneRaw(value);
+      updateRegisterData(key, [countryCode + value]);
+    } else if (key === 'phone') {
+      setUserPhoneRaw(value);
+      updateRegisterData('phone', userCountryCode + value);
+    } else {
+      updateRegisterData(key, value);
+    }
+  };
+
+  const getOTP = async () => {
+    console.log('Register Data:', registerData);
+    setLoading(true);
+    const postBody = {
+      phone: null,
+      email: registerData.email || '',
+      code: null,
+    };
+
+    try {
+      const response = await RequestOTP(postBody);
+      if (response.result) {
+        navigation.navigate('OTP');
+      }
+    } catch (error) {
+      console.error('Failed to request OTP:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      {/* Header with back and progress bar */}
-      <HeaderComponent title={'Basic Information'} navigation={navigation} />
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{paddingBottom: 20}}
+      keyboardShouldPersistTaps="handled">
+      <HeaderComponent
+        title={'Basic Information'}
+        onPress={loading ? null : () => navigation.goBack()}
+      />
       <ProgressBar currentStep={1} totalSteps={5} />
 
-      {/* Input Fields */}
-      <Text style={styles.label}>Name of Hotel</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter hotel name"
-        value={hotelName}
-        onChangeText={setHotelName}
+      <CustomInput
+        label={'Hotel name'}
+        bgColor="#f2f2f2"
+        placeholder={'Enter Hotel Name'}
+        value={registerData?.hotelName}
+        onChangeText={value => handleChange('hotelName', value)}
+        editable={!loading}
       />
 
-      <Text style={styles.label}>Email Address</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter email address"
-        value={email}
+      <CustomInput
+        multiline
+        label={'Hotel Description (Optional)'}
+        bgColor="#f2f2f2"
+        placeholder={'Enter Hotel Description'}
+        value={registerData?.hotelDescription}
+        onChangeText={value => handleChange('hotelDescription', value)}
+        editable={!loading}
+      />
+
+      <CustomInput
+        label={'Username'}
+        bgColor="#f2f2f2"
+        placeholder={'Enter Username'}
+        value={registerData?.username}
+        onChangeText={value => handleChange('username', value)}
+        editable={!loading}
+      />
+
+      <CustomInput
+        label={'ID card number'}
+        bgColor="#f2f2f2"
+        placeholder={'Enter ID card number'}
+        value={registerData?.idCardNo}
+        onChangeText={value => handleChange('idCardNo', value)}
+        editable={!loading}
+      />
+
+      <CustomInput
+        label={'Full Name'}
+        bgColor="#f2f2f2"
+        placeholder={'Enter Full Name'}
+        value={registerData?.fullName}
+        onChangeText={value => handleChange('fullName', value)}
+        editable={!loading}
+      />
+
+      <CustomInput
+        label={'Email Address'}
+        bgColor="#f2f2f2"
+        placeholder={'Enter Email Address'}
+        value={registerData?.email}
+        onChangeText={value => handleChange('email', value)}
         keyboardType="email-address"
-        onChangeText={setEmail}
+        editable={!loading}
+      />
+      <TextInputWithDropdown
+        label="User Phone Number"
+        value={userPhoneRaw}
+        onChangeText={value => handleChange('phone', value)}
+        dropdownValue={userCountryCode}
+        placeholer="Enter Phone Number"
+        setDropdownValue={value => {
+          setUserCountryCode(value);
+          updateRegisterData('phone', value + userPhoneRaw);
+        }}
+        dropdownData={countryCodes}
+        position="front"
+        bgColor="#f2f2f2"
+        editable={!loading}
+      />
+      <CustomDropdown
+        label="User Role"
+        data={[
+          {label: 'Owner', value: 'owner'},
+          {label: 'Manager', value: 'manager'},
+          {label: 'Reception', value: 'reception'},
+        ]}
+        value={registerData?.role}
+        setValue={value => updateRegisterData('role', value)}
+        placeholder="Select user role"
+        bgColor="#f2f2f2"
+        disabled={!loading}
       />
 
-      <Text style={styles.label}>Phone Number</Text>
-      <View style={styles.phoneRow}>
-        <ModalDropdown
-          key={countryCode}
-          options={['+95', '+66']}
-          value={countryCode}
-          onSelect={(index, value) => setCountryCode(value)}
-          style={styles.dropdownWrapper}
-          dropdownStyle={styles.dropdownMenu}
-          renderRow={(option, index, isSelected) => (
-            <View style={styles.dropdownRow}>
-              <Text style={styles.dropdownItem}>{option}</Text>
-            </View>
-          )}
-          adjustFrame={style => ({
-            ...style,
-            top: style.top - 22, // remove space
-          })}>
-          <View style={styles.dropdown}>
-            <Text style={styles.dropdownText}>{countryCode}</Text>
-            <Icon name="arrow-drop-down" size={18} color="#555" />
-          </View>
-        </ModalDropdown>
-        <TextInput
-          placeholder="000 0000 000"
-          style={styles.phoneInput}
-          keyboardType="phone-pad"
-          value={phone}
-          onChangeText={setPhone}
-        />
-      </View>
+      <CustomInput
+        label={'Hotel Email Address'}
+        bgColor="#f2f2f2"
+        placeholder={'Enter Hotel Email Address'}
+        value={registerData?.hotelEmail}
+        onChangeText={value => handleChange('hotelEmail', value)}
+        keyboardType="email-address"
+        editable={!loading}
+      />
+
+      <TextInputWithDropdown
+        label="Hotel Phone Number"
+        value={hotelPhoneRaw}
+        onChangeText={value => handleChange('hotelPhoneNumbers', value)}
+        dropdownValue={countryCode}
+        placeholer="Enter Phone Number"
+        setDropdownValue={value => {
+          setCountryCode(value);
+          updateRegisterData('hotelPhoneNumbers', [value + hotelPhoneRaw]);
+        }}
+        dropdownData={countryCodes}
+        position="front"
+        bgColor="#f2f2f2"
+        editable={!loading}
+      />
 
       <View style={styles.bottomSection}>
         <TouchableOpacity
-          disabled={!isValid}
-          style={[styles.button, !isValid && styles.buttonDisabled]}
-          onPress={() => navigation.navigate('OTP')}>
-          <Text style={styles.buttonText}>Proceed</Text>
+          disabled={!isValid || loading}
+          style={[
+            styles.button,
+            (!isValid || loading) && styles.buttonDisabled,
+          ]}
+          onPress={getOTP}>
+          <Text style={styles.buttonText}>
+            {loading ? 'Proceeding...' : 'Proceed'}
+          </Text>
         </TouchableOpacity>
-
-        <Text style={styles.footer}>
-          Already have an account? <Text style={styles.signIn}>Sign In</Text>
-        </Text>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -102,27 +234,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: screenWidth * 0.06,
     backgroundColor: '#fff',
     paddingTop: 50,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  label: {
-    fontSize: 14,
-    marginTop: 12,
-    marginBottom: 4,
-    color: '#333',
-  },
-  input: {
-    backgroundColor: '#f2f2f2',
-    borderRadius: 6,
-    padding: 12,
-    fontSize: 16,
   },
   button: {
     backgroundColor: '#007bff',
@@ -139,76 +250,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
-  footer: {
-    marginTop: 20,
-    alignSelf: 'center',
-    fontSize: 14,
-    color: '#555',
-  },
-  signIn: {
-    color: '#007bff',
-    fontWeight: 'bold',
-  },
-  phoneRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 8,
-  },
-
-  phoneInput: {
-    flex: 1,
-    backgroundColor: '#f3f3f3',
-    borderRadius: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 12,
-    fontSize: 16,
-    height: 48,
-  },
-
-  dropdownWrapper: {
-    height: 48,
-    width: 80,
-    justifyContent: 'center',
-    backgroundColor: '#f3f3f3',
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    marginRight: 10,
-  },
-
-  dropdown: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-  },
-
-  dropdownText: {
-    fontSize: 16,
-    color: '#000',
-  },
-
-  dropdownItem: {
-    fontSize: 16,
-    color: '#000',
-    padding: 10,
-  },
-
-  dropdownRow: {
-    backgroundColor: '#fff',
-  },
-
-  dropdownMenu: {
-    width: 100,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 6,
-    elevation: 4,
-    zIndex: 1000,
-  },
   bottomSection: {
-    marginTop: 'auto',
-    marginBottom: 20,
+    marginTop: 20,
+    marginBottom: 50,
   },
 });

@@ -1,12 +1,13 @@
-import { View, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet, Image} from 'react-native';
 
-export default function HeaderComponent({ navigation, title }) {
+export default function HeaderComponent({
+  onPress,
+  title,
+  contentContainerStyle,
+}) {
   return (
-    <View style={styles.header}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.backButtonWrapper}
-      >
+    <View style={[styles.header, contentContainerStyle]}>
+      <TouchableOpacity onPress={onPress} style={styles.backButtonWrapper}>
         <Image
           source={require('../../assets/icons/backIcon.png')}
           style={styles.backIcon}
@@ -22,8 +23,8 @@ const styles = StyleSheet.create({
     height: 56,
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'relative',
     marginBottom: 20,
+    position: 'relative',
   },
   backButtonWrapper: {
     position: 'absolute',

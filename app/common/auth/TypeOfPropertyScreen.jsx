@@ -1,37 +1,49 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, Dimensions, Image,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  Image,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import HeaderComponent from '../../apartment/components/Divider/HeaderComponent';
 import hotelIcon from '../assets/hotelIcon.png';
 import apartmentIcon from '../assets/apartmentIcon.png';
+import {RegisterContext} from '../utils/RegisterProvider';
 
 const screenWidth = Dimensions.get('window').width;
 
 export default function TypeOfPropertyScreen() {
+  const {registerData, updateRegisterData} = useContext(RegisterContext);
   const navigation = useNavigation();
-  const [selected, setSelected] = useState(null);
 
   const handleProceed = () => {
-    if (selected) {
-      navigation.navigate('Register', { propertyType: selected });
+    if (registerData.type !== undefined) {
+      navigation.navigate('Register');
     }
+  };
+
+  const handleChange = value => {
+    updateRegisterData('type', value);
   };
 
   return (
     <View style={styles.container}>
-      <HeaderComponent title="Type of Property" navigation={navigation} />
-      
+      <HeaderComponent
+        title="Type of Property"
+        onPress={() => navigation.goBack()}
+      />
+
       <Text style={styles.instruction}>
         Firstly, please select one type of property to proceed the registration.
       </Text>
 
       {/* Property Selection Cards */}
       <TouchableOpacity
-        style={[styles.card, selected === 'Hotel' && styles.cardSelected]}
-        onPress={() => setSelected('Hotel')}
-      >
+        style={[styles.card, registerData.type === 1 && styles.cardSelected]}
+        onPress={() => handleChange(1)}>
         <Image source={hotelIcon} style={styles.icon} />
         <Text style={styles.cardText}>Hotel</Text>
       </TouchableOpacity>
@@ -39,19 +51,20 @@ export default function TypeOfPropertyScreen() {
       <Text style={styles.or}>OR</Text>
 
       <TouchableOpacity
-        style={[styles.card, selected === 'Apartment' && styles.cardSelected]}
-        onPress={() => setSelected('Apartment')}
-      >
+        style={[styles.card, registerData.type === 2 && styles.cardSelected]}
+        onPress={() => handleChange(2)}>
         <Image source={apartmentIcon} style={styles.icon} />
         <Text style={styles.cardText}>Apartment</Text>
       </TouchableOpacity>
 
       {/* Proceed Button */}
       <TouchableOpacity
-        style={[styles.button, !selected && styles.buttonDisabled]}
-        disabled={!selected}
-        onPress={handleProceed}
-      >
+        style={[
+          styles.button,
+          registerData.type === undefined && styles.buttonDisabled,
+        ]}
+        disabled={registerData.type === undefined}
+        onPress={handleProceed}>
         <Text style={styles.buttonText}>Proceed</Text>
       </TouchableOpacity>
     </View>

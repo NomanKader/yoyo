@@ -1,25 +1,34 @@
-import React,{useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Image,
   Dimensions,
-  BackHandler
+  BackHandler,
 } from 'react-native';
 import theme from '../../style/colors';
 import RoundButtonComponent from '../Button/RoundButtonComponent';
 import successIllustration from '../../assets/images/successIllustration.png';
 import DefaultButtonComponent from '../Button/DefaultButtonComponent';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 // Get the screen width
 const {width: screenWidth} = Dimensions.get('window');
 
 const SuccessScreenComponent = ({route}) => {
   // Extract parameters from route.params
-  const navigation=useNavigation();
-  const {header, subheader, nextScreen, nextScreenParams, icon,isShowingIllustration, buttonText,color} = route.params;
+  const navigation = useNavigation();
+  const {
+    header,
+    subheader,
+    nextScreen,
+    nextScreenParams,
+    icon,
+    isShowingIllustration,
+    buttonText,
+    color,
+  } = route.params;
   useEffect(() => {
     const backAction = () => {
       navigation.goBack(); // or navigation.navigate('YourPreviousScreen')
@@ -28,7 +37,7 @@ const SuccessScreenComponent = ({route}) => {
 
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
-      backAction
+      backAction,
     );
 
     return () => backHandler.remove();
@@ -55,7 +64,7 @@ const SuccessScreenComponent = ({route}) => {
         {subheader}
       </Text>
 
-      {isShowingIllustration ? (       
+      {isShowingIllustration ? (
         <>
           <Image
             source={successIllustration}
@@ -65,11 +74,11 @@ const SuccessScreenComponent = ({route}) => {
         </>
       ) : (
         <>
-        <RoundButtonComponent
-          label="Add Room"
-          onPress={() => navigation.navigate(nextScreen, nextScreenParams)}
-        />
-        {/* <RoundButtonComponent 
+          <RoundButtonComponent
+            label="Add Room"
+            onPress={() => navigation.navigate(nextScreen, nextScreenParams)}
+          />
+          {/* <RoundButtonComponent 
           label="Back"
           onPress={() => navigation.goBack()}
         /> */}
@@ -78,14 +87,26 @@ const SuccessScreenComponent = ({route}) => {
 
       {/* DefaultButtonComponent placed at the bottom */}
       {isShowingIllustration && (
-          <View style={styles.buttonContainer}>
-            <DefaultButtonComponent
-              title={buttonText}
-              backgroundColor={theme.colors.textLight}
-              color={color}
-              onPress={() =>buttonText=='Back to home'?navigation.navigate('TabScreen'):navigation.navigate(nextScreen,nextScreenParams)}
-            />
-          </View>
+        <View style={styles.buttonContainer}>
+          <DefaultButtonComponent
+            title={buttonText}
+            backgroundColor={theme.colors.textLight}
+            color={color}
+            onPress={() => {
+              if (buttonText === 'Back to home') {
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: 'TabScreen'}],
+                });
+              } else {
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: nextScreen, params: nextScreenParams}],
+                });
+              }
+            }}
+          />
+        </View>
       )}
     </View>
   );
@@ -129,8 +150,7 @@ const styles = StyleSheet.create({
     bottom: 20, // Adjust the bottom space as needed
     left: 0,
     right: 0,
-    paddingHorizontal:20
-        
+    paddingHorizontal: 20,
   },
 });
 

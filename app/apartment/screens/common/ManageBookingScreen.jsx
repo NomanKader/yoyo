@@ -72,7 +72,7 @@ export default function ManageBookingScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <HeaderComponent navigation={navigation} title={'Manage Booking'} />
+      <HeaderComponent onPress={()=> navigation.goBack()} title={'Manage Booking'} />
       <FlatList
         data={bookingsData}
         renderItem={renderBooking}

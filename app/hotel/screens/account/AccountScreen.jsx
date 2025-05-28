@@ -22,18 +22,29 @@ import accountSettings from '../../config/accountSettingList';
 import AccessTokenService from '../../helper/AccessTokenService';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import theme from '../../style/colors';
-import { AuthContext } from '../../../../App';
+import {AuthContext} from '../../../../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function AccountScreen({navigation}) {
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
-  const {setIsAuthenticated}=useContext(AuthContext)
+  const {setIsAuthenticated, setUserRole} = useContext(AuthContext);
   // Show Bottom Sheet when "Logout" is clicked
-  const handleLogoutPress = () => {
-    AccessTokenService._ClearKeyChainData();
-    // navigation.navigate('AuthStack', {screen: 'LoginScreen'});
-    setBottomSheetVisible(false);
-    setIsAuthenticated(false);
+  const handleLogoutPress = async () => {
+    try {
+      // Clear sensitive token from secure storage (e.g. Keychain or EncryptedStorage)
+      await AccessTokenService._ClearKeyChainData?.();
+
+      // Remove token and role from AsyncStorage
+      await AsyncStorage.multiRemove(['token', 'userRole']);
+
+      // Close bottom sheet and reset auth state
+      setBottomSheetVisible(false);
+      setIsAuthenticated(false);
+      setUserRole(null); // optional: reset role context
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   const handleDeleteAccount = () => {
@@ -152,11 +163,11 @@ export default function AccountScreen({navigation}) {
                 navigation.navigate('AppStack', {
                   screen: 'BasicDetailScreen',
                   params: {
-                    hotelName: "aHotel",
-                    email: "ahotel@gmail.com",
-                    phoneNumber: "09969119949",
-                    pin: "1011",
-                    role: 'Admin'                    
+                    hotelName: 'aHotel',
+                    email: 'ahotel@gmail.com',
+                    phoneNumber: '09969119949',
+                    pin: '1011',
+                    role: 'Admin',
                   },
                 })
               }>
@@ -180,14 +191,17 @@ export default function AccountScreen({navigation}) {
                 navigation.navigate('AppStack', {
                   screen: 'UploadPictureScreen',
                   params: {
-                    photo1:'https://media.istockphoto.com/id/472899538/photo/downtown-cleveland-hotel-entrance-and-waiting-taxi-cab.jpg?s=612x612&w=0&k=20&c=rz-WSe_6gKfkID6EL9yxCdN_UIMkXUBsr67884j-X9o=',
-                    photo2: 'https://hospitalityinsights.ehl.edu/hubfs/Imported_Blog_Media/Hotel-design.jpg',
-                    photo3: 'https://media.istockphoto.com/id/1357529812/photo/digitally-generated-image-of-a-bedroom-interiors-with-minimal-furniture.jpg?s=612x612&w=0&k=20&c=QEQqZHCDDDxovPvKPhuefgPTqqsPLrLm8OgLIKD0m6k=',
-                    photo4: 'https://www.decorpot.com/images/2016633195top-15-beautiful-and-luxury-bedroom-interior-design-ideas-2023.jpg', // Replace with actual pin value                
+                    photo1:
+                      'https://media.istockphoto.com/id/472899538/photo/downtown-cleveland-hotel-entrance-and-waiting-taxi-cab.jpg?s=612x612&w=0&k=20&c=rz-WSe_6gKfkID6EL9yxCdN_UIMkXUBsr67884j-X9o=',
+                    photo2:
+                      'https://hospitalityinsights.ehl.edu/hubfs/Imported_Blog_Media/Hotel-design.jpg',
+                    photo3:
+                      'https://media.istockphoto.com/id/1357529812/photo/digitally-generated-image-of-a-bedroom-interiors-with-minimal-furniture.jpg?s=612x612&w=0&k=20&c=QEQqZHCDDDxovPvKPhuefgPTqqsPLrLm8OgLIKD0m6k=',
+                    photo4:
+                      'https://www.decorpot.com/images/2016633195top-15-beautiful-and-luxury-bedroom-interior-design-ideas-2023.jpg', // Replace with actual pin value
                   },
                 })
-              }
-              >
+              }>
               <View style={styles.listItem}>
                 <Image source={galleryIcon} style={styles.icon} />
                 <View style={styles.textContainer}>

@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
+import {View, Text, StyleSheet} from 'react-native';
+import {Dropdown} from 'react-native-element-dropdown';
 
 const CustomDropdown = ({
   label,
@@ -10,12 +10,15 @@ const CustomDropdown = ({
   labelField = 'label',
   valueField = 'value',
   placeholder = 'Select an option',
+  bgColor = '#fff',
+  disabled = true,
 }) => {
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
       <Dropdown
-        style={styles.dropdown}
+        disabled={!disabled}
+        style={[styles.dropdown, {backgroundColor: bgColor}]}
         data={data}
         labelField={labelField}
         valueField={valueField}
@@ -40,7 +43,7 @@ const styles = StyleSheet.create({
   dropdown: {
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 8,
+    borderRadius: 5,
     paddingHorizontal: 12,
     height: 50,
   },

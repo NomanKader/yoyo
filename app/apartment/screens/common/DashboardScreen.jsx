@@ -31,7 +31,7 @@ const recentBookings = [
 export default function DashboardScreen({navigation}) {
   return (
     <ScrollView contentContainerStyle={styles.container}>      
-        <HeaderComponent navigation={navigation} title={'Transaction History'}/>
+        <HeaderComponent onPress={() => navigation.goBack()} title={'Transaction History'}/>
       {/* Stats */}
       <View style={styles.statsRow}>
         {dashboardStats.map(stat => (

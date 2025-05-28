@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-export default function ProgressBar({ currentStep, totalSteps }) {
+export default function ProgressBar({ currentStep, totalSteps, contentContainerStyle}) {
   const percentage = (currentStep / totalSteps) * 100;
 
   return (
-    <View style={styles.progressBar}>
-      <View style={[styles.progressIndicator, { width: `${percentage}%` }]} />
+    <View style={[styles.progressBar,contentContainerStyle]}>
+      <View style={[styles.progressIndicator, { width: `${percentage}%`}]} />
     </View>
   );
 }

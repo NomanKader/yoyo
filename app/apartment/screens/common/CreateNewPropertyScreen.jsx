@@ -42,7 +42,7 @@ const CreateNewPropertyScreen = ({navigation}) => {
 
   const mapRef = useRef();
   const [marker, setMarker] = useState(null);
-  const [latLng, setLatLng] = useState({
+  const [location, setLocation] = useState({
     lat: '',
     lng: '',
   });
@@ -53,7 +53,7 @@ const CreateNewPropertyScreen = ({navigation}) => {
       <ScrollView
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled">
-        <HeaderComponent title={'Create Property'} navigation={navigation} />
+        <HeaderComponent title={'Create Property'} onPress={() => navigation.goBack()} />
 
         <OptionSelector
           options={['Hotel', 'Apartment']}
@@ -98,9 +98,12 @@ const CreateNewPropertyScreen = ({navigation}) => {
           marker={marker}
           setMarker={setMarker}
           customMapStyle={customMapStyle}
-          getLatLong={(lat, lng) => {
-            setLatLng({lat, lng});
-            console.log('LatLng:', lat, lng);
+          onChangeLocation={location => {
+            console.log('Selected Location:', location);
+            setLocation({
+              lat: location.lat,
+              lng: location.lng,
+            });
           }}
         />
 

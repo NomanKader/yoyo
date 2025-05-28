@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,110 +10,112 @@ import {
 import MapView, {Marker} from 'react-native-maps';
 import CustomInput from '../../apartment/components/Input/CustomInput';
 import axios from 'axios';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const GOOGLE_API_KEY = 'AIzaSyBCQktakyeMA8A1kI80UjSxIpngXUOeXk8';
 
 const AddressPickerWithMap = ({
-  title,
+  title = 'Enter address',
   mapRef,
   marker,
   setMarker,
   customMapStyle,
-  getAddressDetails,
-  getLatLong,
+  onChangeLocation,
 }) => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
 
+  useEffect(() => {
+    if (marker?.latitude && marker?.longitude && query === '') {
+      const {latitude, longitude} = marker;
+
+      fetchAddressDetails(latitude, longitude);
+    }
+  }, []);
+
   const handleSearch = async text => {
     setQuery(text);
-    if (text.length > 2) {
+    if (text.length <= 2) return setSuggestions([]);
+
+    try {
       const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${text}&key=${GOOGLE_API_KEY}&components=country:MM`;
       const res = await axios.get(url);
-      setSuggestions(res.data.predictions);
-    } else {
-      setSuggestions([]);
+      setSuggestions(res.data.predictions || []);
+    } catch (error) {
+      console.error('Autocomplete fetch failed:', error);
     }
   };
 
   const handleSuggestionPress = async placeId => {
-    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${GOOGLE_API_KEY}`;
-    const res = await axios.get(url);
-    const loc = res.data.result.geometry.location;
-
-    const lat = loc.lat;
-    const lng = loc.lng;
-    setMarker({latitude: lat, longitude: lng});
-    setSuggestions([]);
-    setQuery(res.data.result.formatted_address);
-
-    mapRef.current?.animateToRegion({
-      latitude: lat,
-      longitude: lng,
-      latitudeDelta: 0.005,
-      longitudeDelta: 0.005,
-    });
-
-    if (getAddressDetails) {
-      await fetchAddressDetails(lat, lng);
-    }
-
-    if (getLatLong) {
-      getLatLong(lat, lng);
-    }
-
-    Keyboard.dismiss();
-  };
-
-  const fetchAddressDetails = async (lat, lng) => {
     try {
-      const res = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_API_KEY}`,
-      );
+      const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${GOOGLE_API_KEY}`;
+      const res = await axios.get(url);
+      const loc = res.data.result.geometry.location;
+      const lat = loc.lat;
+      const lng = loc.lng;
 
-      if (res.data.status === 'OK') {
-        const formatted = res.data.results[0]?.formatted_address || '';
-        setQuery(formatted);
+      setSuggestions([]);
+      setMarker({latitude: lat, longitude: lng});
 
-        let components = [];
-        for (let r of res.data.results) {
-          components = [...components, ...r.address_components];
-        }
+      mapRef.current?.animateToRegion({
+        latitude: lat,
+        longitude: lng,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+      });
 
-        const getComp = type =>
-          components.find(c => c.types.includes(type))?.long_name || '--';
-
-        const locationDetails = {
-          state: getComp('administrative_area_level_1'),
-          city:
-            getComp('locality') ||
-            getComp('administrative_area_level_2') ||
-            '--',
-          township: getComp('administrative_area_level_3') || '--',
-        };
-
-        getAddressDetails?.(locationDetails);
-      }
+      await fetchAddressDetails(lat, lng, res.data.result.formatted_address);
+      Keyboard.dismiss();
     } catch (error) {
-      console.error('Error fetching address details:', error);
+      console.error('Place details fetch failed:', error);
     }
   };
 
   const handleMapPress = async e => {
     const {latitude, longitude} = e.nativeEvent.coordinate;
     setMarker({latitude, longitude});
+    await fetchAddressDetails(latitude, longitude);
+  };
 
-    if (getAddressDetails) {
-      await fetchAddressDetails(latitude, longitude);
-    }
+  const fetchAddressDetails = async (lat, lng, addressFromSearch = '') => {
+    try {
+      const res = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_API_KEY}`,
+      );
 
-    if (getLatLong) {
-      getLatLong(latitude, longitude);
+      if (res.data.status !== 'OK') return;
+
+      const formatted =
+        addressFromSearch || res.data.results[0]?.formatted_address || '';
+      setQuery(formatted);
+
+      let components = [];
+      res.data.results.forEach(r => {
+        components = [...components, ...r.address_components];
+      });
+
+      const getComponent = type =>
+        components.find(c => c.types.includes(type))?.long_name || '--';
+
+      const locationDetails = {
+        state: getComponent('administrative_area_level_1'),
+        city:
+          getComponent('locality') ||
+          getComponent('administrative_area_level_2'),
+        township: getComponent('administrative_area_level_3'),
+        latitude: lat,
+        longitude: lng,
+        address: formatted,
+      };
+
+      onChangeLocation?.(locationDetails);
+    } catch (error) {
+      console.error('Reverse geocode failed:', error);
     }
   };
 
   return (
-    <>
+    <View>
       <CustomInput
         label={title}
         value={query}
@@ -121,20 +123,19 @@ const AddressPickerWithMap = ({
         contentContainerStyle={styles.input}
       />
 
-      <FlatList
-        data={suggestions}
-        keyExtractor={item => item.place_id}
-        renderItem={({item}) => (
+      <ScrollView
+        style={styles.suggestionsList}
+        keyboardShouldPersistTaps="handled"
+        nestedScrollEnabled>
+        {suggestions.map(item => (
           <TouchableOpacity
+            key={item.place_id}
             onPress={() => handleSuggestionPress(item.place_id)}
             style={styles.suggestionItem}>
             <Text>{item.description}</Text>
           </TouchableOpacity>
-        )}
-        style={styles.suggestionsList}
-        keyboardShouldPersistTaps="handled"
-        nestedScrollEnabled={true}
-      />
+        ))}
+      </ScrollView>
 
       <Text style={styles.label}>Map</Text>
       <View style={styles.mapWrapper}>
@@ -142,17 +143,26 @@ const AddressPickerWithMap = ({
           ref={mapRef}
           style={styles.map}
           customMapStyle={customMapStyle}
-          initialRegion={{
-            latitude: 16.8409,
-            longitude: 96.1735,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
-          }}
+          initialRegion={
+            marker
+              ? {
+                  latitude: marker.latitude,
+                  longitude: marker.longitude,
+                  latitudeDelta: 0.005,
+                  longitudeDelta: 0.005,
+                }
+              : {
+                  latitude: 16.8409,
+                  longitude: 96.1735,
+                  latitudeDelta: 0.05,
+                  longitudeDelta: 0.05,
+                }
+          }
           onPress={handleMapPress}>
           {marker && <Marker coordinate={marker} pinColor="#FFA500" />}
         </MapView>
       </View>
-    </>
+    </View>
   );
 };
 
