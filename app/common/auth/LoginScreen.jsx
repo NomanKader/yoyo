@@ -33,7 +33,7 @@ export default function LoginScreen() {
 
   const isValid = username.trim() !== '' && pin.length === 4;
 
-  const handleLogin = async () => {
+  const handleLogin = async () => {   
     setLoading(true);
 
     try {
@@ -42,8 +42,9 @@ export default function LoginScreen() {
       if (response.result) {
         await AsyncStorage.setItem('token', response.access_token || '');
         await AsyncStorage.setItem('userRole', response.isApartment ? 'apartment' : 'hotel');
-        setIsAuthenticated(true);
-        setUserRole(response.isApartment ? 'apartment' : 'hotel');
+        // setIsAuthenticated(true);
+        // setUserRole(response.isApartment ? 'apartment' : 'hotel');
+        navigation.navigate('SelectProperty')
       } else {
         setErrorMessage(response.message || 'Login failed');
         setAlertVisible(true);

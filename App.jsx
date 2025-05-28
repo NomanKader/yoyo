@@ -10,10 +10,11 @@ import {HotelLanguageProvider} from './app/hotel/context/LanguageContext';
 import {LanguageProvider} from './app/apartment/context/LanguageContext';
 
 import ApartmentAppStack from './app/apartment/navigation/AppStack';
-import AuthStack from './app/apartment/navigation/AuthStack';
+import AuthStack from './app/common/navigation/AuthStack';
 import HotelTabStack from './app/hotel/navigation/TabStack';
 import RoleSelectorStack from './app/common/navigation/RoleSelectorStack';
 import theme from './app/apartment/style/colors';
+import SelectPropertyScreen from './app/common/auth/SelectPropertyScreen';
 
 // 🔐 Create Auth Context
 export const AuthContext = createContext();
@@ -65,9 +66,9 @@ export default function App() {
     if (userRole === 'apartment') return <ApartmentAppStack />;
     if (userRole === 'hotel') return <HotelTabStack />;
     if (userRole === 'both') return <RoleSelectorStack />;
-    return <AuthStack />;
+    return <SelectPropertyScreen />;
   };
-
+  
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <I18nextProvider i18n={i18n}>
@@ -77,6 +78,7 @@ export default function App() {
               value={{
                 isAuthenticated,
                 setIsAuthenticated,
+                setLoading,
                 userRole,
                 setUserRole,
               }}>
@@ -87,15 +89,11 @@ export default function App() {
                   translucent={false}
                 />
                 {loading ? (
-                  <View style={styles.loadingContainer}>
-                    <ActivityIndicator
-                      size="large"
-                      color={theme.colors.primary}
-                    />
-                  </View>
-                ) : (
-                  renderNavigator()
-                )}
+  <View style={styles.loadingContainer}>
+    <ActivityIndicator size="large" color={theme.colors.primary} />
+  </View>
+) : renderNavigator()}
+
               </NavigationContainer>
             </AuthContext.Provider>
           </HotelLanguageProvider>
