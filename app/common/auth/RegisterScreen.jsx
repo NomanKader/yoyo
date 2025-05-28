@@ -33,15 +33,42 @@ export default function RegisterScreen({navigation}) {
 
   useEffect(() => {
     const onBackPress = () => {
-      if (loading) return true; // block back
-      return false; // allow
+      if (loading) return true;
+      return false;
     };
+
+    // Extract raw number and country code if already saved
+    if (registerData?.phone?.startsWith('+')) {
+      const code = countryCodes.find(c =>
+        registerData.phone.startsWith(c.value),
+      );
+      if (code) {
+        setUserCountryCode(code.value);
+        setUserPhoneRaw(registerData.phone.replace(code.value, ''));
+      }
+    }
+
+    if (
+      Array.isArray(registerData?.hotelPhoneNumbers) &&
+      registerData.hotelPhoneNumbers.length > 0 &&
+      registerData.hotelPhoneNumbers[0].startsWith('+')
+    ) {
+      const code = countryCodes.find(c =>
+        registerData.hotelPhoneNumbers[0].startsWith(c.value),
+      );
+      if (code) {
+        setCountryCode(code.value);
+        setHotelPhoneRaw(
+          registerData.hotelPhoneNumbers[0].replace(code.value, ''),
+        );
+      }
+    }
 
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       onBackPress,
     );
-    return () => backHandler.remove(); // cleanup
+    return () => backHandler.remove();
   }, [loading]);
 
   const isValid =

@@ -12,7 +12,7 @@ import HeaderComponent from '../../apartment/components/Divider/HeaderComponent'
 import {useNavigation} from '@react-navigation/native';
 import ProgressBar from '../components/ProgessBarComponent';
 import {RegisterContext} from '../utils/RegisterProvider';
-import {VerifyOTp} from '../service/AuthService';
+import {RequestOTP, VerifyOTp} from '../service/AuthService';
 import CustomAlert from '../alert/CustomAlert';
 
 const screenWidth = Dimensions.get('window').width;
@@ -24,6 +24,7 @@ export default function OTPScreen() {
   const [loading, setLoading] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [resendLoading, setResendLoading] = useState(false);
 
   const isValid = otpCode.length === 6;
 
@@ -40,6 +41,32 @@ export default function OTPScreen() {
     return () => backHandler.remove();
   }, [loading]);
 
+  const resendOTPCode = async () => {
+    try {
+      setResendLoading(true);
+      const postBody = {
+        phone: null,
+        email: registerData.email || '',
+        code: null,
+      };
+
+      const response = await RequestOTP(postBody);
+
+      if (response?.result) {
+        console.log('OTP resent successfully:', response);
+      } else {
+        console.warn(
+          'Failed to resend OTP:',
+          response?.message || 'Unknown error',
+        );
+      }
+    } catch (error) {
+      console.error('Error resending OTP:', error);
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
   const verifyOtp = async () => {
     setLoading(true);
     const postBody = {
@@ -53,8 +80,8 @@ export default function OTPScreen() {
       if (response.result) {
         registerData.otpToken = response.token;
         navigation.navigate('CreatePin');
-      }else {
-        setAlertVisible(true)
+      } else {
+        setAlertVisible(true);
         setErrorMessage(response.message || 'Failed to verify OTP');
       }
     } catch (error) {
@@ -69,7 +96,7 @@ export default function OTPScreen() {
       <CustomAlert
         visible={alertVisible}
         onClose={() => setAlertVisible(false)}
-        title={"Something went wrong"}
+        title={'Something went wrong'}
         message={errorMessage}
       />
       <HeaderComponent
@@ -94,8 +121,12 @@ export default function OTPScreen() {
       <View style={styles.bottomSection}>
         <View style={styles.resendContainer}>
           <Text style={styles.resendText}>No OTP yet?</Text>
-          <TouchableOpacity>
-            <Text style={styles.resendLink}> Resend OTP</Text>
+          <TouchableOpacity onPress={resendOTPCode} disabled={resendLoading}>
+            {resendLoading ? (
+              <Text style={styles.resendLink}> Resending...</Text>
+            ) : (
+              <Text style={styles.resendLink}> Resend OTP</Text>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -155,11 +186,6 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
   },
-  resendContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 10,
-  },
   resendText: {
     fontSize: 14,
     color: '#555',
@@ -191,6 +217,7 @@ const styles = StyleSheet.create({
   resendContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 12,
   },
 });
