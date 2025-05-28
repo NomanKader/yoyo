@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
   Switch,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import {LanguageContext} from '../../context/LanguageContext';
@@ -14,6 +15,7 @@ import {useTranslation} from 'react-i18next';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import theme from '../../style/colors';
 import {AuthContext} from '../../../../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SettingTabScreen({navigation}) {
   const {language, changeLanguage} = useContext(LanguageContext);
@@ -29,11 +31,18 @@ export default function SettingTabScreen({navigation}) {
     try {
       await AsyncStorage.multiRemove(['token', 'userRole']);
       setIsAuthenticated(false);
-      setUserRole(null); // optional reset if you track role
+      setUserRole(null);
+  
+      // 🧼 Reset navigation stack to AuthStack
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Login'}],
+      });
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
