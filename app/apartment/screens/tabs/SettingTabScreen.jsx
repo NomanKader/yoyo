@@ -14,6 +14,7 @@ import {useTranslation} from 'react-i18next';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import theme from '../../style/colors';
 import {AuthContext} from '../../../../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SettingTabScreen({navigation}) {
   const {language, changeLanguage} = useContext(LanguageContext);

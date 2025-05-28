@@ -41,9 +41,14 @@ export default function LoginScreen() {
 
       if (response.result) {
         await AsyncStorage.setItem('token', response.access_token || '');
-        await AsyncStorage.setItem('userRole', response.isApartment ? 'apartment' : 'hotel');
+        await AsyncStorage.setItem(
+          'userRole',
+          response.userInfo?.isApartment === true ? 'apartment' : 'hotel',
+        );
         setIsAuthenticated(true);
-        setUserRole(response.isApartment ? 'apartment' : 'hotel');
+        setUserRole(
+          response.userInfo?.isApartment === true ? 'apartment' : 'hotel',
+        );
       } else {
         setErrorMessage(response.message || 'Login failed');
         setAlertVisible(true);
