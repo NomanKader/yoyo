@@ -13,6 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import ProgressBar from '../components/ProgessBarComponent';
 import {RegisterContext} from '../utils/RegisterProvider';
 import {VerifyOTp} from '../service/AuthService';
+import CustomAlert from '../alert/CustomAlert';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -21,6 +22,8 @@ export default function OTPScreen() {
   const navigation = useNavigation();
   const [otpCode, setOtpCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const isValid = otpCode.length === 6;
 
@@ -50,6 +53,9 @@ export default function OTPScreen() {
       if (response.result) {
         registerData.otpToken = response.token;
         navigation.navigate('CreatePin');
+      }else {
+        setAlertVisible(true)
+        setErrorMessage(response.message || 'Failed to verify OTP');
       }
     } catch (error) {
       console.error('Failed to request OTP:', error);
@@ -60,6 +66,12 @@ export default function OTPScreen() {
 
   return (
     <View style={styles.container}>
+      <CustomAlert
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
+        title={"Something went wrong"}
+        message={errorMessage}
+      />
       <HeaderComponent
         title="OTP Verification"
         onPress={loading ? null : () => navigation.goBack()}

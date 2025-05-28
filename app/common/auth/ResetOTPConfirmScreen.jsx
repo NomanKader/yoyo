@@ -4,12 +4,15 @@ import HeaderComponent from '../../apartment/components/Divider/HeaderComponent'
 import ProgressBar from '../components/ProgessBarComponent';
 import CustomInput from '../../apartment/components/Input/CustomInput';
 import {RequestOTP, VerifyOTp} from '../service/AuthService';
+import CustomAlert from '../alert/CustomAlert';
 
 const ResetOTPConfirmScreen = ({navigation, route}) => {
   const {email} = route.params || {};
   const [resendLoading, setResendLoading] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const isValid = otpCode.trim().length === 6;
 
   const resendOTPCode = async () => {
@@ -56,6 +59,8 @@ const ResetOTPConfirmScreen = ({navigation, route}) => {
           token: response.token,
         });
       } else {
+        setAlertVisible(true);
+        setErrorMessage(response?.message || 'Failed to verify OTP');
         console.warn('Failed to verify OTP or missing token.');
       }
     } catch (error) {
@@ -67,6 +72,12 @@ const ResetOTPConfirmScreen = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
+      <CustomAlert
+        title={'Something went wrong'}
+        message={errorMessage}
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
+      />
       <HeaderComponent
         title={'Confirmation Code'}
         onPress={() => navigation.goBack()}
