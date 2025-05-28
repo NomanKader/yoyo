@@ -31,7 +31,7 @@ export default function SettingTabScreen({navigation}) {
     try {
       await AsyncStorage.multiRemove(['token', 'userRole']);
       setIsAuthenticated(false);
-      setUserRole(null);
+      // setUserRole(null);
   
       // 🧼 Reset navigation stack to AuthStack
       navigation.reset({

@@ -40,7 +40,7 @@ export default function CreateNewPinScreen({navigation, route}) {
       const response = await ResetPassword(postBody);
 
       if (response?.result) {
-        navigation.navigate('HotelAppStack', {
+        navigation.navigate('HotelTabStack', {
           screen: 'SuccessScreen',
           params: {
             header: 'New Pin code is changed Successfully',

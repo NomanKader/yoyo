@@ -9,7 +9,7 @@ const _LoginService = (email, pin,setIsAuthenticated,setUserRole) => {
   const user = loginData.find(u => u.email === email && u.pin === pin);
   if (user) {
     setIsAuthenticated(true);
-    setUserRole(user.role);
+    // setUserRole(user.role);
     return { success: true, role: user.role }; // Let caller navigate
   } else {
     Alert.alert('Login Failed', 'Invalid email or PIN');

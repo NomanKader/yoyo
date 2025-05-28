@@ -24,8 +24,8 @@ export default function LoginScreen() {
   const navigation = useNavigation();
   const {setIsAuthenticated, setUserRole} = useContext(AuthContext);
 
-  const [username, setUsername] = useState('');
-  const [pin, setPin] = useState('');
+  const [username, setUsername] = useState('oceanadmain');
+  const [pin, setPin] = useState('1234');
   const [showPin, setShowPin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);

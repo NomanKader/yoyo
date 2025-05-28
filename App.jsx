@@ -1,20 +1,17 @@
-import React, {useState, useEffect, createContext, useContext} from 'react';
-import {StatusBar, View, ActivityIndicator, StyleSheet} from 'react-native';
-import {I18nextProvider} from 'react-i18next';
-import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import React, { useState, useEffect, createContext, useContext } from 'react';
+import { StatusBar, View, ActivityIndicator, StyleSheet } from 'react-native';
+import { I18nextProvider } from 'react-i18next';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import i18n from './app/apartment/i18n/i18n';
-import {HotelLanguageProvider} from './app/hotel/context/LanguageContext';
-import {LanguageProvider} from './app/apartment/context/LanguageContext';
+import { HotelLanguageProvider } from './app/hotel/context/LanguageContext';
+import { LanguageProvider } from './app/apartment/context/LanguageContext';
 
-import ApartmentAppStack from './app/apartment/navigation/AppStack';
 import AuthStack from './app/common/navigation/AuthStack';
-import HotelTabStack from './app/hotel/navigation/TabStack';
-import RoleSelectorStack from './app/common/navigation/RoleSelectorStack';
+import AppStack from './app/common/navigation/AppStack'; // ✅ import updated AppStack
 import theme from './app/apartment/style/colors';
-import SelectPropertyScreen from './app/common/auth/SelectPropertyScreen';
 
 // 🔐 Create Auth Context
 export const AuthContext = createContext();
@@ -34,22 +31,16 @@ const MyTheme = {
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState(null);
-  const [loading, setLoading] = useState(true); // 🚀 Loading indicator
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-        const role = await AsyncStorage.getItem('userRole');
-        console.log('Auth Check - Token:', token, 'Role:', role);
-
-        if (token && role) {
+        if (token) {
           setIsAuthenticated(true);
-          setUserRole(role);
         } else {
           setIsAuthenticated(false);
-          setUserRole(null);
         }
       } catch (err) {
         console.error('Error reading auth state:', err);
@@ -62,15 +53,11 @@ export default function App() {
   }, []);
 
   const renderNavigator = () => {
-    if (!isAuthenticated) return <AuthStack />;
-    if (userRole === 'apartment') return <ApartmentAppStack />;
-    if (userRole === 'hotel') return <HotelTabStack />;
-    if (userRole === 'both') return <RoleSelectorStack />;
-    return <SelectPropertyScreen />;
+    return isAuthenticated ? <AppStack /> : <AuthStack />;
   };
-  
+
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <I18nextProvider i18n={i18n}>
         <LanguageProvider>
           <HotelLanguageProvider>
@@ -79,9 +66,8 @@ export default function App() {
                 isAuthenticated,
                 setIsAuthenticated,
                 setLoading,
-                userRole,
-                setUserRole,
-              }}>
+              }}
+            >
               <NavigationContainer theme={MyTheme}>
                 <StatusBar
                   backgroundColor={theme.colors.primary}
@@ -89,11 +75,12 @@ export default function App() {
                   translucent={false}
                 />
                 {loading ? (
-  <View style={styles.loadingContainer}>
-    <ActivityIndicator size="large" color={theme.colors.primary} />
-  </View>
-) : renderNavigator()}
-
+                  <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color={theme.colors.primary} />
+                  </View>
+                ) : (
+                  renderNavigator()
+                )}
               </NavigationContainer>
             </AuthContext.Provider>
           </HotelLanguageProvider>
