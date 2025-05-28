@@ -40,7 +40,7 @@ export default function SelectPropertyScreen() {
     if (!selectedProperty) return;
   
     if (selectedProperty.type === 'hotel') {
-      navigation.navigate('HotelAppStack');
+      navigation.navigate('HotelTabStack');
     } else {
       navigation.navigate('ApartmentAppStack');
     }
