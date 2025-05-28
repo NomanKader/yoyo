@@ -5,6 +5,7 @@ import SelectPropertyScreen from '../auth/SelectPropertyScreen';
 import ApartmentAppStack from '../../apartment/navigation/AppStack';
 import HotelTabStack from '../../hotel/navigation/TabStack';
 import AuthStack from './AuthStack';
+import LoginScreen from '../auth/LoginScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,7 @@ export default function AppStack() {
       <Stack.Screen name="ApartmentAppStack" component={ApartmentAppStack} />
       <Stack.Screen name="HotelTabStack" component={HotelTabStack} />
       <Stack.Screen name='AuthStack' component={AuthStack}/>
+      <Stack.Screen name='Login' component={LoginScreen}/>
     </Stack.Navigator>
   );
 }

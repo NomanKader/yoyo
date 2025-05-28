@@ -41,18 +41,22 @@ export default function AccountScreen({navigation}) {
       // Close bottom sheet and reset auth state
       setBottomSheetVisible(false);
       setIsAuthenticated(false);
-      // setUserRole(null); // optional: reset role context
       navigation.reset({
         index: 0,
-        routes: [
-          {
-            name: 'AuthStack',
-            state: {
-              routes: [{name: 'Login'}],
-            },
-          },
-        ],
+        routes: [{name: 'Login'}],
       });
+      // setUserRole(null); // optional: reset role context
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [
+      //     {
+      //       name: 'AuthStack',
+      //       state: {
+      //         routes: [{name: 'Login'}],
+      //       },
+      //     },
+      //   ],
+      // });
     } catch (error) {
       console.error('Logout failed:', error);
     }
@@ -149,25 +153,7 @@ export default function AccountScreen({navigation}) {
           </View>
         ) : selectedItem === 'Profile Settings' ? (
           <View style={{padding: 10}}>
-            {/* Manage Roles */}
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('AppStack', {screen: 'ManageRoleScreen'})
-              }>
-              <View style={styles.listItem}>
-                <Image source={profileIcon} style={styles.icon} />
-                <View style={styles.textContainer}>
-                  <Text style={styles.headerText}>Manage Roles</Text>
-                  <Text style={styles.subheaderText}>
-                    Add & Remove user roles
-                  </Text>
-                </View>
-                <Image source={rightArrowIcon} style={styles.arrowIcon} />
-              </View>
-            </TouchableOpacity>
-
             <DividerComponent />
-
             {/* Basic Details */}
             <TouchableOpacity
               onPress={() =>
@@ -193,9 +179,7 @@ export default function AccountScreen({navigation}) {
                 <Image source={rightArrowIcon} style={styles.arrowIcon} />
               </View>
             </TouchableOpacity>
-
             <DividerComponent />
-
             {/* Update Pictures */}
             <TouchableOpacity
               onPress={() =>
@@ -219,6 +203,22 @@ export default function AccountScreen({navigation}) {
                   <Text style={styles.headerText}>Update Pictures</Text>
                   <Text style={styles.subheaderText}>
                     Edit your hotel pictures easily
+                  </Text>
+                </View>
+                <Image source={rightArrowIcon} style={styles.arrowIcon} />
+              </View>
+            </TouchableOpacity>
+            {/* Manage Roles */}
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('AppStack', {screen: 'ManageRoleScreen'})
+              }>
+              <View style={styles.listItem}>
+                <Image source={profileIcon} style={styles.icon} />
+                <View style={styles.textContainer}>
+                  <Text style={styles.headerText}>Manage Roles</Text>
+                  <Text style={styles.subheaderText}>
+                    Add & Remove user roles
                   </Text>
                 </View>
                 <Image source={rightArrowIcon} style={styles.arrowIcon} />
