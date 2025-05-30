@@ -1,6 +1,7 @@
 import { max } from 'moment';
 import React from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
+import theme from '../../style/colors';
 
 const CustomInput = ({
   label,
@@ -26,6 +27,7 @@ const CustomInput = ({
           {backgroundColor: bgColor,marginVertical:mv},
         ]}
         placeholder={placeholder}
+        placeholderTextColor={theme.colors.textGray}
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
