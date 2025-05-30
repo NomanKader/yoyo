@@ -5,13 +5,14 @@ import {useTranslation} from 'react-i18next';
 import CustomInput from '../../apartment/components/Input/CustomInput';
 import DefaultButtonComponent from '../../apartment/components/Button/DefaultButtonComponent';
 import {ForgetPassword} from '../service/AuthService';
+import CustomAlert from '../alert/CustomAlert';
 
 const ForgetPINScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const {t} = useTranslation();
   const isValid = email.length > 0 && email.includes('@');
   const [loading, setLoading] = useState(false);
-
+  const [showError, setShowError] = useState(false);
   const handleSendEmail = async () => {
     setLoading(true);
     try {
@@ -27,6 +28,7 @@ const ForgetPINScreen = ({navigation}) => {
           email: email,
         });
       } else {
+        setShowError(true);
         console.warn(
           'Failed to send reset email:',
           response?.message || 'Unknown error',
@@ -73,6 +75,7 @@ const ForgetPINScreen = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
+      <CustomAlert visible={showError} title={'Warning'} message={'Email does not exist.Please register first or check your email to get OTP code.'} onClose={setShowError} />
     </View>
   );
 };
