@@ -15,6 +15,7 @@ import CustomInput from '../../apartment/components/Input/CustomInput';
 import TextInputWithDropdown from '../../apartment/components/Dropdown/TextInputWithDropdown';
 import CustomDropdown from '../../apartment/components/Dropdown/CustomDropDown';
 import {RequestOTP} from '../service/AuthService';
+import CustomAlert from '../alert/CustomAlert';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -30,6 +31,7 @@ export default function RegisterScreen({navigation}) {
   const [countryCode, setCountryCode] = useState('+95');
   const [userCountryCode, setUserCountryCode] = useState('+95');
   const [loading, setLoading] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
 
   useEffect(() => {
     const onBackPress = () => {
@@ -108,7 +110,15 @@ export default function RegisterScreen({navigation}) {
     try {
       const response = await RequestOTP(postBody);
       if (response.result) {
-        navigation.navigate('OTP');
+        navigation.navigate('OTP', {
+          resendTime: response.codeExpireDate,
+        });
+      } else {
+        setAlertVisible(true);
+        console.warn(
+          'Failed to request OTP:',
+          response.message || 'Unknown error',
+        );
       }
     } catch (error) {
       console.error('Failed to request OTP:', error);
@@ -122,12 +132,19 @@ export default function RegisterScreen({navigation}) {
       style={styles.container}
       contentContainerStyle={{paddingBottom: 20}}
       keyboardShouldPersistTaps="handled">
+      <CustomAlert
+        visible={alertVisible}
+        title={'Warning'}
+        message={
+          'Email does not exist.Please register first or check your email to get OTP code.'
+        }
+        onClose={setAlertVisible}
+      />
       <HeaderComponent
         title={'Basic Information'}
         onPress={loading ? null : () => navigation.goBack()}
       />
       <ProgressBar currentStep={1} totalSteps={5} />
-
       <CustomInput
         label={'Hotel name'}
         bgColor="#f2f2f2"
@@ -136,7 +153,6 @@ export default function RegisterScreen({navigation}) {
         onChangeText={value => handleChange('hotelName', value)}
         editable={!loading}
       />
-
       <CustomInput
         multiline
         label={'Hotel Description (Optional)'}
@@ -146,7 +162,6 @@ export default function RegisterScreen({navigation}) {
         onChangeText={value => handleChange('hotelDescription', value)}
         editable={!loading}
       />
-
       <CustomInput
         label={'Username'}
         bgColor="#f2f2f2"
@@ -155,7 +170,6 @@ export default function RegisterScreen({navigation}) {
         onChangeText={value => handleChange('username', value)}
         editable={!loading}
       />
-
       <CustomInput
         label={'ID card number'}
         bgColor="#f2f2f2"
@@ -164,7 +178,6 @@ export default function RegisterScreen({navigation}) {
         onChangeText={value => handleChange('idCardNo', value)}
         editable={!loading}
       />
-
       <CustomInput
         label={'Full Name'}
         bgColor="#f2f2f2"
@@ -173,7 +186,6 @@ export default function RegisterScreen({navigation}) {
         onChangeText={value => handleChange('fullName', value)}
         editable={!loading}
       />
-
       <CustomInput
         label={'Email Address (OTP will be sent to this address)'}
         bgColor="#f2f2f2"
@@ -211,7 +223,6 @@ export default function RegisterScreen({navigation}) {
         bgColor="#f2f2f2"
         disabled={!loading}
       />
-
       <CustomInput
         label={'Hotel Email Address'}
         bgColor="#f2f2f2"
@@ -221,7 +232,6 @@ export default function RegisterScreen({navigation}) {
         keyboardType="email-address"
         editable={!loading}
       />
-
       <TextInputWithDropdown
         label="Hotel Phone Number"
         value={hotelPhoneRaw}
@@ -237,7 +247,6 @@ export default function RegisterScreen({navigation}) {
         bgColor="#f2f2f2"
         editable={!loading}
       />
-
       <View style={styles.bottomSection}>
         <TouchableOpacity
           disabled={!isValid || loading}

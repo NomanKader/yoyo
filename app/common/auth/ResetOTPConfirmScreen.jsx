@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState,useRef,useEffect} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import HeaderComponent from '../../apartment/components/Divider/HeaderComponent';
 import ProgressBar from '../components/ProgessBarComponent';
 import CustomInput from '../../apartment/components/Input/CustomInput';
@@ -7,39 +7,43 @@ import {RequestOTP, VerifyOTp} from '../service/AuthService';
 import CustomAlert from '../alert/CustomAlert';
 
 const ResetOTPConfirmScreen = ({navigation, route}) => {
-  const {email} = route.params || {};
-  const [resendLoading, setResendLoading] = useState(false);
+  const {email, resendTime} = route.params || {}; // Add resendTime from navigation
   const [otpCode, setOtpCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const isValid = otpCode.trim().length === 6;
-  const [resendTimer, setResendTimer] = useState(60); // seconds
+
+  const [resendTimer, setResendTimer] = useState(0);
+  const [resendLoading, setResendLoading] = useState(false);
   const timerRef = useRef(null);
 
-  // Start countdown after initial render or resend
   useEffect(() => {
-    if (resendTimer === 0 && timerRef.current) {
-      clearInterval(timerRef.current);
-    }
+    if (!resendTime) return;
 
-    if (resendTimer > 0) {
-      timerRef.current = setInterval(() => {
-        setResendTimer(prev => {
-          if (prev <= 1 && timerRef.current) {
-            clearInterval(timerRef.current);
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
+    const expireTime = new Date(new Date(resendTime).getTime() + 60 * 1000);
+    console.log('Expire time:', expireTime);
+
+    const updateTimer = () => {
+      const now = new Date();
+      const diff = Math.floor((expireTime - now) / 1000);
+
+      if (diff <= 0) {
+        setResendTimer(0);
+        if (timerRef.current) clearInterval(timerRef.current);
+      } else {
+        setResendTimer(diff);
+      }
+    };
+
+    updateTimer();
+    timerRef.current = setInterval(updateTimer, 1000);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [resendTimer]);
+  }, [resendTime]);
 
-  // Update resendOTPCode to reset timer
   const resendOTPCode = async () => {
     try {
       setResendLoading(true);
@@ -52,13 +56,10 @@ const ResetOTPConfirmScreen = ({navigation, route}) => {
       const response = await RequestOTP(postBody);
 
       if (response?.result) {
-        setResendTimer(60); // Restart countdown
+        navigation.setParams({resendTime: response?.codeExpireDate});
         console.log('OTP resent successfully:', response);
       } else {
-        console.warn(
-          'Failed to resend OTP:',
-          response?.message || 'Unknown error',
-        );
+        console.warn('Failed to resend OTP:', response?.message || 'Unknown error');
       }
     } catch (error) {
       console.error('Error resending OTP:', error);
@@ -66,31 +67,6 @@ const ResetOTPConfirmScreen = ({navigation, route}) => {
       setResendLoading(false);
     }
   };
-  // const resendOTPCode = async () => {
-  //   try {
-  //     setResendLoading(true);
-  //     const postBody = {
-  //       phone: null,
-  //       email: email,
-  //       code: null,
-  //     };
-
-  //     const response = await RequestOTP(postBody);
-
-  //     if (response?.result) {
-  //       console.log('OTP resent successfully:', response);
-  //     } else {
-  //       console.warn(
-  //         'Failed to resend OTP:',
-  //         response?.message || 'Unknown error',
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.error('Error resending OTP:', error);
-  //   } finally {
-  //     setResendLoading(false);
-  //   }
-  // };
 
   const handleConfirmCode = async () => {
     setLoading(true);
@@ -100,8 +76,6 @@ const ResetOTPConfirmScreen = ({navigation, route}) => {
         email: email,
         code: otpCode,
       };
-      console.log('OTP Code:', postBody);
-
       const response = await VerifyOTp(postBody);
 
       if (response?.result && response?.token) {
@@ -129,6 +103,7 @@ const ResetOTPConfirmScreen = ({navigation, route}) => {
         visible={alertVisible}
         onClose={() => setAlertVisible(false)}
       />
+
       <HeaderComponent
         title={'Confirmation Code'}
         onPress={() => navigation.goBack()}
@@ -136,37 +111,36 @@ const ResetOTPConfirmScreen = ({navigation, route}) => {
       />
       <ProgressBar currentStep={1} totalSteps={2} />
       <CustomInput
-  label={'Confirmation Code'}
-  bgColor="#f2f2f2"
-  contentContainerStyle={{marginHorizontal: 16}}
-  placeholder={'Enter 6-digit otp code'}
-  maxLength={6}
-  value={otpCode}
-  onChangeText={setOtpCode}
-  keyboardType="number-pad"
-/>
+        label={'Confirmation Code'}
+        bgColor="#f2f2f2"
+        contentContainerStyle={{marginHorizontal: 16}}
+        placeholder={'Enter 6-digit otp code'}
+        maxLength={6}
+        value={otpCode}
+        onChangeText={setOtpCode}
+        keyboardType="number-pad"
+      />
 
-{resendTimer > 0 && (
-  <Text style={[styles.resendText, {marginHorizontal: 16, marginTop: 4}]}>
-    Resend available in <Text style={{fontWeight: 'bold'}}>{resendTimer}s</Text>
-  </Text>
-)}
-
+      {/* Countdown timer display below input */}
+      {resendTimer > 0 && (
+        <Text style={[styles.resendText, {marginHorizontal: 16, marginTop: 4}]}>
+          Resend available in <Text style={{fontWeight: 'bold'}}>{resendTimer}s</Text>
+        </Text>
+      )}
 
       <View style={styles.bottomSection}>
-      <View style={styles.resendWrapper}>
-  {resendLoading ? (
-    <Text style={styles.resendText}>Sending...</Text>
-  ) : resendTimer === 0 ? (
-    <Text style={styles.resendText}>
-      No OTP yet?{' '}
-      <Text style={styles.resendLink} onPress={resendOTPCode}>
-        Resend Confirmation code
-      </Text>
-    </Text>
-  ) : null}
-</View>
-
+        <View style={styles.resendWrapper}>
+          {resendLoading ? (
+            <Text style={styles.resendText}>Sending...</Text>
+          ) : resendTimer === 0 ? (
+            <Text style={styles.resendText}>
+              No OTP yet?{' '}
+              <Text style={styles.resendLink} onPress={resendOTPCode}>
+                Resend Confirmation code
+              </Text>
+            </Text>
+          ) : null}
+        </View>
 
         <TouchableOpacity
           disabled={!isValid || loading || resendLoading}

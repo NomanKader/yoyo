@@ -1,9 +1,9 @@
-import React, { createContext, useState } from 'react';
+import React, {createContext, useState} from 'react';
 
 export const RegisterContext = createContext();
 
-export const RegisterProvider = ({ children }) => {
-  const [registerData, setRegisterData] = useState({
+export const RegisterProvider = ({children}) => {
+  const initialData = {
     username: '',
     password: '',
     fullName: '',
@@ -25,10 +25,11 @@ export const RegisterProvider = ({ children }) => {
     state: '',
     city: '',
     township: '',
-    hotelPhoneNumbers: "",
+    hotelPhoneNumbers: '',
     hotelEmail: '',
     logo: '',
-  });
+  };
+  const [registerData, setRegisterData] = useState(initialData);
 
   const updateRegisterData = (key, value) => {
     setRegisterData(prev => ({
@@ -37,8 +38,12 @@ export const RegisterProvider = ({ children }) => {
     }));
   };
 
+  const resetRegisterData = () => {
+    setRegisterData(initialData);
+  };
+
   return (
-    <RegisterContext.Provider value={{ registerData, updateRegisterData }}>
+    <RegisterContext.Provider value={{registerData, updateRegisterData,resetRegisterData}}>
       {children}
     </RegisterContext.Provider>
   );

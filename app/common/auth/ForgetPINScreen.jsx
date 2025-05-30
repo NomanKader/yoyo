@@ -12,7 +12,7 @@ const ForgetPINScreen = ({navigation}) => {
   const {t} = useTranslation();
   const isValid = email.length > 0 && email.includes('@');
   const [loading, setLoading] = useState(false);
-  const [showError, setShowError] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
   const handleSendEmail = async () => {
     setLoading(true);
     try {
@@ -26,9 +26,10 @@ const ForgetPINScreen = ({navigation}) => {
       if (response?.result) {
         navigation.navigate('ResetOTPConfirm', {
           email: email,
+          resendTime: response?.codeExpireDate,
         });
       } else {
-        setShowError(true);
+        setAlertVisible(true);
         console.warn(
           'Failed to send reset email:',
           response?.message || 'Unknown error',
@@ -60,7 +61,7 @@ const ForgetPINScreen = ({navigation}) => {
         onChangeText={setEmail}
         contentContainerStyle={{marginTop: 20}}
         mv={20}
-        keyboardType='email-address'
+        keyboardType="email-address"
       />
       <View style={styles.bottomSection}>
         <TouchableOpacity
@@ -75,7 +76,14 @@ const ForgetPINScreen = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <CustomAlert visible={showError} title={'Warning'} message={'Email does not exist.Please register first or check your email to get OTP code.'} onClose={setShowError} />
+      <CustomAlert
+        visible={alertVisible}
+        title={'Warning'}
+        message={
+          'Email does not exist.Please register first or check your email to get OTP code.'
+        }
+        onClose={() => setAlertVisible(false)}
+      />
     </View>
   );
 };

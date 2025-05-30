@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -17,14 +17,18 @@ import CustomAlert from '../alert/CustomAlert';
 
 const screenWidth = Dimensions.get('window').width;
 
-export default function OTPScreen() {
+export default function OTPScreen({route}) {
+  const {resendTime} = route.params || {};
   const {registerData, updateRegisterData} = useContext(RegisterContext);
   const navigation = useNavigation();
+
   const [otpCode, setOtpCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [resendLoading, setResendLoading] = useState(false);
+  const [resendTimer, setResendTimer] = useState(0);
+  const timerRef = useRef(null);
 
   const isValid = otpCode.length === 6;
 
@@ -41,6 +45,30 @@ export default function OTPScreen() {
     return () => backHandler.remove();
   }, [loading]);
 
+  useEffect(() => {
+    if (!resendTime) return;
+
+    const expireTime = new Date(new Date(resendTime).getTime() + 60 * 1000);
+
+    const updateTimer = () => {
+      const now = new Date();
+      const diff = Math.floor((expireTime - now) / 1000);
+      if (diff <= 0) {
+        setResendTimer(0);
+        if (timerRef.current) clearInterval(timerRef.current);
+      } else {
+        setResendTimer(diff);
+      }
+    };
+
+    updateTimer();
+    timerRef.current = setInterval(updateTimer, 1000);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [resendTime]);
+
   const resendOTPCode = async () => {
     try {
       setResendLoading(true);
@@ -54,6 +82,9 @@ export default function OTPScreen() {
 
       if (response?.result) {
         console.log('OTP resent successfully:', response);
+        if (response?.OtpExpireCode) {
+          navigation.setParams({resendTime: response.OtpExpireCode});
+        }
       } else {
         console.warn(
           'Failed to resend OTP:',
@@ -115,20 +146,30 @@ export default function OTPScreen() {
         editable={!loading}
       />
 
-      {/* Spacer to push content down */}
+      {/* Countdown display */}
+      {resendTimer > 0 && (
+        <Text style={[styles.resendText, {marginTop: 6}]}>
+          Resend available in{' '}
+          <Text style={{fontWeight: 'bold'}}>{resendTimer}s</Text>
+        </Text>
+      )}
+
       <View style={{flex: 1}} />
 
       <View style={styles.bottomSection}>
-        <View style={styles.resendContainer}>
-          <Text style={styles.resendText}>No OTP yet?</Text>
-          <TouchableOpacity onPress={resendOTPCode} disabled={resendLoading}>
-            {resendLoading ? (
-              <Text style={styles.resendLink}> Resending...</Text>
-            ) : (
-              <Text style={styles.resendLink}> Resend OTP</Text>
-            )}
-          </TouchableOpacity>
-        </View>
+        {/* Only show resend option if timer reached 0 */}
+        {resendTimer === 0 && (
+          <View style={styles.resendContainer}>
+            <Text style={styles.resendText}>No OTP yet?</Text>
+            <TouchableOpacity onPress={resendOTPCode} disabled={resendLoading}>
+              {resendLoading ? (
+                <Text style={styles.resendLink}> Resending...</Text>
+              ) : (
+                <Text style={styles.resendLink}> Resend OTP</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        )}
 
         <TouchableOpacity
           disabled={!isValid || loading}
@@ -152,27 +193,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: screenWidth * 0.06,
     paddingTop: 50,
     backgroundColor: '#fff',
-  },
-  progressBar: {
-    flexDirection: 'row',
-    height: 4,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 2,
-    marginTop: 10,
-    marginBottom: 20,
-    overflow: 'hidden',
-  },
-
-  progressSegment: {
-    flex: 1,
-  },
-
-  progressStepFilled: {
-    backgroundColor: '#007bff',
-  },
-
-  progressStepEmpty: {
-    backgroundColor: '#e0e0e0',
   },
   label: {
     fontSize: 14,
@@ -213,7 +233,6 @@ const styles = StyleSheet.create({
   bottomSection: {
     marginBottom: 20,
   },
-
   resendContainer: {
     flexDirection: 'row',
     justifyContent: 'center',

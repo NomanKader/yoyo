@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,8 +6,13 @@ import {
   StyleSheet,
   Dimensions,
   Image,
+  BackHandler,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import HeaderComponent from '../../apartment/components/Divider/HeaderComponent';
 import hotelIcon from '../assets/hotelIcon.png';
 import apartmentIcon from '../assets/apartmentIcon.png';
@@ -16,8 +21,30 @@ import {RegisterContext} from '../utils/RegisterProvider';
 const screenWidth = Dimensions.get('window').width;
 
 export default function TypeOfPropertyScreen() {
-  const {registerData, updateRegisterData} = useContext(RegisterContext);
+  const {registerData, updateRegisterData, resetRegisterData} =
+    useContext(RegisterContext);
   const navigation = useNavigation();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        handleBack();
+        return true;
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress,
+      );
+
+      return () => backHandler.remove();
+    }, []),
+  );
+
+  const handleBack = () => {
+    resetRegisterData();
+    navigation.goBack();
+  };
 
   const handleProceed = () => {
     if (registerData.type !== undefined) {
@@ -31,10 +58,7 @@ export default function TypeOfPropertyScreen() {
 
   return (
     <View style={styles.container}>
-      <HeaderComponent
-        title="Type of Property"
-        onPress={() => navigation.goBack()}
-      />
+      <HeaderComponent title="Type of Property" onPress={handleBack} />
 
       <Text style={styles.instruction}>
         Firstly, please select one type of property to proceed the registration.
@@ -59,11 +83,8 @@ export default function TypeOfPropertyScreen() {
 
       {/* Proceed Button */}
       <TouchableOpacity
-        style={[
-          styles.button,
-          registerData.type === undefined && styles.buttonDisabled,
-        ]}
-        disabled={registerData.type === undefined}
+        style={[styles.button, !registerData.type && styles.buttonDisabled]}
+        disabled={!registerData.type}
         onPress={handleProceed}>
         <Text style={styles.buttonText}>Proceed</Text>
       </TouchableOpacity>

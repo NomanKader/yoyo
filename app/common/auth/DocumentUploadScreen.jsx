@@ -29,7 +29,8 @@ const screenWidth = Dimensions.get('window').width;
 const BASE_IMAGE_URL = 'https://www.12zay.com/easyclickup/upload/hotel/images/';
 
 export default function DocumentUploadScreen({navigation}) {
-  const {registerData, updateRegisterData} = useContext(RegisterContext);
+  const {registerData, updateRegisterData, resetRegisterData} =
+    useContext(RegisterContext);
   const [loading, setLoading] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -173,6 +174,9 @@ export default function DocumentUploadScreen({navigation}) {
             color: theme.colors.primary,
           },
         });
+        setTimeout(() => {
+          resetRegisterData();
+        }, 300);
       } else {
         setErrorMessage(response.message || 'Registration failed');
         setAlertVisible(true);
