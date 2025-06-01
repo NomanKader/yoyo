@@ -1,7 +1,5 @@
-import { max } from 'moment';
 import React from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
-import theme from '../../style/colors';
 
 const CustomInput = ({
   label,
@@ -24,10 +22,10 @@ const CustomInput = ({
         style={[
           styles.input,
           multiline && styles.multiline,
-          {backgroundColor: bgColor,marginVertical:mv},
+          {backgroundColor: bgColor, marginVertical: mv},
         ]}
         placeholder={placeholder}
-        placeholderTextColor={theme.colors.textGray}
+        placeholderTextColor="#B7B8BA"
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
@@ -56,6 +54,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 12,
+    color: '#01070F', // ✅ Set input text color
   },
   multiline: {
     height: 100,

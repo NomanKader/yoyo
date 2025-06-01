@@ -139,12 +139,12 @@ export default function RegisterScreen({navigation}) {
           'Email does not exist.Please register first or check your email to get OTP code.'
         }
         onClose={setAlertVisible}
-      />
+      />      
       <HeaderComponent
         title={'Basic Information'}
         onPress={loading ? null : () => navigation.goBack()}
       />
-      <ProgressBar currentStep={1} totalSteps={5} />
+      <ProgressBar contentContainerStyle={{marginTop:-10}} currentStep={1} totalSteps={5} />
       <CustomInput
         label={'Hotel name'}
         bgColor="#f2f2f2"
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: screenWidth * 0.06,
     backgroundColor: '#fff',
-    paddingTop: 50,
+    paddingTop: 20,
   },
   button: {
     backgroundColor: '#007bff',
