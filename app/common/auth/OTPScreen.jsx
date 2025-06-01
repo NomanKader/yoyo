@@ -83,7 +83,7 @@ export default function OTPScreen({route}) {
       if (response?.result) {
         console.log('OTP resent successfully:', response);
         if (response?.OtpExpireCode) {
-          navigation.setParams({resendTime: response.OtpExpireCode});
+          navigation.setParams({resendTime: response.codeExpireDate});
         }
       } else {
         console.warn(

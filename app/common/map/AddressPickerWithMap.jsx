@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {
   View,
   Text,
-  FlatList,
   TouchableOpacity,
   StyleSheet,
   Keyboard,
@@ -11,27 +10,49 @@ import MapView, {Marker} from 'react-native-maps';
 import CustomInput from '../../apartment/components/Input/CustomInput';
 import axios from 'axios';
 import {ScrollView} from 'react-native-gesture-handler';
+import {useFocusEffect} from '@react-navigation/native';
 
 const GOOGLE_API_KEY = 'AIzaSyBCQktakyeMA8A1kI80UjSxIpngXUOeXk8';
 
 const AddressPickerWithMap = ({
   title = 'Enter address',
+  initialQuery = '',
   mapRef,
   marker,
   setMarker,
   customMapStyle,
   onChangeLocation,
 }) => {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(initialQuery);
   const [suggestions, setSuggestions] = useState([]);
+  const [initialRegion] = useState({
+    latitude: 16.8409,
+    longitude: 96.1735,
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05,
+  });
+  const [mapRegion, setMapRegion] = useState(initialRegion);
+  const hasAnimatedToMarker = useRef(false);
 
   useEffect(() => {
     if (marker?.latitude && marker?.longitude && query === '') {
-      const {latitude, longitude} = marker;
-
-      fetchAddressDetails(latitude, longitude);
+      fetchAddressDetails(marker.latitude, marker.longitude);
     }
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (marker?.latitude && marker?.longitude && !hasAnimatedToMarker.current) {
+        mapRef.current?.animateToRegion({
+          latitude: marker.latitude,
+          longitude: marker.longitude,
+          latitudeDelta: mapRegion.latitudeDelta,
+          longitudeDelta: mapRegion.longitudeDelta,
+        });
+        hasAnimatedToMarker.current = true;
+      }
+    }, [marker, mapRegion])
+  );
 
   const handleSearch = async text => {
     setQuery(text);
@@ -53,18 +74,21 @@ const AddressPickerWithMap = ({
       const loc = res.data.result.geometry.location;
       const lat = loc.lat;
       const lng = loc.lng;
+      const formattedAddress = res.data.result.formatted_address || '';
 
       setSuggestions([]);
-      setMarker({latitude: lat, longitude: lng});
+      setQuery(formattedAddress);
 
-      mapRef.current?.animateToRegion({
+      const newRegion = {
         latitude: lat,
         longitude: lng,
         latitudeDelta: 0.005,
         longitudeDelta: 0.005,
-      });
+      };
 
-      await fetchAddressDetails(lat, lng, res.data.result.formatted_address);
+      setMapRegion(newRegion);
+      mapRef.current?.animateToRegion(newRegion);
+
       Keyboard.dismiss();
     } catch (error) {
       console.error('Place details fetch failed:', error);
@@ -73,7 +97,16 @@ const AddressPickerWithMap = ({
 
   const handleMapPress = async e => {
     const {latitude, longitude} = e.nativeEvent.coordinate;
+
+    const newRegion = {
+      latitude,
+      longitude,
+      latitudeDelta: mapRegion.latitudeDelta,
+      longitudeDelta: mapRegion.longitudeDelta,
+    };
+
     setMarker({latitude, longitude});
+    mapRef.current?.animateToRegion(newRegion);
     await fetchAddressDetails(latitude, longitude);
   };
 
@@ -143,21 +176,8 @@ const AddressPickerWithMap = ({
           ref={mapRef}
           style={styles.map}
           customMapStyle={customMapStyle}
-          initialRegion={
-            marker
-              ? {
-                  latitude: marker.latitude,
-                  longitude: marker.longitude,
-                  latitudeDelta: 0.005,
-                  longitudeDelta: 0.005,
-                }
-              : {
-                  latitude: 16.8409,
-                  longitude: 96.1735,
-                  latitudeDelta: 0.05,
-                  longitudeDelta: 0.05,
-                }
-          }
+          initialRegion={initialRegion}
+          onRegionChangeComplete={region => setMapRegion(region)}
           onPress={handleMapPress}>
           {marker && <Marker coordinate={marker} pinColor="#FFA500" />}
         </MapView>

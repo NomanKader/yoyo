@@ -39,6 +39,7 @@ const LocationInfoScreen = ({navigation}) => {
         setMarker={setMarker}
         customMapStyle={customMapStyle}
         onChangeLocation={handleChangeLocation}
+        initialQuery= {registerData.address || ''}
       />
 
       <View style={styles.infoContainer}>
