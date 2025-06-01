@@ -134,7 +134,7 @@ export default function OTPScreen({route}) {
         title="OTP Verification"
         onPress={loading ? null : () => navigation.goBack()}
       />
-      <ProgressBar currentStep={2} totalSteps={5} />
+      <ProgressBar contentContainerStyle={{marginTop:-10}} currentStep={2} totalSteps={5} />
       <Text style={styles.label}>OTP Code</Text>
       <TextInput
         style={styles.input}
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: screenWidth * 0.06,
-    paddingTop: 50,
+    paddingTop: 20,
     backgroundColor: '#fff',
   },
   label: {
