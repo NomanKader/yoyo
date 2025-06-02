@@ -7,7 +7,9 @@ import {
   Dimensions,
   ScrollView,
   BackHandler,
+  Image,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import HeaderComponent from '../../apartment/components/Divider/HeaderComponent';
 import ProgressBar from '../components/ProgessBarComponent';
 import {RegisterContext} from '../utils/RegisterProvider';
@@ -16,6 +18,8 @@ import TextInputWithDropdown from '../../apartment/components/Dropdown/TextInput
 import CustomDropdown from '../../apartment/components/Dropdown/CustomDropDown';
 import {RequestOTP} from '../service/AuthService';
 import CustomAlert from '../alert/CustomAlert';
+import hotelIcon from '../assets/hoteldetail.png';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -39,7 +43,6 @@ export default function RegisterScreen({navigation}) {
       return false;
     };
 
-    // Extract raw number and country code if already saved
     if (registerData?.phone?.startsWith('+')) {
       const code = countryCodes.find(c =>
         registerData.phone.startsWith(c.value),
@@ -99,7 +102,6 @@ export default function RegisterScreen({navigation}) {
   };
 
   const getOTP = async () => {
-    console.log('Register Data:', registerData);
     setLoading(true);
     const postBody = {
       phone: null,
@@ -136,19 +138,43 @@ export default function RegisterScreen({navigation}) {
         visible={alertVisible}
         title={'Warning'}
         message={
-          'Email does not exist.Please register first or check your email to get OTP code.'
+          'Email does not exist. Please register first or check your email to get OTP code.'
         }
         onClose={setAlertVisible}
-      />      
+      />
+
       <HeaderComponent
         title={'Basic Information'}
         onPress={loading ? null : () => navigation.goBack()}
       />
-      <ProgressBar contentContainerStyle={{marginTop:-10}} currentStep={1} totalSteps={5} />
+      <ProgressBar
+        contentContainerStyle={{marginTop: -10}}
+        currentStep={1}
+        totalSteps={5}
+      />
+
+      {/* Logo & Hotel Header */}
+      <View style={{alignItems: 'center', marginTop: 10}}>
+        <View
+          style={{
+            width: 60,
+            height: 60,
+            borderRadius: 30,
+            backgroundColor: '#eee',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image source={hotelIcon} style={styles.hotelIcon} />
+        </View>
+        <Text style={{marginTop: 8, fontWeight: '600'}}>
+          Basic Hotel Details
+        </Text>
+      </View>
+      {/* Hotel Inputs */}
       <CustomInput
-        label={'Hotel name'}
+        label={'Name of Hotel'}
         bgColor="#f2f2f2"
-        placeholder={'Enter Hotel Name'}
+        placeholder={'Enter hotel name'}
         value={registerData?.hotelName}
         onChangeText={value => handleChange('hotelName', value)}
         editable={!loading}
@@ -157,21 +183,55 @@ export default function RegisterScreen({navigation}) {
         multiline
         label={'Hotel Description (Optional)'}
         bgColor="#f2f2f2"
-        placeholder={'Enter Hotel Description'}
+        placeholder={'Enter description'}
         value={registerData?.hotelDescription}
         onChangeText={value => handleChange('hotelDescription', value)}
         editable={!loading}
       />
       <CustomInput
+        label={'Hotel Email Address'}
+        bgColor="#f2f2f2"
+        placeholder={'Enter email address'}
+        value={registerData?.hotelEmail}
+        onChangeText={value => handleChange('hotelEmail', value)}
+        keyboardType="email-address"
+        editable={!loading}
+      />
+      <TextInputWithDropdown
+        label="Hotel Phone Number"
+        value={hotelPhoneRaw}
+        onChangeText={value => handleChange('hotelPhoneNumbers', value)}
+        dropdownValue={countryCode}
+        placeholer="000 0000 000"
+        setDropdownValue={value => {
+          setCountryCode(value);
+          updateRegisterData('hotelPhoneNumbers', [value + hotelPhoneRaw]);
+        }}
+        dropdownData={countryCodes}
+        position="front"
+        bgColor="#f2f2f2"
+        editable={!loading}
+      />
+
+      {/* User Info Header */}
+      <View style={styles.iconSection}>
+        <View style={styles.iconWrapper}>
+          <MIcon name="person" size={40} color="#111" />
+        </View>
+        <Text style={styles.sectionTitle}>User Information</Text>
+      </View>
+
+      {/* User Inputs */}
+      <CustomInput
         label={'Username'}
         bgColor="#f2f2f2"
-        placeholder={'Enter Username'}
+        placeholder={'Enter username'}
         value={registerData?.username}
         onChangeText={value => handleChange('username', value)}
         editable={!loading}
       />
       <CustomInput
-        label={'ID card number'}
+        label={'ID Card Number'}
         bgColor="#f2f2f2"
         placeholder={'Enter ID card number'}
         value={registerData?.idCardNo}
@@ -181,7 +241,7 @@ export default function RegisterScreen({navigation}) {
       <CustomInput
         label={'Full Name'}
         bgColor="#f2f2f2"
-        placeholder={'Enter Full Name'}
+        placeholder={'Enter your full name'}
         value={registerData?.fullName}
         onChangeText={value => handleChange('fullName', value)}
         editable={!loading}
@@ -189,18 +249,18 @@ export default function RegisterScreen({navigation}) {
       <CustomInput
         label={'Email Address (OTP will be sent to this address)'}
         bgColor="#f2f2f2"
-        placeholder={'Enter Email Address'}
+        placeholder={'Enter email address'}
         value={registerData?.email}
         onChangeText={value => handleChange('email', value)}
         keyboardType="email-address"
         editable={!loading}
       />
       <TextInputWithDropdown
-        label="User Phone Number"
+        label="Phone Number"
         value={userPhoneRaw}
         onChangeText={value => handleChange('phone', value)}
         dropdownValue={userCountryCode}
-        placeholer="Enter Phone Number"
+        placeholer="000 0000 000"
         setDropdownValue={value => {
           setUserCountryCode(value);
           updateRegisterData('phone', value + userPhoneRaw);
@@ -219,34 +279,12 @@ export default function RegisterScreen({navigation}) {
         ]}
         value={registerData?.role}
         setValue={value => updateRegisterData('role', value)}
-        placeholder="Select user role"
+        placeholder="Please select user role"
         bgColor="#f2f2f2"
-        disabled={!loading}
+        disabled={loading}
       />
-      <CustomInput
-        label={'Hotel Email Address'}
-        bgColor="#f2f2f2"
-        placeholder={'Enter Hotel Email Address'}
-        value={registerData?.hotelEmail}
-        onChangeText={value => handleChange('hotelEmail', value)}
-        keyboardType="email-address"
-        editable={!loading}
-      />
-      <TextInputWithDropdown
-        label="Hotel Phone Number"
-        value={hotelPhoneRaw}
-        onChangeText={value => handleChange('hotelPhoneNumbers', value)}
-        dropdownValue={countryCode}
-        placeholer="Enter Phone Number"
-        setDropdownValue={value => {
-          setCountryCode(value);
-          updateRegisterData('hotelPhoneNumbers', [value + hotelPhoneRaw]);
-        }}
-        dropdownData={countryCodes}
-        position="front"
-        bgColor="#f2f2f2"
-        editable={!loading}
-      />
+
+      {/* Submit Button */}
       <View style={styles.bottomSection}>
         <TouchableOpacity
           disabled={!isValid || loading}
@@ -270,6 +308,38 @@ const styles = StyleSheet.create({
     paddingHorizontal: screenWidth * 0.06,
     backgroundColor: '#fff',
     paddingTop: 20,
+  },
+  hotelIcon: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain',
+    tintColor: '#0E101F',
+  },
+
+  iconSection: {
+    alignItems: 'center',
+    marginTop: 30,
+  },
+  iconWrapper: {
+    width: 60,
+    height: 60,
+    borderRadius: 32,
+    backgroundColor: '#e5e5e5',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sectionTitle: {
+    marginTop: 6,
+    fontWeight: '600',
+    fontSize: 16,
+    color: '#111',
+  },
+
+  sectionHeader: {
+    marginTop: 10,
+    fontWeight: '600',
+    fontSize: 16,
+    textAlign: 'center',
   },
   button: {
     backgroundColor: '#007bff',
