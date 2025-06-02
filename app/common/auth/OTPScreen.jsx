@@ -48,11 +48,12 @@ export default function OTPScreen({route}) {
   useEffect(() => {
     if (!resendTime) return;
 
-    const expireTime = new Date(new Date(resendTime).getTime() + 60 * 1000);
+    const expireTime = new Date(resendTime);
 
     const updateTimer = () => {
       const now = new Date();
       const diff = Math.floor((expireTime - now) / 1000);
+
       if (diff <= 0) {
         setResendTimer(0);
         if (timerRef.current) clearInterval(timerRef.current);
@@ -82,7 +83,7 @@ export default function OTPScreen({route}) {
 
       if (response?.result) {
         console.log('OTP resent successfully:', response);
-        if (response?.OtpExpireCode) {
+        if (response?.codeExpireDate) {
           navigation.setParams({resendTime: response.codeExpireDate});
         }
       } else {
@@ -122,6 +123,14 @@ export default function OTPScreen({route}) {
     }
   };
 
+  const formatTime = totalSeconds => {
+    const minutes = Math.floor(totalSeconds / 60)
+      .toString()
+      .padStart(2, '0');
+    const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+    return `${minutes}:${seconds}`;
+  };
+
   return (
     <View style={styles.container}>
       <CustomAlert
@@ -134,7 +143,15 @@ export default function OTPScreen({route}) {
         title="OTP Verification"
         onPress={loading ? null : () => navigation.goBack()}
       />
-      <ProgressBar contentContainerStyle={{marginTop:-10}} currentStep={2} totalSteps={5} />
+      <ProgressBar
+        contentContainerStyle={{marginTop: -10}}
+        currentStep={2}
+        totalSteps={5}
+      />
+      <Text style={styles.infoText}>
+        OTP Code was sent to your email address. Please check and enter below!
+      </Text>
+
       <Text style={styles.label}>OTP Code</Text>
       <TextInput
         style={styles.input}
@@ -147,10 +164,17 @@ export default function OTPScreen({route}) {
       />
 
       {/* Countdown display */}
-      {resendTimer > 0 && (
+      {resendTimer > 0 ? (
         <Text style={[styles.resendText, {marginTop: 6}]}>
-          Resend available in{' '}
-          <Text style={{fontWeight: 'bold'}}>{resendTimer}s</Text>
+          Code will expire in{' '}
+          <Text style={{fontWeight: 'bold', color: '#000'}}>
+            {formatTime(resendTimer)}
+          </Text>
+          <Text style={{color: 'gray'}}> mins</Text>
+        </Text>
+      ) : (
+        <Text style={styles.errorText}>
+          The code has expired. Please resend!
         </Text>
       )}
 
@@ -194,6 +218,12 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     backgroundColor: '#fff',
   },
+  infoText: {
+    fontSize: 17,
+    color: '#333',
+    marginBottom: 12,
+  },
+
   label: {
     fontSize: 14,
     marginTop: 12,
@@ -215,6 +245,12 @@ const styles = StyleSheet.create({
     color: '#007bff',
     fontWeight: 'bold',
   },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 6,
+  },
+
   button: {
     backgroundColor: '#007bff',
     marginTop: 30,

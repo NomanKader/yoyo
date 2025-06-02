@@ -18,6 +18,14 @@ const ResetOTPConfirmScreen = ({navigation, route}) => {
   const [resendLoading, setResendLoading] = useState(false);
   const timerRef = useRef(null);
 
+  const formatTime = totalSeconds => {
+    const minutes = Math.floor(totalSeconds / 60)
+      .toString()
+      .padStart(2, '0');
+    const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+    return `${minutes}:${seconds}`;
+  };
+
   useEffect(() => {
     if (!resendTime) return;
 
@@ -59,7 +67,10 @@ const ResetOTPConfirmScreen = ({navigation, route}) => {
         navigation.setParams({resendTime: response?.codeExpireDate});
         console.log('OTP resent successfully:', response);
       } else {
-        console.warn('Failed to resend OTP:', response?.message || 'Unknown error');
+        console.warn(
+          'Failed to resend OTP:',
+          response?.message || 'Unknown error',
+        );
       }
     } catch (error) {
       console.error('Error resending OTP:', error);
@@ -122,9 +133,17 @@ const ResetOTPConfirmScreen = ({navigation, route}) => {
       />
 
       {/* Countdown timer display below input */}
-      {resendTimer > 0 && (
-        <Text style={[styles.resendText, {marginHorizontal: 16, marginTop: 4}]}>
-          Resend available in <Text style={{fontWeight: 'bold'}}>{resendTimer}s</Text>
+      {resendTimer > 0 ? (
+        <Text style={[styles.resendText, {marginTop: 6, marginHorizontal: 16}]}>
+          Code will expire in{' '}
+          <Text style={{fontWeight: 'bold', color: '#000'}}>
+            {formatTime(resendTimer)}
+          </Text>
+          <Text style={{color: 'gray'}}> mins</Text>
+        </Text>
+      ) : (
+        <Text style={styles.errorText}>
+          The code has expired. Please resend!
         </Text>
       )}
 
@@ -188,6 +207,12 @@ const styles = StyleSheet.create({
   resendWrapper: {
     alignItems: 'center',
     marginBottom: 10,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 6,
+    marginHorizontal: 16,
   },
   resendText: {
     color: '#888',

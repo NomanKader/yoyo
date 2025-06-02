@@ -281,7 +281,7 @@ export default function RegisterScreen({navigation}) {
         setValue={value => updateRegisterData('role', value)}
         placeholder="Please select user role"
         bgColor="#f2f2f2"
-        disabled={loading}
+        disabled={!loading}
       />
 
       {/* Submit Button */}
