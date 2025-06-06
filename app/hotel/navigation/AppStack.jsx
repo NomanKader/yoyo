@@ -39,6 +39,8 @@ import AddOnPriceFeatureSettingScreen from '../screens/account/AddOnPriceFeature
 import HistoryScreen from '../screens/account/HistoryScreen';
 import QRScanScreen from '../screens/booking/QRScanScreen';
 import BottomTabStack from './TabStack';
+import AccountInfoScreen from '../screens/account/AccountInfoScreen';
+import BasicHotelDetailScreen from '../screens/account/BasicHotelDetailScreen';
 
 
 
@@ -52,6 +54,8 @@ const AppStack = () => {
       <Stack.Screen name='TabStack' component={BottomTabStack} options={hiddenHeaderOptions} />
       <Stack.Screen name='Home' component={HomeScreen} options={{ headerTitle: 'Welcome To YoYo' }} />
       <Stack.Screen name='Unauthorized' component={UnauthorizedScreen} options={hiddenHeaderOptions} />
+      <Stack.Screen name='AccountInfo' component={AccountInfoScreen} options={hiddenHeaderOptions} />
+      <Stack.Screen name='BasicHotelDetail' component={BasicHotelDetailScreen} options={hiddenHeaderOptions} />  
       {/* Room */}
       <Stack.Screen name="RoomDetailScreen" component={RoomDetailScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='RoomCategoryCreateScreen' component={RoomCategoryCreateScreen} options={hiddenHeaderOptions}/>

@@ -1,4 +1,5 @@
 import {View, TouchableOpacity, Text, StyleSheet, Image} from 'react-native';
+import DividerComponent from './DividerComponent';
 
 export default function HeaderComponent({
   onPress,
@@ -14,7 +15,10 @@ export default function HeaderComponent({
         />
       </TouchableOpacity>
       <Text style={styles.headerTitle}>{title}</Text>
-    </View>
+      <View style={{marginTop:5}} />
+      <DividerComponent/>
+      </View>
+    
   );
 }
 

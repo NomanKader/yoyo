@@ -9,7 +9,8 @@ export default function DividerComponent({ style }) {
 const styles = StyleSheet.create({
   divider: {
     height: 1,
-    backgroundColor: theme.colors.dividerColor,
+    backgroundColor: theme.colors.textLightGray,
+    top: 12,
     width: '100%',    
   },
 });
