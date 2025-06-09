@@ -16,6 +16,7 @@ import BottomSheetComponent from '../../components/BottomSheet/BottomSheetCompon
 import profileImage from '../../assets/icons/profileImage.png';
 import rightArrowIcon from '../../assets/icons/rightArrowIcon.png';
 import profileIcon from '../../assets/icons/profileIcon.png';
+import rolesIcon from '../../assets/icons/rolesIcon.png';
 import settingIcon from '../../assets/icons/settingIcon.png';
 import galleryIcon from '../../assets/icons/galleryIcon.png';
 import accountSettings from '../../config/accountSettingList';
@@ -135,7 +136,7 @@ export default function AccountScreen({navigation}) {
         isVisible={isBottomSheetVisible}
         onClose={() => setBottomSheetVisible(false)}
         title={selectedItem}
-        snapPoints={['55%', '50%']}>
+        snapPoints={['60%', '50%']}>
         {selectedItem === 'Logout' ? (
           <View style={styles.bottomSheetContent}>
             <DefaultButtonComponent
@@ -152,13 +153,12 @@ export default function AccountScreen({navigation}) {
             />
           </View>
         ) : selectedItem === 'Profile Settings' ? (
-          <View style={{padding: 10}}>
-            <DividerComponent />
+          <View style={{padding: 10}}>            
             {/* Basic Details */}
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('AppStack', {
-                  screen: 'BasicDetailScreen',
+                  screen: 'BasicHotelDetail',
                   params: {
                     hotelName: 'aHotel',
                     email: 'ahotel@gmail.com',
@@ -171,15 +171,40 @@ export default function AccountScreen({navigation}) {
               <View style={styles.listItem}>
                 <Image source={settingIcon} style={styles.icon} />
                 <View style={styles.textContainer}>
-                  <Text style={styles.headerText}>Basic Details</Text>
+                  <Text style={styles.headerText}>Basic Hotel Details</Text>
                   <Text style={styles.subheaderText}>
-                    Edit your basic hotel admin info easily
+                    Edit your basic hotel details info
                   </Text>
                 </View>
                 <Image source={rightArrowIcon} style={styles.arrowIcon} />
               </View>
             </TouchableOpacity>
             <DividerComponent />
+            {/* Acount Info */}
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('AppStack', {
+                  screen: 'AccountInfo',
+                  params: {
+                    hotelName: 'aHotel',
+                    email: 'ahotel@gmail.com',
+                    phoneNumber: '09969119949',
+                    pin: '1011',
+                    role: 'Admin',
+                  },
+                })
+              }>
+              <View style={styles.listItem}>
+                <Image source={profileIcon} style={styles.icon} />
+                <View style={styles.textContainer}>
+                  <Text style={styles.headerText}>Account Info</Text>
+                  <Text style={styles.subheaderText}>
+                    Edit your account information
+                  </Text>
+                </View>
+                <Image source={rightArrowIcon} style={styles.arrowIcon} />
+              </View>
+            </TouchableOpacity>
             {/* Update Pictures */}
             <TouchableOpacity
               onPress={() =>
@@ -214,7 +239,7 @@ export default function AccountScreen({navigation}) {
                 navigation.navigate('AppStack', {screen: 'ManageRoleScreen'})
               }>
               <View style={styles.listItem}>
-                <Image source={profileIcon} style={styles.icon} />
+                <Image source={rolesIcon} style={styles.icon} />
                 <View style={styles.textContainer}>
                   <Text style={styles.headerText}>Manage Roles</Text>
                   <Text style={styles.subheaderText}>
