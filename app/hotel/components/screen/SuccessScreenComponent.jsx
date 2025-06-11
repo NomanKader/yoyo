@@ -50,12 +50,20 @@ const SuccessScreenComponent = ({route}) => {
         styles.container,
         isShowingIllustration && {backgroundColor: theme.colors.info},
       ]}>
-      <LottieView
-        source={animation}
-        autoPlay
-        loop={true}
+        {icon!== null ? (
+      <Image
+        source={icon}
         style={styles.icon}
-      />
+        />
+        ):(
+      <LottieView
+      source={animation}
+      autoPlay
+      loop={true}
+      style={styles.icon}
+    />
+        )}
+
       <Text
         style={[
           styles.header,

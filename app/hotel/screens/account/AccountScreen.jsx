@@ -19,6 +19,7 @@ import profileIcon from '../../assets/icons/profileIcon.png';
 import rolesIcon from '../../assets/icons/rolesIcon.png';
 import settingIcon from '../../assets/icons/settingIcon.png';
 import galleryIcon from '../../assets/icons/galleryIcon.png';
+import pinIcon from '../../assets/icons/pinIcon.png';
 import accountSettings from '../../config/accountSettingList';
 import AccessTokenService from '../../helper/AccessTokenService';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
@@ -224,6 +225,31 @@ export default function AccountScreen({navigation}) {
                 <Image source={profileIcon} style={styles.icon} />
                 <View style={styles.textContainer}>
                   <Text style={styles.headerText}>Account Info</Text>
+                  <Text style={styles.subheaderText}>
+                    Edit your account information
+                  </Text>
+                </View>
+                <Image source={rightArrowIcon} style={styles.arrowIcon} />
+              </View>
+            </TouchableOpacity>
+            {/* Change Pin */}
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('AuthStack', {
+                  screen: 'CreateNewPin',
+                  params: {
+                    hotelName: 'aHotel',
+                    email: 'ahotel@gmail.com',
+                    phoneNumber: '09969119949',
+                    pin: '1011',
+                    role: 'Admin',
+                  },
+                })
+              }>
+              <View style={styles.listItem}>
+                <Image source={pinIcon} style={styles.icon} />
+                <View style={styles.textContainer}>
+                  <Text style={styles.headerText}>Change Pin</Text>
                   <Text style={styles.subheaderText}>
                     Edit your account information
                   </Text>

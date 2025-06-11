@@ -35,7 +35,7 @@ const accountSettings = [
       subheader: 'Manage your categories',
       navigateTo: {
         name: 'AppStack',
-        params: {screen: 'ManageCategoriesScreen'},
+        params: {screen: 'RoomCategoryCreateScreen'},
       },
     },
     {
