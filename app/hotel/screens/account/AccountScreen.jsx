@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Alert,
   Text,
@@ -30,6 +30,32 @@ export default function AccountScreen({navigation}) {
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
   const {setIsAuthenticated, setUserRole} = useContext(AuthContext);
+  const [userInfo, setUserInfo] = useState({
+    name: '',
+    email: '',
+  });
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const userInfoJson = await AsyncStorage.getItem('USER_INFO_KEY');
+        const userInfo = userInfoJson ? JSON.parse(userInfoJson) : null;
+        console.log('userInfo', userInfo);
+
+        if (userInfo) {
+          setUserInfo({
+            name: userInfo.fullName || '',
+            email: userInfo.email || '',
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load user info:', error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
   // Show Bottom Sheet when "Logout" is clicked
   const handleLogoutPress = async () => {
     try {
@@ -98,8 +124,8 @@ export default function AccountScreen({navigation}) {
           <DividerComponent />
           <View style={styles.profileContainer}>
             <Image source={profileImage} style={styles.profileImage} />
-            <Text style={CommonStyles.header}>Hotel Admin</Text>
-            <Text style={CommonStyles.subHeader}>ahotel@gmail.com</Text>
+            <Text style={CommonStyles.header}>{userInfo?.name}</Text>
+            <Text style={CommonStyles.subHeader}>{userInfo?.email}</Text>
           </View>
           <DividerComponent />
         </View>
@@ -153,7 +179,7 @@ export default function AccountScreen({navigation}) {
             />
           </View>
         ) : selectedItem === 'Profile Settings' ? (
-          <View style={{padding: 10}}>            
+          <View style={{padding: 10}}>
             {/* Basic Details */}
             <TouchableOpacity
               onPress={() =>

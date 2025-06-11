@@ -48,7 +48,7 @@ export default function DashboardScreen({navigation}) {
   ];
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container} nestedScrollEnabled>
       <View style={styles.headerRow}>
         <Text style={styles.headerTitle}>Dashboard</Text>
         <View style={styles.headerIcons}>
@@ -114,6 +114,7 @@ export default function DashboardScreen({navigation}) {
       <FlatList
         data={bookings}
         keyExtractor={item => item.id}
+        nestedScrollEnabled
         renderItem={({item}) => (
           <View style={styles.bookingItem}>
             <Image source={item.image} style={styles.roomImage} />

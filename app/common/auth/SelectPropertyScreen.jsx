@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,85 +7,147 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import HeaderComponent from '../../apartment/components/Divider/HeaderComponent';
 import hotelIcon from '../assets/hotel.png';
 import apartmentIcon from '../assets/apartment.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const screenWidth = Dimensions.get('window').width;
 
-const propertyData = {
-    hotels: [
-      { id: 1, name: 'Azure Hotel', type: 'hotel' },
-      { id: 2, name: 'Hotel Vista', type: 'hotel' },
-      { id: 3, name: '121 Hotel', type: 'hotel' },
-    ],
-    apartments: [
-      { id: 4, name: 'Pantanaw Street 3B/42', type: 'apartment' },
-      { id: 5, name: 'Baho Road 142', type: 'apartment' },
-    ],
-  };
-  
+// const propertyData = {
+//   hotels: [
+//     {id: 1, name: 'Azure Hotel', type: 'hotel'},
+//     {id: 2, name: 'Hotel Vista', type: 'hotel'},
+//     {id: 3, name: '121 Hotel', type: 'hotel'},
+//   ],
+//   apartments: [
+//     {id: 4, name: 'Pantanaw Street 3B/42', type: 'apartment'},
+//     {id: 5, name: 'Baho Road 142', type: 'apartment'},
+//   ],
+// };
 
 export default function SelectPropertyScreen() {
+  const [propertyData, setPropertyData] = useState({
+    hotels: [],
+    apartments: [],
+  });
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const userInfoJson = await AsyncStorage.getItem('USER_INFO_KEY');
+        const userInfo = userInfoJson ? JSON.parse(userInfoJson) : null;
+
+        if (userInfo?.properties && Array.isArray(userInfo.properties)) {
+          const hotels = userInfo.properties
+            .filter(p => p.isHotel)
+            .map(p => ({
+              id: p.id,
+              name: p.hotelName,
+              isHotel: true,
+            }));
+
+          const apartments = userInfo.properties
+            .filter(p => p.isApartment)
+            .map(p => ({
+              id: p.id,
+              name: p.hotelName,
+              isApartment: true,
+            }));
+
+          setPropertyData({
+            hotels: hotels,
+            apartments: apartments,
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load user info:', error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
   const navigation = useNavigation();
   const [selectedProperty, setSelectedProperty] = useState(null);
 
-  const handleSelect = (property) => {
+  const handleSelect = property => {
     setSelectedProperty(property);
   };
-  
 
   const handleContinue = () => {
     if (!selectedProperty) return;
-  
-    if (selectedProperty.type === 'hotel') {
+
+    if (selectedProperty.isHotel) {
       navigation.navigate('HotelTabStack');
-    } else {
+    } else if (selectedProperty.isApartment) {
       navigation.navigate('ApartmentAppStack');
     }
   };
-  
 
   const renderPropertyItem = (item, icon) => (
     <TouchableOpacity
       key={item.id}
       style={[
         styles.propertyItem,
-        selectedProperty?.name === item.name && styles.selectedItem,
+        selectedProperty?.id === item.id && styles.selectedItem,
       ]}
-      onPress={() => handleSelect(item)}
-    >
+      onPress={() => handleSelect(item)}>
       <Image source={icon} style={styles.icon} />
       <Text style={styles.propertyText}>{item.name}</Text>
     </TouchableOpacity>
   );
-  
-  
 
   return (
     <View style={styles.container}>
-      <HeaderComponent title="Select Property" navigation={navigation} />
+      <HeaderComponent
+        title="Select Property"
+        navigation={navigation}
+        showBackIcon={false}
+      />
 
       <Text style={styles.instruction}>
         Please select one of your properties to continue!
       </Text>
 
-      <Text style={styles.sectionTitle}>Hotels</Text>
-      {propertyData.hotels.map((item) => renderPropertyItem(item, hotelIcon))}
+      {propertyData.hotels.length > 0 && (
+        <>
+          <Text style={styles.sectionTitle}>Hotels</Text>
+          <ScrollView
+            style={styles.propertyScroll}
+            nestedScrollEnabled
+            showsVerticalScrollIndicator={false}>
+            {propertyData.hotels.map(item =>
+              renderPropertyItem(item, hotelIcon),
+            )}
+          </ScrollView>
+        </>
+      )}
 
-      <View style={styles.divider} />
+      {propertyData.hotels.length > 0 && propertyData.apartments.length > 0 && (
+        <View style={styles.divider} />
+      )}
 
-      <Text style={styles.sectionTitle}>Apartments</Text>
-      {propertyData.apartments.map((item) =>
-        renderPropertyItem(item, apartmentIcon)
+      {propertyData.apartments.length > 0 && (
+        <>
+          <Text style={styles.sectionTitle}>Apartments</Text>
+          <ScrollView
+            style={styles.propertyScroll}
+            nestedScrollEnabled
+            showsVerticalScrollIndicator={false}>
+            {propertyData.apartments.map(item =>
+              renderPropertyItem(item, apartmentIcon),
+            )}
+          </ScrollView>
+        </>
       )}
 
       <TouchableOpacity
         style={[styles.continueButton, !selectedProperty && styles.disabled]}
         disabled={!selectedProperty}
-        onPress={handleContinue}
-      >
+        onPress={handleContinue}>
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>
     </View>
@@ -99,6 +161,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingTop: 30,
   },
+  propertyScroll: {
+    maxHeight: 200, // Adjust height as needed
+    marginBottom: 10,
+  },
+
   instruction: {
     fontSize: 14,
     color: '#333',

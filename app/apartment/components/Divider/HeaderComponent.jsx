@@ -5,20 +5,22 @@ export default function HeaderComponent({
   onPress,
   title,
   contentContainerStyle,
+  showBackIcon = true,
 }) {
   return (
     <View style={[styles.header, contentContainerStyle]}>
       <TouchableOpacity onPress={onPress} style={styles.backButtonWrapper}>
-        <Image
-          source={require('../../assets/icons/backIcon.png')}
-          style={styles.backIcon}
-        />
+        {showBackIcon && (
+          <Image
+            source={require('../../assets/icons/backIcon.png')}
+            style={styles.backIcon}
+          />
+        )}
       </TouchableOpacity>
       <Text style={styles.headerTitle}>{title}</Text>
-      <View style={{marginTop:5}} />
-      <DividerComponent/>
-      </View>
-    
+      <View style={{marginTop: 5}} />
+      <DividerComponent />
+    </View>
   );
 }
 

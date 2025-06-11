@@ -45,6 +45,11 @@ export default function LoginScreen() {
           'userRole',
           response.userInfo?.isApartment === true ? 'apartment' : 'hotel',
         );
+        await AsyncStorage.setItem(
+          "USER_INFO_KEY",
+          JSON.stringify(response.userInfo),
+        );
+
         // setIsAuthenticated(true);
         // setUserRole(
         //   response.userInfo?.isApartment === true ? 'apartment' : 'hotel',
