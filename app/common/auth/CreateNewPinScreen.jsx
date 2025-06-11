@@ -20,6 +20,7 @@ const screenWidth = Dimensions.get('window').width;
 export default function CreateNewPinScreen({navigation, route}) {
   const {email, token} = route.params || {};
   const [pin, setPin] = useState('');
+  const [newPin, setNewPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
   const [showPin, setShowPin] = useState(false);
   const [showConfirmPin, setShowConfirmPin] = useState(false);
@@ -28,44 +29,64 @@ export default function CreateNewPinScreen({navigation, route}) {
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleChangePin = async () => {
-    setLoading(true);
-    try {
-      const postBody = {
-        otpToken: token,
-        email: email,
-        phone: null,
-        password: confirmPin,
-      };
+    // setLoading(true);
+    // try {
+    //   const postBody = {
+    //     otpToken: token,
+    //     email: email,
+    //     phone: null,
+    //     password: confirmPin,
+    //   };
 
-      const response = await ResetPassword(postBody);
+    //   const response = await ResetPassword(postBody);
 
-      if (response?.result) {
-        navigation.navigate('HotelTabStack', {
-          screen: 'SuccessScreen',
-          params: {
-            header: 'New Pin code is changed Successfully',
-            subheader: '',
-            nextScreen: 'Login',
-            icon: paymentSuccessIcon,
-            isShowingIllustration: true,
-            buttonText: 'Back to Login',
-            color: theme.colors.primary,
-          },
-        });
-      } else {
-        console.warn('Reset failed:', response?.message || 'Unknown error');
-        setErrorMessage(response?.message || 'Failed to reset pin');
-        setAlertVisible(true);
-      }
-    } catch (error) {
-      console.error('Reset error:', error);
-    } finally {
-      setLoading(false);
-    }
+    //   if (response?.result) {
+    //     navigation.navigate('HotelTabStack', {
+    //       screen: 'SuccessScreen',
+    //       params: {
+    //         header: 'New Pin code is changed Successfully',
+    //         subheader: '',
+    //         nextScreen: 'Login',
+    //         icon: paymentSuccessIcon,
+    //         isShowingIllustration: true,
+    //         buttonText: 'Back to Login',
+    //         color: theme.colors.primary,
+    //       },
+    //     });
+    //   } else {
+    //     console.warn('Reset failed:', response?.message || 'Unknown error');
+    //     setErrorMessage(response?.message || 'Failed to reset pin');
+    //     setAlertVisible(true);
+    //   }
+    // } catch (error) {
+    //   console.error('Reset error:', error);
+    // } finally {
+    //   setLoading(false);
+    // }
+    navigation.navigate('HotelTabStack', {
+      screen: 'SuccessScreen',
+      params: {
+        header: 'New Pin Updated Successfully',
+        subheader: '',
+        nextScreen: 'HotelTabStack',
+        icon: paymentSuccessIcon,
+        isShowingIllustration: true,
+        buttonText: 'Back to Dashboard',
+        color: theme.colors.primary,
+      },
+    });
+    setPin('');
+    setNewPin('');
+    setConfirmPin('');
+    setShowPin(false);
+    setShowConfirmPin(false);
+    setLoading(false);
+    setAlertVisible(false);
+    setErrorMessage('');
   };
 
   const isValid =
-    pin.length === 4 && confirmPin.length === 4 && pin === confirmPin;
+    (pin.length === 4 && newPin.length===4 && confirmPin.length === 4  && newPin === confirmPin);
 
   return (
     <View style={styles.container}>
@@ -76,16 +97,16 @@ export default function CreateNewPinScreen({navigation, route}) {
         title={"Something's Wrong!"}
       />
       <HeaderComponent
-        title="Create New PIN"
+        title="Change Pin"
         onPress={() => navigation.goBack()}
       />
-      <ProgressBar currentStep={3} totalSteps={5} />
+      {/* <ProgressBar currentStep={3} totalSteps={5} /> */}
 
       {/* Create Pin */}
-      <Text style={styles.label}>Create Pin</Text>
+      <Text style={styles.label}>Current Pin</Text>
       <View style={styles.inputWrapper}>
         <TextInput
-          placeholder="Enter 4 digit pin"
+          placeholder="Enter your current 4 digit pin"
           style={styles.input}
           keyboardType="number-pad"
           maxLength={4}
@@ -104,11 +125,34 @@ export default function CreateNewPinScreen({navigation, route}) {
         </TouchableOpacity>
       </View>
 
-      {/* Confirm Pin */}
-      <Text style={styles.label}>Confirm Pin</Text>
+      {/* New Pin */}
+      <Text style={styles.label}>New Pin</Text>
       <View style={styles.inputWrapper}>
         <TextInput
-          placeholder="Re-Enter pin"
+          placeholder="Enter a new 4 digit pin"
+          style={styles.input}
+          keyboardType="number-pad"
+          maxLength={4}
+          secureTextEntry={!showConfirmPin}
+          value={newPin}
+          onChangeText={setNewPin}
+        />
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => setShowConfirmPin(!showConfirmPin)}>
+          <Icon
+            name={showConfirmPin ? 'visibility-off' : 'visibility'}
+            size={22}
+            color="#888"
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Confrim Pin */}
+      <Text style={styles.label}>Confirm New Pin</Text>
+      <View style={styles.inputWrapper}>
+        <TextInput
+          placeholder="Re-Enter new pin"
           style={styles.input}
           keyboardType="number-pad"
           maxLength={4}
@@ -126,6 +170,7 @@ export default function CreateNewPinScreen({navigation, route}) {
           />
         </TouchableOpacity>
       </View>
+
 
       {/* Bottom */}
       <View style={styles.bottomSection}>
