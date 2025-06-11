@@ -235,7 +235,7 @@ export default function AccountScreen({navigation}) {
             {/* Change Pin */}
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('AuthStack', {
+                navigation.navigate('AppStack', {
                   screen: 'CreateNewPin',
                   params: {
                     hotelName: 'aHotel',

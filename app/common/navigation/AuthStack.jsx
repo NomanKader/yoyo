@@ -43,7 +43,6 @@ export default function AuthStack() {
           name="ResetOTPConfirm"
           component={ResetOTPConfirmScreen}
         />
-        <Stack.Screen name="CreateNewPin" component={CreateNewPinScreen} />
       </Stack.Navigator>
     </RegisterProvider>
   );

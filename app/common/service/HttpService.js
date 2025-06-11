@@ -10,7 +10,7 @@ const techForgeAPI = axios.create({
 
 techForgeAPI.interceptors.request.use(
   async config => {
-    const token = await AsyncStorage.getItem('techForgeToken');
+    const token = await AsyncStorage.getItem('token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -24,14 +24,26 @@ techForgeAPI.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest.skipAuth) {
-      await AsyncStorage.removeItem('techForgeToken');
+    // Prevent infinite loop by marking the request
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      // Remove token and clear auth header
+      await AsyncStorage.removeItem('token');
       removeAuthHeader();
-      return Promise.reject({message: 'Unauthorized, please login again.'});
+
+      return Promise.reject({
+        message: 'Unauthorized, please login again.',
+        status: 401,
+      });
     }
 
-    return Promise.reject(error.response?.data || error);
-  },
+    // Handle other errors gracefully
+    return Promise.reject(
+      error.response?.data || {
+        message: error.message || 'Something went wrong!',
+      }
+    );
+  }
 );
 
 export const setAuthHeader = async () => {

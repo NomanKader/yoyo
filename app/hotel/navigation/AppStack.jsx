@@ -41,6 +41,7 @@ import QRScanScreen from '../screens/booking/QRScanScreen';
 import BottomTabStack from './TabStack';
 import AccountInfoScreen from '../screens/account/AccountInfoScreen';
 import BasicHotelDetailScreen from '../screens/account/BasicHotelDetailScreen';
+import CreateNewPinScreen from '../../common/auth/CreateNewPinScreen';
 
 
 
@@ -95,6 +96,8 @@ const AppStack = () => {
       <Stack.Screen name='BookingCancelSettingScreen' component={BookingCancelSettingScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='AddOnPriceFeatureSettingScreen' component={AddOnPriceFeatureSettingScreen} options={hiddenHeaderOptions}/>
       <Stack.Screen name='HistoryScreen' component={HistoryScreen} options={hiddenHeaderOptions}/>
+      <Stack.Screen name='CreateNewPin' component={CreateNewPinScreen} options={hiddenHeaderOptions}/>
+
     </Stack.Navigator>
   );
 };

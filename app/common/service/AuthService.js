@@ -109,6 +109,20 @@ export const ForgetPassword = async postBody => {
   }
 };
 
+export const ChangePassword = async postBody => {
+  try {
+    const response = await HttpService.techForgeAPI.post(
+      '/auth/changePasssword',
+      postBody,
+    );
+    console.log('change password response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('change password error:', error);
+    throw error;
+  }
+};
+
 export const ResetPassword = async postBody => {
   try {
     const response = await HttpService.techForgeAPI.post(
