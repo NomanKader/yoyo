@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  KeyboardAvoidingView,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import StepAppBarComponent from '../../../components/AppBar/StepAppBarComponent';
-import { CommonStyles } from '../../../style/CommonStyles';
+import {CommonStyles} from '../../../style/CommonStyles';
 import TextInputComponent from '../../../components/TextInput/TextInputComponent';
 import theme from '../../../style/colors';
 import DefaultButtonComponent from '../../../components/Button/DefaultButtonComponent';
+import FullWidthCheckboxComponent from '../../../components/Checkbox/FullWidthCheckBoxComponent';
 
-export default function RoomCategoryCreateScreen({ navigation }) {
+export default function RoomCategoryCreateScreen({navigation}) {
   const [categoryName, setCategoryName] = useState('');
   const [price, setPrice] = useState('');
   const [breakfastIncluded, setBreakfastIncluded] = useState(true);
@@ -18,14 +26,16 @@ export default function RoomCategoryCreateScreen({ navigation }) {
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
-      >
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
         <ScrollView
           contentContainerStyle={CommonStyles.scrollViewContainer}
           showsVerticalScrollIndicator={false}
-          style={styles.scrollView}
-        >
-          <StepAppBarComponent title="Some Screen" currentStep="1" navigation={navigation} />
+          style={styles.scrollView}>
+          <StepAppBarComponent
+            title="Some Screen"
+            currentStep="1"
+            navigation={navigation}
+          />
           <Text style={CommonStyles.header}>Create Room Category</Text>
           <Text style={CommonStyles.subHeader}>
             Add a new room to your category of hotels using this form
@@ -48,20 +58,20 @@ export default function RoomCategoryCreateScreen({ navigation }) {
               keyboardType="numeric"
             />
           </View>
-          <View style={CommonStyles.room.breakfastContainer}>
-            <Text style={CommonStyles.room.breakfastLabel}>Breakfast included</Text>
-            <CheckBox
-              tintColors={{ true: theme.colors.primary, false: theme.colors.textGray }}
-              value={breakfastIncluded}
-              onValueChange={setBreakfastIncluded}
-            />
-          </View>
+          <FullWidthCheckboxComponent
+            value={breakfastIncluded}
+            onChange={setBreakfastIncluded}
+          />
         </ScrollView>
         <View style={styles.buttonContainer}>
           <DefaultButtonComponent
             title="Proceed"
             backgroundColor={theme.colors.primary}
-            onPress={() => navigation.navigate('RoomFacilityCreateScreen', { breakfastIncluded })}
+            onPress={() =>
+              navigation.navigate('RoomFacilityCreateScreen', {
+                breakfastIncluded,
+              })
+            }
           />
         </View>
       </KeyboardAvoidingView>
@@ -79,7 +89,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     backgroundColor: 'white',
-    paddingLeft:20,
-    paddingRight:20
+    paddingLeft: 20,
+    paddingRight: 20,
   },
 });

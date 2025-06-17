@@ -81,10 +81,10 @@ export default function OTPScreen({route}) {
 
       const response = await RequestOTP(postBody);
 
-      if (response?.result) {
+      if (response?.success) {
         console.log('OTP resent successfully:', response);
         if (response?.codeExpireDate) {
-          navigation.setParams({resendTime: response.codeExpireDate});
+          navigation.setParams({resendTime: response.data?.codeExpireTime});
         }
       } else {
         console.warn(
@@ -109,7 +109,7 @@ export default function OTPScreen({route}) {
 
     try {
       const response = await VerifyOTp(postBody);
-      if (response.result) {
+      if (response.success) {
         registerData.otpToken = response.token;
         navigation.navigate('CreatePin');
       } else {

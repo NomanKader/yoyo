@@ -23,7 +23,7 @@ const ForgetPINScreen = ({navigation}) => {
 
       const response = await ForgetPassword(postBody);
 
-      if (response?.result) {
+      if (response?.success) {
         navigation.navigate('ResetOTPConfirm', {
           email: email,
           resendTime: response?.codeExpireDate,

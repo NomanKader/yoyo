@@ -66,8 +66,8 @@ export default function DocumentUploadScreen({navigation}) {
       formData.append('usage', 0);
 
       const response = await ImageUpload(formData);
-      if (response?.result) {
-        updateRegisterData(key, response.name);
+      if (response?.success) {
+        updateRegisterData(key, response.data?.name);
       } else {
         setErrorMessage(response.message || 'Image upload failed');
         setAlertVisible(true);
@@ -82,7 +82,7 @@ export default function DocumentUploadScreen({navigation}) {
   const handleImageDelete = async key => {
     try {
       const response = await RemoveImage(registerData[key]);
-      if (response?.result) {
+      if (response?.success) {
         console.log('Image removed:', response);
         updateRegisterData(key, '');
       } else {
@@ -136,8 +136,8 @@ export default function DocumentUploadScreen({navigation}) {
 
         const response = await FileUpload(formData);
 
-        if (response?.result) {
-          updateRegisterData('documents', [response.name]); // save backend path
+        if (response?.success) {
+          updateRegisterData('documents', [response.data?.name]); // save backend path
         } else {
           setErrorMessage(response.message || 'File upload failed');
           setAlertVisible(true);
@@ -161,7 +161,7 @@ export default function DocumentUploadScreen({navigation}) {
     try {
       setLoading(true);
       const response = await Register(payload);
-      if (response.result) {
+      if (response.success) {
         navigation.navigate('HotelAppStack', {
           screen: 'SuccessScreen',
           params: {
@@ -193,7 +193,7 @@ export default function DocumentUploadScreen({navigation}) {
     try {
       const filePath = registerData.documents?.[0];
       const response = await RemoveImage(filePath);
-      if (response?.result) {
+      if (response?.success) {
         updateRegisterData('documents', []);
       }
     } catch (err) {

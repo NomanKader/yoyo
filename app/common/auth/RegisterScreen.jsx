@@ -111,9 +111,9 @@ export default function RegisterScreen({navigation}) {
 
     try {
       const response = await RequestOTP(postBody);
-      if (response.result) {
+      if (response.success) {
         navigation.navigate('OTP', {
-          resendTime: response.codeExpireDate,
+          resendTime: response.data?.codeExpireTime,
         });
       } else {
         setAlertVisible(true);

@@ -63,7 +63,7 @@ const ResetOTPConfirmScreen = ({navigation, route}) => {
 
       const response = await RequestOTP(postBody);
 
-      if (response?.result) {
+      if (response?.success) {
         navigation.setParams({resendTime: response?.codeExpireDate});
         console.log('OTP resent successfully:', response);
       } else {
@@ -89,7 +89,7 @@ const ResetOTPConfirmScreen = ({navigation, route}) => {
       };
       const response = await VerifyOTp(postBody);
 
-      if (response?.result && response?.token) {
+      if (response?.success && response?.token) {
         navigation.navigate('CreateNewPin', {
           email: email,
           token: response.token,
