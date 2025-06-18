@@ -47,7 +47,7 @@ export default function LoginScreen() {
         );
         await AsyncStorage.setItem(
           "USER_INFO_KEY",
-          JSON.stringify(response.userInfo),
+          JSON.stringify(response.data?.userInfo),
         );
 
         // setIsAuthenticated(true);
