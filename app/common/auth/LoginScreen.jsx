@@ -39,7 +39,7 @@ export default function LoginScreen() {
     try {
       const response = await Login({username, password: pin});
 
-      if (response.result) {
+      if (response.success) {
         await AsyncStorage.setItem('token', response.access_token || '');
         await AsyncStorage.setItem(
           'userRole',
