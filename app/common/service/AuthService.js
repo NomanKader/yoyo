@@ -81,6 +81,20 @@ export const Register = async postBody => {
   }
 };
 
+export const CheckUser = async postBody => {
+  try {
+    const response = await HttpService.techForgeAPI.post(
+      '/auth/checkuser',
+      postBody,
+    );
+    console.log('check user response:', response.data);
+    return response.data; // Return success and message
+  } catch (error) {
+    console.error('check usre error:', error);
+    throw error;
+  }
+};
+
 export const Login = async postBody => {
   try {
     const response = await HttpService.techForgeAPI.post(

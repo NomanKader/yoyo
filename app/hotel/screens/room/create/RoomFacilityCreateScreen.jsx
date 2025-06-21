@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import theme from '../../../style/colors';
 import DefaultButtonComponent from '../../../components/Button/DefaultButtonComponent';
@@ -17,26 +16,43 @@ import TextInputComponent from '../../../components/TextInput/TextInputComponent
 import TypoPriceComponent from '../../../components/Typography/TypoPriceComponent';
 import DropdownPickerComponent from '../../../components/Dropdown/DropdownPickerComponent';
 import DividerComponent from '../../../components/Divider/DividerComponent';
-
-const PRICE_PER_EXTRA_BED = 30000; // Example price in MMK
+import { GetAllFacilities } from '../../../services/FacilitiesAndAmentitiesService';
 
 export default function RoomFacilityCreateScreen({ route, navigation }) {
   const { breakfastIncluded } = route.params;
   const [open, setOpen] = useState(false);
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const [extraBedCount, setExtraBedCount] = useState(1);
-  const [facilityOptions, setFacilityOptions] = useState([
-    { label: 'Wifi', value: 'wifi' },
-    { label: 'Wine Bottle', value: 'wine_bottle' },
-    { label: 'Gym Access', value: 'gym_access' },
-    { label: 'Swimming Pool Access', value: 'swimming_pool_access' },
-    { label: 'Extra Bed', value: 'extra_bed' },
-  ]);
+  const [facilityOptions, setFacilityOptions] = useState([]);
 
-  // Calculate total price for extra beds
+  // Fetch facilities
+  useEffect(() => {
+    const fetchFacilities = async () => {
+      try {
+        const response = await GetAllFacilities({ languageId: 1, hotelId: 1 });
+        const rawFacilityData = response.data.data;
+        const mappedFacilities = rawFacilityData.map(item => ({
+          label: item.facilityName,
+          value: item.id.toString(),
+          price: item.price,
+        }));
+        setFacilityOptions(mappedFacilities);
+      } catch (error) {
+        console.error('Failed to fetch facilities:', error);
+      }
+    };
+
+    fetchFacilities();
+  }, []);
+
+  // Dynamic calculation for extra bed price
   const calculateTotalPrice = () => {
+    const extraBedFacility = facilityOptions.find(
+      f => f.label.toLowerCase() === 'extra bed'
+    );
+    const unitPrice = Number(extraBedFacility?.price || 0);
     const count = parseInt(extraBedCount, 10);
-    return isNaN(count) || count <= 0 ? 0 : count * PRICE_PER_EXTRA_BED;
+    return isNaN(count) || count <= 0 ? 0 : count * unitPrice;
   };
 
   return (
@@ -70,6 +86,7 @@ export default function RoomFacilityCreateScreen({ route, navigation }) {
               dropDownContainerStyle={pickerSelectStyles.dropdown}
             />
           </View>
+
           {breakfastIncluded && (
             <>
               <TypoPriceComponent label="Breakfast" price="30,000 MMK" />
@@ -78,46 +95,53 @@ export default function RoomFacilityCreateScreen({ route, navigation }) {
               </View>
             </>
           )}
-          {selectedFacilities.map(facility =>
-            facility !== 'extra_bed' ? (
-              <TypoPriceComponent
-                key={facility}
-                label={
-                  facilityOptions.find(
-                    facilityOption => facilityOption.value === facility,
-                  ).label
-                }
-                price="30,000 MMK"
-              />
-            ) : (
-              <View key={facility}>
-                {/* Updated TypoPriceComponent for Extra Bed */}
-                <TypoPriceComponent
-                  label="Extra Bed"
-                  price={`${calculateTotalPrice().toLocaleString()} MMK`}
-                />
-                <View style={CommonStyles.dividerView}>
-                  <DividerComponent />
-                </View>
-                <View style={CommonStyles.room.inputContainer}>
-                  <TextInputComponent
-                    placeholder="Enter number of extra beds"
-                    value={extraBedCount}
-                    onChangeText={setExtraBedCount}
-                    label="How many extra beds are allowed?"
-                    keyboardType="number-pad"
+
+          {selectedFacilities.map(facilityId => {
+            const facility = facilityOptions.find(option => option.value === facilityId);
+            const label = facility?.label || '';
+            const price = Number(facility?.price || 0);
+
+            if (label.toLowerCase() === 'extra bed') {
+              return (
+                <View key={facilityId}>
+                  <TypoPriceComponent
+                    label="Extra Bed"
+                    price={`${calculateTotalPrice().toLocaleString()} MMK`}
                   />
+                  <View style={CommonStyles.dividerView}>
+                    <DividerComponent />
+                  </View>
+                  <View style={CommonStyles.room.inputContainer}>
+                    <TextInputComponent
+                      placeholder="Enter number of extra beds"
+                      value={extraBedCount}
+                      onChangeText={setExtraBedCount}
+                      label="How many extra beds are allowed?"
+                      keyboardType="number-pad"
+                    />
+                  </View>
                 </View>
-              </View>
-            ),
-          )}
+              );
+            } else {
+              return (
+                <TypoPriceComponent
+                  key={facilityId}
+                  label={label}
+                  price={`${price.toLocaleString()} MMK`}
+                />
+              );
+            }
+          })}
         </ScrollView>
+
         <View style={styles.buttonContainer}>
           <DefaultButtonComponent
             title="Proceed"
             backgroundColor={theme.colors.primary}
             onPress={() =>
-              navigation.navigate('AppStack', { screen: 'RoomBasicFeatureScreen' })
+              navigation.navigate('AppStack', {
+                screen: 'RoomBasicFeatureScreen',
+              })
             }
           />
         </View>
@@ -132,7 +156,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.textLight,
   },
   buttonContainer: {
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    padding: 16,
   },
   label: {
     fontSize: 16,

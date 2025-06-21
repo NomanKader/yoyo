@@ -64,7 +64,6 @@ const LocationInfoScreen = ({navigation}) => {
 
       <DefaultButtonComponent
         title={'Proceed'}
-        buttonStyle={{marginTop: 50}}
         disabled={
           registerData.lat === '' ||
           registerData.long === '' ||

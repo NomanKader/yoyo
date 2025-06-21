@@ -5,12 +5,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   Keyboard,
+  Image,
 } from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import CustomInput from '../../apartment/components/Input/CustomInput';
 import axios from 'axios';
 import {ScrollView} from 'react-native-gesture-handler';
-import {useFocusEffect} from '@react-navigation/native';
+import MarkIcon from '../assets/mapIcon.png';
 
 const GOOGLE_API_KEY = 'AIzaSyBCQktakyeMA8A1kI80UjSxIpngXUOeXk8';
 
@@ -19,40 +20,42 @@ const AddressPickerWithMap = ({
   initialQuery = '',
   mapRef,
   marker,
-  setMarker,
   customMapStyle,
   onChangeLocation,
 }) => {
-  const [query, setQuery] = useState(initialQuery);
-  const [suggestions, setSuggestions] = useState([]);
-  const [initialRegion] = useState({
+  const defaultRegion = {
     latitude: 16.8409,
     longitude: 96.1735,
     latitudeDelta: 0.05,
     longitudeDelta: 0.05,
-  });
-  const [mapRegion, setMapRegion] = useState(initialRegion);
-  const hasAnimatedToMarker = useRef(false);
+  };
+
+  const [initialRegion] = useState(
+    marker?.latitude && marker?.longitude
+      ? {
+          latitude: marker.latitude,
+          longitude: marker.longitude,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        }
+      : defaultRegion,
+  );
+
+  const [region, setRegion] = useState(initialRegion);
+  const [query, setQuery] = useState(initialQuery);
+  const [suggestions, setSuggestions] = useState([]);
+  const timeoutRef = useRef(null);
+  const lastFetchedRef = useRef({lat: null, lng: null});
 
   useEffect(() => {
     if (marker?.latitude && marker?.longitude && query === '') {
       fetchAddressDetails(marker.latitude, marker.longitude);
+      lastFetchedRef.current = {lat: marker.latitude, lng: marker.longitude};
+    } else {
+      fetchAddressDetails(region.latitude, region.longitude);
+      lastFetchedRef.current = {lat: region.latitude, lng: region.longitude};
     }
   }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      if (marker?.latitude && marker?.longitude && !hasAnimatedToMarker.current) {
-        mapRef.current?.animateToRegion({
-          latitude: marker.latitude,
-          longitude: marker.longitude,
-          latitudeDelta: mapRegion.latitudeDelta,
-          longitudeDelta: mapRegion.longitudeDelta,
-        });
-        hasAnimatedToMarker.current = true;
-      }
-    }, [marker, mapRegion])
-  );
 
   const handleSearch = async text => {
     setQuery(text);
@@ -86,8 +89,10 @@ const AddressPickerWithMap = ({
         longitudeDelta: 0.005,
       };
 
-      setMapRegion(newRegion);
+      setRegion(newRegion);
       mapRef.current?.animateToRegion(newRegion);
+      lastFetchedRef.current = {lat, lng};
+      fetchAddressDetails(lat, lng);
 
       Keyboard.dismiss();
     } catch (error) {
@@ -95,22 +100,27 @@ const AddressPickerWithMap = ({
     }
   };
 
-  const handleMapPress = async e => {
-    const {latitude, longitude} = e.nativeEvent.coordinate;
+  const handleRegionChangeComplete = useCallback(newRegion => {
+  setRegion(newRegion);
 
-    const newRegion = {
-      latitude,
-      longitude,
-      latitudeDelta: mapRegion.latitudeDelta,
-      longitudeDelta: mapRegion.longitudeDelta,
-    };
+  const offset = newRegion.latitudeDelta * 0.15;
+  const adjustedLatitude = newRegion.latitude - offset;
+  const adjustedLongitude = newRegion.longitude;
 
-    setMarker({latitude, longitude});
-    mapRef.current?.animateToRegion(newRegion);
-    await fetchAddressDetails(latitude, longitude);
-  };
+  // Immediately update the address
+  fetchAddressDetails(adjustedLatitude, adjustedLongitude);
+  lastFetchedRef.current = { lat: adjustedLatitude, lng: adjustedLongitude };
+
+  // Optional: debounce further updates if needed
+  if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  timeoutRef.current = setTimeout(() => {
+    // could add background updates or smooth animation logic here
+  }, 1000);
+}, []);
+
 
   const fetchAddressDetails = async (lat, lng, addressFromSearch = '') => {
+    console.log('latlong', lat, lng);
     try {
       const res = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_API_KEY}`,
@@ -147,6 +157,12 @@ const AddressPickerWithMap = ({
     }
   };
 
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   return (
     <View>
       <CustomInput
@@ -177,10 +193,19 @@ const AddressPickerWithMap = ({
           style={styles.map}
           customMapStyle={customMapStyle}
           initialRegion={initialRegion}
-          onRegionChangeComplete={region => setMapRegion(region)}
-          onPress={handleMapPress}>
-          {marker && <Marker coordinate={marker} pinColor="#FFA500" />}
-        </MapView>
+          region={region}
+          onRegionChangeComplete={handleRegionChangeComplete}
+        />
+
+        {/* Floating marker centered visually */}
+        <View pointerEvents="none" style={styles.centerMarker}>
+          <Image
+            source={MarkIcon}
+            tintColor="#FFA500"
+            style={styles.markerImage}
+            resizeMode="contain"
+          />
+        </View>
       </View>
     </View>
   );
@@ -216,5 +241,18 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+  },
+  centerMarker: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginLeft: -25, // half of image width
+    marginTop: -50, // full image height to point pin tip at center
+    zIndex: 10,
+  },
+
+  markerImage: {
+    width: 50,
+    height: 50,
   },
 });

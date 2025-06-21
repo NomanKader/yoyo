@@ -40,10 +40,10 @@ export default function LoginScreen() {
       const response = await Login({username, password: pin});
 
       if (response.success) {
-        await AsyncStorage.setItem('token', response.access_token || '');
+        await AsyncStorage.setItem('token', response.data?.access_token || '');
         await AsyncStorage.setItem(
           'userRole',
-          response.userInfo?.isApartment === true ? 'apartment' : 'hotel',
+          response.data?.userInfo?.isApartment === true ? 'apartment' : 'hotel',
         );
         await AsyncStorage.setItem(
           "USER_INFO_KEY",

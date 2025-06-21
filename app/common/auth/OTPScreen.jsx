@@ -117,7 +117,12 @@ export default function OTPScreen({route}) {
         setErrorMessage(response.message || 'Failed to verify OTP');
       }
     } catch (error) {
-      console.error('Failed to request OTP:', error);
+      console.log('error', error);
+      if (!error.success) {
+        setAlertVisible(true)
+        setErrorMessage(`${error.message}, please try again.`);
+      } 
+      
     } finally {
       setLoading(false);
     }

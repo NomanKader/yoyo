@@ -12,6 +12,7 @@ import { LanguageProvider } from './app/apartment/context/LanguageContext';
 import AuthStack from './app/common/navigation/AuthStack';
 import AppStack from './app/common/navigation/AppStack'; // ✅ import updated AppStack
 import theme from './app/apartment/style/colors';
+import { navigationRef } from './app/common/navigation/NavigationService';
 
 // 🔐 Create Auth Context
 export const AuthContext = createContext();
@@ -68,7 +69,7 @@ export default function App() {
                 setLoading,
               }}
             >
-              <NavigationContainer theme={MyTheme}>
+              <NavigationContainer theme={MyTheme} ref={navigationRef}>
                 <StatusBar
                   backgroundColor={theme.colors.primary}
                   barStyle="light-content"

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
+import { navigate } from '../navigation/NavigationService';
 
 const API_BASE_URL = 'https://www.12zay.com/axtrahoteladminapi/api';
 
@@ -30,7 +32,7 @@ techForgeAPI.interceptors.response.use(
       // Remove token and clear auth header
       await AsyncStorage.removeItem('token');
       removeAuthHeader();
-
+      navigate('Login');
       return Promise.reject({
         message: 'Unauthorized, please login again.',
         status: 401,
@@ -41,9 +43,9 @@ techForgeAPI.interceptors.response.use(
     return Promise.reject(
       error.response?.data || {
         message: error.message || 'Something went wrong!',
-      }
+      },
     );
-  }
+  },
 );
 
 export const setAuthHeader = async () => {

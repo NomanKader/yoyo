@@ -16,7 +16,7 @@ import {RegisterContext} from '../utils/RegisterProvider';
 import CustomInput from '../../apartment/components/Input/CustomInput';
 import TextInputWithDropdown from '../../apartment/components/Dropdown/TextInputWithDropdown';
 import CustomDropdown from '../../apartment/components/Dropdown/CustomDropDown';
-import {RequestOTP} from '../service/AuthService';
+import {CheckUser, RequestOTP} from '../service/AuthService';
 import CustomAlert from '../alert/CustomAlert';
 import hotelIcon from '../assets/hoteldetail.png';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -36,6 +36,7 @@ export default function RegisterScreen({navigation}) {
   const [userCountryCode, setUserCountryCode] = useState('+95');
   const [loading, setLoading] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const onBackPress = () => {
@@ -82,6 +83,7 @@ export default function RegisterScreen({navigation}) {
     registerData.idCardNo &&
     registerData.fullName &&
     registerData.email &&
+    registerData.email.includes("@") &&
     registerData.phone &&
     registerData.role &&
     registerData.hotelEmail &&
@@ -101,8 +103,41 @@ export default function RegisterScreen({navigation}) {
     }
   };
 
+const checkUser = async () => {
+  const postBody = {
+    username: registerData?.username,
+    email: registerData?.email,
+  };
+
+  try {
+    const response = await CheckUser(postBody);
+
+    if (response?.success) {
+      // ❌ User already exists — show error and stop
+      setAlertVisible(true);
+      setMessage(
+        response?.message || 'Username or email is already registered.',
+      );
+      return false;
+    } else {
+      // ✅ User does not exist — safe to continue
+      return true;
+    }
+  } catch (error) {
+    console.error('Error checking user:', error);
+    setAlertVisible(true);
+    setMessage('Something went wrong. Please try again.');
+    return false;
+  }finally{
+    setLoading(false)
+  }
+};
+
+
   const getOTP = async () => {
     setLoading(true);
+    const isAvailable = await checkUser();
+    if (!isAvailable) return;
     const postBody = {
       phone: null,
       email: registerData.email || '',
@@ -117,6 +152,10 @@ export default function RegisterScreen({navigation}) {
         });
       } else {
         setAlertVisible(true);
+        setMessage(
+          'Email does not exist. Please register first or check your email to get OTP code.',
+        );
+
         console.warn(
           'Failed to request OTP:',
           response.message || 'Unknown error',
@@ -137,9 +176,7 @@ export default function RegisterScreen({navigation}) {
       <CustomAlert
         visible={alertVisible}
         title={'Warning'}
-        message={
-          'Email does not exist. Please register first or check your email to get OTP code.'
-        }
+        message={message}
         onClose={setAlertVisible}
       />
 
