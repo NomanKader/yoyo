@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
+  BackHandler,
+  Alert
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -32,7 +34,34 @@ export default function LoginScreen() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const isValid = username.trim() !== '' && pin.length === 4;
-
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert(
+        'Exit App',
+        'Are you sure you want to exit?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => null,
+            style: 'cancel',
+          },
+          {
+            text: 'YES',
+            onPress: () => BackHandler.exitApp(), // 👈 Exits the app
+          },
+        ],
+        { cancelable: false }
+      );
+      return true; // prevent default back behavior
+    };
+  
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+  
+    return () => backHandler.remove();
+  }, []);
   const handleLogin = async () => {
     setLoading(true);
 

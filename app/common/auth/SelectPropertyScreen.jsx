@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   Image,
+  BackHandler
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import HeaderComponent from '../../apartment/components/Divider/HeaderComponent';
@@ -33,7 +34,20 @@ export default function SelectPropertyScreen() {
     hotels: [],
     apartments: [],
   });
+  // write backhandler
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate('Login') // 👈 This goes to the previous screen
+      return true; // prevent default behavior (exit app)
+    };
 
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    return () => backHandler.remove(); 
+  }, []);
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
