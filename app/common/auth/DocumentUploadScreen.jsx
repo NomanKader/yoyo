@@ -152,7 +152,7 @@ export default function DocumentUploadScreen({navigation}) {
     }
   };
   const register = async () => {
-    console.log('Register Data:', registerData);
+    console.log('Register Data:', JSON.stringify(registerData));
     const payload = {
       ...registerData,
       documents: registerData.documents?.map(doc => doc.name) || [],
@@ -162,7 +162,7 @@ export default function DocumentUploadScreen({navigation}) {
       setLoading(true);
       const response = await Register(payload);
       if (response.success) {
-        navigation.navigate('HotelAppStack', {
+        navigation.navigate('HotelTabStack', {
           screen: 'SuccessScreen',
           params: {
             header: 'Registered Successfully',

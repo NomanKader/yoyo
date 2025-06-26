@@ -110,7 +110,7 @@ export default function OTPScreen({route}) {
     try {
       const response = await VerifyOTp(postBody);
       if (response.success) {
-        registerData.otpToken = response.token;
+        registerData.otpToken = response.data?.token;
         navigation.navigate('CreatePin');
       } else {
         setAlertVisible(true);

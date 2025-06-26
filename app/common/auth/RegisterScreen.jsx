@@ -112,77 +112,91 @@ const checkUser = async () => {
   try {
     const response = await CheckUser(postBody);
 
-    if (response?.success) {
-      // ❌ User already exists — show error and stop
-      setAlertVisible(true);
-      setMessage(
-        response?.message || 'Username or email is already registered.',
-      );
-      return false;
-    } else {
-      // ✅ User does not exist — safe to continue
+    if (response?.data) {
+      const {isUsernameExist, isEmailExist} = response.data;
+
+      if (isUsernameExist || isEmailExist) {
+        let msg = '';
+        if (isUsernameExist && isEmailExist) {
+          msg = 'Username and email are already registered.';
+        } else if (isUsernameExist) {
+          msg = 'Username is already taken.';
+        } else if (isEmailExist) {
+          msg = 'Email is already registered.';
+        }
+
+        setAlertVisible(true);
+        setMessage(msg);
+        return false;
+      }
+
+      // ✅ Safe to continue
       return true;
+    } else {
+      // Fallback if no data
+      setAlertVisible(true);
+      setMessage('Unexpected response from server.');
+      return false;
     }
   } catch (error) {
     console.error('Error checking user:', error);
     setAlertVisible(true);
     setMessage('Something went wrong. Please try again.');
     return false;
-  }finally{
-    setLoading(false)
+  } finally {
+    setLoading(false);
   }
 };
 
-
-  const getOTP = async () => {
-    setLoading(true);
-    const isAvailable = await checkUser();
-    if (!isAvailable) return;
-    const postBody = {
-      phone: null,
-      email: registerData.email || '',
-      code: null,
-    };
-
-    try {
-      const response = await RequestOTP(postBody);
-      if (response.success) {
-        navigation.navigate('OTP', {
-          resendTime: response.data?.codeExpireTime,
-        });
-      } else {
-        setAlertVisible(true);
-        setMessage(
-          'Email does not exist. Please register first or check your email to get OTP code.',
-        );
-
-        console.warn(
-          'Failed to request OTP:',
-          response.message || 'Unknown error',
-        );
-      }
-    } catch (error) {
-      console.error('Failed to request OTP:', error);
-    } finally {
-      setLoading(false);
-    }
+const getOTP = async () => {
+  setLoading(true);
+  const isAvailable = await checkUser();
+  if (!isAvailable) return;
+  const postBody = {
+    phone: null,
+    email: registerData.email || '',
+    code: null,
   };
 
-  return (
+  try {
+    const response = await RequestOTP(postBody);
+    if (response.success) {
+      navigation.navigate('OTP', {
+        resendTime: response.data?.codeExpireTime,
+      });
+    } else {
+      setAlertVisible(true);
+      setMessage(
+        'Email does not exist. Please register first or check your email to get OTP code.',
+      );
+
+      console.warn(
+        'Failed to request OTP:',
+        response.message || 'Unknown error',
+      );
+    }
+  } catch (error) {
+    console.error('Failed to request OTP:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+return (
+  <View style={styles.container}>
+    <HeaderComponent
+      title={'Basic Information'}
+      onPress={loading ? null : () => navigation.goBack()}
+    />
     <ScrollView
-      style={styles.container}
       contentContainerStyle={{paddingBottom: 20}}
+      showsVerticalScrollIndicator = {false}
       keyboardShouldPersistTaps="handled">
       <CustomAlert
         visible={alertVisible}
         title={'Warning'}
         message={message}
         onClose={setAlertVisible}
-      />
-
-      <HeaderComponent
-        title={'Basic Information'}
-        onPress={loading ? null : () => navigation.goBack()}
       />
       <ProgressBar
         contentContainerStyle={{marginTop: -10}}
@@ -336,7 +350,8 @@ const checkUser = async () => {
         </TouchableOpacity>
       </View>
     </ScrollView>
-  );
+  </View>
+);
 }
 
 const styles = StyleSheet.create({
