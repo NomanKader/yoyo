@@ -27,7 +27,7 @@ export default function CreatePinScreen({navigation}) {
   return (
     <View style={styles.container}>
       <HeaderComponent title="Create Pin" onPress={() => navigation.goBack()} />
-      <ProgressBar currentStep={3} totalSteps={5} />
+      <ProgressBar  contentContainerStyle={{marginTop: -25}} currentStep={3} totalSteps={5} />
 
       {/* Create Pin */}
       <Text style={styles.label}>Create Pin</Text>
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: screenWidth * 0.06,
-    paddingTop: 50,
+    paddingTop: 3,
     backgroundColor: '#fff',
   },
   label: {

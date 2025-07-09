@@ -30,7 +30,7 @@ const LocationInfoScreen = ({navigation}) => {
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
       <HeaderComponent title="Location Info" onPress={() => navigation.goBack()} />
-      <ProgressBar currentStep={4} totalSteps={5} />
+      <ProgressBar  contentContainerStyle={{marginTop: -25}} currentStep={4} totalSteps={5} />
 
       <AddressPickerWithMap
         title="Enter hotel address"

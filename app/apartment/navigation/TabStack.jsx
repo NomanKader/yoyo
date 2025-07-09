@@ -8,6 +8,7 @@ import HomeTabScreen from "../screens/tabs/HomeTabScreen";
 import ProfileTabScreen from "../screens/tabs/ProfileTabScreen";
 import SettingTabScreen from "../screens/tabs/SettingTabScreen";
 import NotiTabScreen from "../screens/tabs/NotiTabScreen";
+import theme from "../style/colors";
 
 
 const Tab = createBottomTabNavigator();
@@ -20,7 +21,7 @@ export default function TabStack() {
         headerShown: false,
         tabBarActiveTintColor: "#0047AB", // Active icon color (Blue)
         tabBarInactiveTintColor: "#A0A0A0", // Inactive icon color (Gray)
-        tabBarStyle: {
+        tabBarStyle: {          
           height: 60,
           paddingBottom: 10,
           paddingTop: 5,

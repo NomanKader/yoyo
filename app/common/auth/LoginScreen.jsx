@@ -11,7 +11,7 @@ import {
   BackHandler,
   Alert
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -34,7 +34,7 @@ export default function LoginScreen() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const isValid = username.trim() !== '' && pin.length === 4;
-  useEffect(() => {
+  useFocusEffect(() => {
     const backAction = () => {
       Alert.alert(
         'Exit App',

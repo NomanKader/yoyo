@@ -59,7 +59,7 @@ const TabScreens = () => {
       screenOptions={({ route }) => ({
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.textDark,
-        tabBarStyle: {
+        tabBarStyle: {          
           height: 60,
           borderTopColor: theme.colors.border,
           borderTopWidth: 1,

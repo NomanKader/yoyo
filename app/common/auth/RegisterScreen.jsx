@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: screenWidth * 0.06,
     backgroundColor: '#fff',
-    paddingTop: 20,
+    paddingTop: 3,
   },
   hotelIcon: {
     width: 30,

@@ -257,7 +257,7 @@ export default function DocumentUploadScreen({navigation}) {
         title="Hotel Pictures and Documents"
         onPress={loading ? null : () => navigation.goBack()}
       />
-      <ProgressBar currentStep={4} totalSteps={5} />
+      <ProgressBar  contentContainerStyle={{marginTop: -25}} currentStep={4} totalSteps={5} />
 
       <Text style={styles.subtitle}>
         Please upload your hotel logo and picture, so that customers can see you
@@ -335,7 +335,8 @@ export default function DocumentUploadScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: screenWidth * 0.06,
+    paddingHorizontal: screenWidth * 0.06,
+    paddingTop: 3,
     backgroundColor: '#fff',
   },
   subtitle: {
@@ -403,7 +404,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#007bff',
-    marginTop: 20,
+    marginTop: 20,    
     paddingVertical: 14,
     borderRadius: 6,
     alignItems: 'center',

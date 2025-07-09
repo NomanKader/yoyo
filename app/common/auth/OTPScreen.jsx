@@ -149,7 +149,7 @@ export default function OTPScreen({route}) {
         onPress={loading ? null : () => navigation.goBack()}
       />
       <ProgressBar
-        contentContainerStyle={{marginTop: -10}}
+        contentContainerStyle={{marginTop: -25}}
         currentStep={2}
         totalSteps={5}
       />
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: screenWidth * 0.06,
-    paddingTop: 20,
+    paddingTop: 3,
     backgroundColor: '#fff',
   },
   infoText: {

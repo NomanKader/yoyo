@@ -8,7 +8,7 @@ import {
   Image,
   BackHandler
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import HeaderComponent from '../../apartment/components/Divider/HeaderComponent';
 import hotelIcon from '../assets/hotel.png';
 import apartmentIcon from '../assets/apartment.png';
@@ -35,7 +35,7 @@ export default function SelectPropertyScreen() {
     apartments: [],
   });
   // write backhandler
-  useEffect(() => {
+  useFocusEffect(() => {
     const backAction = () => {
       navigation.navigate('Login') // 👈 This goes to the previous screen
       return true; // prevent default behavior (exit app)
