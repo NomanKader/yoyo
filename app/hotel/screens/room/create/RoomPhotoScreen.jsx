@@ -138,9 +138,9 @@ const RoomPhotoScreen = ({ navigation }) => {
               <Image source={{ uri: image.uri }} style={styles.image} />
               <TouchableOpacity
                 style={styles.deleteIcon}
-                onPress={() => handleDeleteImage(index)}
+                onPress={() => handleDeleteImage(index)}                
               >
-                <Icon name="delete" size={20} color="#fff" />
+                <Icon name="delete" size={20} color={theme.colors.error} />
               </TouchableOpacity>
             </View>
           ))}
@@ -242,9 +242,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    backgroundColor: 'red',
+    backgroundColor: 'white',
     borderRadius: 12,
     padding: 4,
+    elevation:3
   },
   addBlock: {
     height: 180,

@@ -19,6 +19,17 @@ export default function RoomBedroomDetailScreen({ navigation }) {
     satelliteChannel: false,
   });
 
+  const areAllSelected = Object.values(features).every(Boolean);
+
+  const toggleAll = () => {
+    const newValue = !areAllSelected;
+    const updated = {};
+    for (const key in features) {
+      updated[key] = newValue;
+    }
+    setFeatures(updated);
+  };
+
   const toggleFeature = (feature) => {
     setFeatures((prevFeatures) => ({
       ...prevFeatures,
@@ -36,23 +47,42 @@ export default function RoomBedroomDetailScreen({ navigation }) {
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
           <StepAppBarComponent title="Add bedroom details" currentStep="4" navigation={navigation} />
           <Text style={CommonStyles.header}>Add bedroom details</Text>
-          <Text style={CommonStyles.subHeader}>Please select all the room features available in this category.</Text>
+          <Text style={CommonStyles.subHeader}>
+            Please select all the room features available in this category.
+          </Text>
+
           <View style={CommonStyles.room.inputContainer}>
+            {/* Select All checkbox at the top */}
+            <CheckBoxComponent
+              selectAll={true}
+              selectAllLabel="Select All"
+              isAllSelected={areAllSelected}
+              onToggleAll={toggleAll}
+            />
+
+            {/* Feature checkboxes */}
             {Object.keys(features).map((featureKey) => (
               <CheckBoxComponent
                 key={featureKey}
-                label={featureKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                label={featureKey
+                  .replace(/([A-Z])/g, ' $1')
+                  .replace(/^./, (str) => str.toUpperCase())}
                 isChecked={features[featureKey]}
                 onToggle={() => toggleFeature(featureKey)}
               />
             ))}
           </View>
         </ScrollView>
+
         <View style={styles.buttonContainer}>
           <DefaultButtonComponent
             title="Proceed"
             backgroundColor={theme.colors.primary}
-            onPress={() => navigation.navigate('AppStack',{screen:'RoomViewScreen'})}
+            onPress={() =>
+              navigation.navigate('AppStack', {
+                screen: 'RoomViewScreen',
+              })
+            }
           />
         </View>
       </KeyboardAvoidingView>

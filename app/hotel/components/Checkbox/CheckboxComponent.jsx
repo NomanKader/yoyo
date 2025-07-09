@@ -8,29 +8,34 @@ export default function CheckBoxComponent({
   label,
   isChecked,
   onToggle,
-  isSwap,
+  selectAll = false,
+  selectAllLabel = 'Select All',
+  isAllSelected = false,
+  onToggleAll = () => {},
 }) {
+  if (selectAll) {
+    // Only render "Select All" checkbox
+    return (
+      <View style={CommonStyles.infoContainer}>
+        <Text style={[CommonStyles.infoLabel,{color:theme.colors.primary}]}>{selectAllLabel}</Text>
+        <CheckBox 
+          isChecked={isAllSelected}
+          onClick={onToggleAll}
+          checkBoxColor={theme.colors.primary}
+        />
+      </View>
+    );
+  }
+
+  // Normal feature checkbox
   return (
     <View style={CommonStyles.infoContainer}>
-      {isSwap ? (
-        <>
-          <CheckBox            
-            isChecked={isChecked}
-            onClick={onToggle}
-            checkBoxColor={theme.colors.primary}
-          />
-          <Text style={[CommonStyles.infoLabel,{marginTop:10,marginLeft:10}]}>{label}</Text>
-        </>
-      ) : (
-        <>
-          <Text style={CommonStyles.infoLabel}>{label}</Text>
-          <CheckBox
-            isChecked={isChecked}
-            onClick={onToggle}
-            checkBoxColor={theme.colors.primary}
-          />
-        </>
-      )}
+      <Text style={CommonStyles.infoLabel}>{label}</Text>
+      <CheckBox
+        isChecked={isChecked}
+        onClick={onToggle}
+        checkBoxColor={theme.colors.primary}
+      />
     </View>
   );
 }
