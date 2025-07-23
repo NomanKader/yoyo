@@ -17,3 +17,23 @@ export const GetAllFacilities = async ({languageId, hotelId}) => {
     throw error;
   }
 };
+
+export const GetAllAmenities= async ({languageId, hotelId}) => {
+  try {
+    const response = await HttpService.techForgeAPI.get(
+      '/amenity/getallamenity',{
+       headers: {
+           languageId:languageId,
+           hotelId:hotelId
+        }
+      }
+    );
+    console.log('get all facilites response:', response.data);
+    return response.data; // Return success and message
+  } catch (error) {
+    console.error('get all facilites error:', error);
+    throw error;
+  }
+};
+
+

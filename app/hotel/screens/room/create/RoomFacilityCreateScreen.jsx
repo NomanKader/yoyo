@@ -33,7 +33,7 @@ export default function RoomFacilityCreateScreen({ route, navigation }) {
         const rawFacilityData = response.data.data;
         const mappedFacilities = rawFacilityData.map(item => ({
           label: item.facilityName,
-          value: item.id.toString(),
+          value: item.facilityToHotelId.toString(),
           price: item.price,
         }));
         setFacilityOptions(mappedFacilities);

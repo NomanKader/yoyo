@@ -19,6 +19,7 @@ import AuthStack from './app/common/navigation/AuthStack';
 import AppStack from './app/common/navigation/AppStack';
 import theme from './app/apartment/style/colors';
 import { navigationRef } from './app/common/navigation/NavigationService';
+import RoomProvider, { RoomContext } from './app/hotel/context/RoomContext';
 
 // 🔐 Create Auth Context
 export const AuthContext = createContext();
@@ -39,6 +40,7 @@ const MyTheme = {
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [type, setType] = useState('category'); // Default type
 
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -75,6 +77,7 @@ export default function App() {
                 setLoading,
               }}
             >
+             <RoomProvider value={{ type, setType }}>
               <SafeAreaView
                 style={{ flex: 1, backgroundColor: theme.colors.primary }}
               >
@@ -95,6 +98,7 @@ export default function App() {
                   )}
                 </NavigationContainer>
               </SafeAreaView>
+              </RoomProvider>
             </AuthContext.Provider>
           </HotelLanguageProvider>
         </LanguageProvider>

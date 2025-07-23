@@ -17,11 +17,12 @@ import dashboardTabIcon from '../assets/icons/tab/dashboardTabIcon.png';
 import bookingTabIcon from '../assets/icons/tab/bookingTabIcon.png';
 import accountTabIcon from '../assets/icons/tab/profileTabIcon.png';
 import BookingRoomCategoryScreen from '../screens/booking/BookingRoomCategoryScreen';
+import { RoomContext } from '../context/RoomContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-const options = { headerShown: false };
+
 
 // 🧩 Custom center tab button (Plus icon)
 const CustomPlusButton = ({ onPress }) => (
@@ -44,6 +45,8 @@ const CustomPlusButton = ({ onPress }) => (
 
 const TabScreens = () => {
   const { translate } = useContext(LanguageContext);
+  const {type,setType}=useContext(RoomContext)
+  const options = { headerShown: false,tabBarStyle: { display: type=='list'?'none':'flex' } };
 
   const tabNames = {
     Dashboard: translate?.navigation?.Dashboard || 'Dashboard',

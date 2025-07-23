@@ -42,7 +42,7 @@ const RoomListComponent = ({ data, navigation, type, onPress }) => {
                 {isCategory ? item.roomName : item.roomNumber}
               </Text>
               <Text style={styles.subtitle}>
-                {isCategory ? `${item.priceKyats.toLocaleString()} Ks` : item.roomCategory}
+                {isCategory ? `${item?.priceKyats?.toLocaleString()} Ks` : item?.roomCategory}
               </Text>
             </View>
             <View style={styles.statusWrapper}>

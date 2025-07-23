@@ -32,10 +32,11 @@ const LanguageSettingsScreen = ({ navigation }) => {
     fetchLanguagePreference();
   }, []);
 
-  const changeLanguage = async (newLanguage) => {
+  const changeLanguage = async (newLanguage,languageId) => {
     setSelectedLanguage(newLanguage);
     setLanguage(newLanguage);        
     await AsyncStorage.setItem('language_preference', newLanguage);
+    await AsyncStorage.setItem('language_id', languageId);
   };
 
   return (
@@ -52,7 +53,7 @@ const LanguageSettingsScreen = ({ navigation }) => {
                   {/* Make the container Touchable */}
                   <TouchableOpacity 
                     style={styles.radioButtonContainer} 
-                    onPress={() => changeLanguage(lang.code)}
+                    onPress={() => changeLanguage(lang.code,lang.id)}
                   >
                     <View style={[styles.radio, selectedLanguage === lang.code && styles.radioSelected]}>
                       {selectedLanguage === lang.code && <View style={styles.radioInner} />}

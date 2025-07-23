@@ -1,23 +1,50 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import theme from '../../../style/colors';
 import DefaultButtonComponent from '../../../components/Button/DefaultButtonComponent';
 import StepAppBarComponent from '../../../components/AppBar/StepAppBarComponent';
 import { CommonStyles } from '../../../style/CommonStyles';
 import CheckBoxComponent from '../../../components/Checkbox/CheckboxComponent';
+import { GetAllAmenities } from '../../../services/FacilitiesAndAmentitiesService';
 
 export default function RoomBedroomDetailScreen({ navigation }) {
-  const [features, setFeatures] = useState({
-    wardrobe: false,
-    handSanitiser: false,
-    desk: false,
-    seatingArea: false,
-    diningArea: false,
-    washingMachine: false,
-    wheelchairAccessible: false,
-    satelliteChannel: false,
-  });
+  const [features, setFeatures] = useState({});
+  const [featureOptions, setFeatureOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchAmenities = async () => {
+      try {
+        const response = await GetAllAmenities({ languageId: 1, hotelId: 1 });
+        if (response) {
+          const bedroomFeatures = response?.data?.data?.filter(
+            item => item.amenityTypeName === 'BedRoom'
+          );
+
+          const initialFeatures = {};
+          const formattedOptions = bedroomFeatures.map(item => {
+            initialFeatures[item.id] = false;
+            return { label: item.amenityName, value: item.id };
+          });
+
+          console.log("BedRoom Features:", formattedOptions);
+          setFeatureOptions(formattedOptions);
+          setFeatures(initialFeatures);
+        }
+      } catch (error) {
+        console.error('Error fetching amenities:', error);
+      }
+    };
+
+    fetchAmenities();
+  }, []);
 
   const areAllSelected = Object.values(features).every(Boolean);
 
@@ -30,10 +57,10 @@ export default function RoomBedroomDetailScreen({ navigation }) {
     setFeatures(updated);
   };
 
-  const toggleFeature = (feature) => {
-    setFeatures((prevFeatures) => ({
-      ...prevFeatures,
-      [feature]: !prevFeatures[feature],
+  const toggleFeature = (featureId) => {
+    setFeatures((prev) => ({
+      ...prev,
+      [featureId]: !prev[featureId],
     }));
   };
 
@@ -52,7 +79,6 @@ export default function RoomBedroomDetailScreen({ navigation }) {
           </Text>
 
           <View style={CommonStyles.room.inputContainer}>
-            {/* Select All checkbox at the top */}
             <CheckBoxComponent
               selectAll={true}
               selectAllLabel="Select All"
@@ -60,15 +86,12 @@ export default function RoomBedroomDetailScreen({ navigation }) {
               onToggleAll={toggleAll}
             />
 
-            {/* Feature checkboxes */}
-            {Object.keys(features).map((featureKey) => (
+            {featureOptions.map((feature) => (
               <CheckBoxComponent
-                key={featureKey}
-                label={featureKey
-                  .replace(/([A-Z])/g, ' $1')
-                  .replace(/^./, (str) => str.toUpperCase())}
-                isChecked={features[featureKey]}
-                onToggle={() => toggleFeature(featureKey)}
+                key={feature.value}
+                label={feature.label}
+                isChecked={features[feature.value]}
+                onToggle={() => toggleFeature(feature.value)}
               />
             ))}
           </View>
