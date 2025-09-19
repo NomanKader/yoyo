@@ -6,10 +6,11 @@ import DefaultButtonComponent from '../../../components/Button/DefaultButtonComp
 import StepAppBarComponent from '../../../components/AppBar/StepAppBarComponent';
 import { CommonStyles } from '../../../style/CommonStyles';
 import TextAreaComponent from '../../../components/Typography/TextAreaComponent';
+import { useRoomData } from '../../../context/CreatCategoryContext';
 
 const RoomRuleScreen = ({ navigation }) => {
   const [roomRules, setRoomRules] = useState('');
-
+  const { roomData, updateRoomData } = useRoomData()
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={CommonStyles.scrollViewContainer}>
@@ -20,8 +21,8 @@ const RoomRuleScreen = ({ navigation }) => {
           <View style={CommonStyles.component}>
             <TextAreaComponent
               placeholder="Write some rules on this category"
-              value={roomRules}
-              onChange={setRoomRules}
+              value={roomData.rules}
+              onChange={(v) => updateRoomData({ rules: v })}
               backgroundColor={theme.colors.textLightGray}
             />
           </View>
@@ -31,7 +32,8 @@ const RoomRuleScreen = ({ navigation }) => {
             title="Proceed"
             backgroundColor={theme.colors.primary}
             onPress={() => {
-              navigation.navigate('AppStack',{screen:'RoomPhotoScreen'})
+              navigation.navigate('AppStack', { screen: 'RoomPhotoScreen' })
+              console.log("refef", roomData)
             }}
           />
         </View>

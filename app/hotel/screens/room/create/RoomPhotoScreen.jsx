@@ -8,6 +8,8 @@ import {
   Image,
   Platform,
   PermissionsAndroid,
+  Alert,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -18,162 +20,257 @@ import { CommonStyles } from '../../../style/CommonStyles';
 import StepAppBarComponent from '../../../components/AppBar/StepAppBarComponent';
 import DefaultButtonComponent from '../../../components/Button/DefaultButtonComponent';
 import BottomSheetComponent from '../../../components/BottomSheet/BottomSheetComponent';
-import createIcon from '../../../assets/icons/createIcon.png';
-import DividerComponent from '../../../../apartment/components/Divider/DividerComponent';
+import { useRoomData } from '../../../context/CreatCategoryContext';
+import { CreateRoomCategory } from '../../../services/RoomService';
+import TextInputComponent from '../../../components/TextInput/TextInputComponent';
 
-const chipLabels = ['Property', 'Dining Area', 'Gym'];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const pickerOpts = { mediaType: 'photo', quality: 0.9, includeBase64: true };
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const H_PADDING = 20;
+const GRID_GAP = 10;
+const COLS = 3;
+const THUMB_SIZE = Math.floor(
+  (SCREEN_WIDTH - H_PADDING * 2 - GRID_GAP * (COLS - 1)) / COLS
+);
 
 const RoomPhotoScreen = ({ navigation }) => {
-  const [selectedChip, setSelectedChip] = useState('Property');
-  const [imageGroups, setImageGroups] = useState({
-    Property: [],
-    'Dining Area': [],
-    Gym: [],
-  });
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const { roomData, updateRoomData } = useRoomData();
+
+  const [images, setImages] = useState([]); // [{ uri, base64, fileName, type, fileSize }]
+  const [editingIndex, setEditingIndex] = useState(null);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
 
-  const currentImages = imageGroups[selectedChip];
+  const hasAny = images.length > 0;
 
   const openBottomSheet = (index) => {
-    setSelectedIndex(index);
+    setEditingIndex(index); // if index is existing item => replace, else add new
     setIsBottomSheetVisible(true);
   };
+  const closeBottomSheet = () => setIsBottomSheetVisible(false);
 
-  const closeBottomSheet = () => {
-    setIsBottomSheetVisible(false);
-  };
-
-  const handleImagePick = (response) => {
-    if (response.assets && response.assets[0].uri) {
-      const updated = [...imageGroups[selectedChip]];
-      if (selectedIndex !== null && selectedIndex < updated.length) {
-        updated[selectedIndex] = { uri: response.assets[0].uri };
-      } else {
-        updated.push({ uri: response.assets[0].uri });
-      }
-      setImageGroups({ ...imageGroups, [selectedChip]: updated });
+  const pickDone = (response) => {
+    if (!response?.assets?.length) {
+      closeBottomSheet();
+      return;
     }
+    const a = response.assets[0];
+
+    if (a.fileSize && a.fileSize > MAX_FILE_SIZE) {
+      Alert.alert('File too large', 'Please select a photo up to 5 MB.');
+      closeBottomSheet();
+      return;
+    }
+
+    const item = {
+      uri: a.uri,
+      base64: a.base64 || '',
+      fileName: a.fileName || `photo_${Date.now()}.jpg`,
+      type: a.type || 'image/jpeg',
+      fileSize: a.fileSize,
+    };
+
+    setImages((prev) => {
+      const next = [...prev];
+      if (editingIndex != null && editingIndex < next.length) {
+        next[editingIndex] = item; // replace existing
+      } else {
+        next.push(item); // add new
+      }
+      return next;
+    });
+
     closeBottomSheet();
   };
 
+  const handleGallery = () => launchImageLibrary(pickerOpts, pickDone);
+
   const requestCameraPermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-          {
-            title: 'Camera Permission',
-            message: 'App needs camera access to take pictures.',
-            buttonPositive: 'OK',
-            buttonNegative: 'Cancel',
-          }
-        );
-        return granted === PermissionsAndroid.RESULTS.GRANTED;
-      } catch (err) {
-        console.warn(err);
-        return false;
-      }
+    if (Platform.OS !== 'android') return true;
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Camera Permission',
+          message: 'Allow camera to take photos.',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+        }
+      );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    } catch {
+      return false;
     }
-    return true;
   };
 
   const handleCamera = async () => {
-    const hasPermission = await requestCameraPermission();
-    if (!hasPermission) return;
-
-    launchCamera({ mediaType: 'photo', includeBase64: false }, handleImagePick);
+    const ok = await requestCameraPermission();
+    if (!ok) return;
+    launchCamera(pickerOpts, pickDone);
   };
 
-  const handleGallery = () => {
-    launchImageLibrary({ mediaType: 'photo' }, handleImagePick);
+  const handleDelete = (index) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleDeleteImage = (index) => {
-    const updated = [...imageGroups[selectedChip]];
-    updated.splice(index, 1);
-    setImageGroups({ ...imageGroups, [selectedChip]: updated });
+  const handleSubmit = async () => {
+    if (!hasAny) {
+      Alert.alert('Add a photo', 'Please upload at least one photo.');
+      return;
+    }
+
+    const roomCategoryPhotos = images
+      .filter((i) => !!i.base64)
+      .map((i) => i.base64);
+
+    if (roomCategoryPhotos.length === 0) {
+      Alert.alert('No image data', 'Selected images have no base64 content.');
+      return;
+    }
+
+    const postBody = {
+      roomTypeId: roomData?.roomTypeId,
+      description: [
+        {
+          langaugeId: 1,
+          description: roomData?.description,
+          rules: roomData?.rules,
+        },
+      ],
+      status: 1,
+      pricePerNight: roomData?.pricePerNight,
+      maxOccupancy: roomData?.maxOccupancy,
+      roomSize: roomData?.roomSize,
+      includesBreakfast: !!roomData?.includesBreakfast,
+      isExtraBedAllowed: roomData?.isExtraBedAllowed,
+      extraBedLimit: roomData?.extraBedLimit,
+      roomCategoryPhotos, // string[]
+      amenities: roomData?.amenities,
+      facilities: roomData?.facilities,
+      roomBedType: [
+        {
+          bedTypeId: roomData.bedTypeId,
+          isExtraBed: roomData.isExtraBed
+        }
+      ]
+    };
+    console.log("body", JSON.stringify(postBody))
+
+    try {
+      const response = await CreateRoomCategory({
+        languageId: 1,
+        hotelId: 1,
+        body: postBody,
+      });
+      console.log('Create category response', response);
+      // navigation.navigate('SuccessScreen', {...});
+    } catch (error) {
+      console.log('Create category error', error);
+      Alert.alert('Error', 'Failed to create category. Please try again.');
+    }
   };
 
   return (
-    <SafeAreaView style={CommonStyles.scrollViewContainer}>      
-      <StepAppBarComponent
-        title="Add Photos"
-        currentStep={8}
-        navigation={navigation}
-      />
-      <ScrollView contentContainerStyle={styles.container}>
+    <SafeAreaView style={CommonStyles.scrollViewContainer}>
+      <StepAppBarComponent title="Add Photos" currentStep={8} navigation={navigation} />
+
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         <Text style={CommonStyles.header}>Add Photos</Text>
         <Text style={CommonStyles.subHeader}>
           Please upload at least one photo for this category to be created.
         </Text>
 
-        {/* Chips */}
-        <View style={styles.chipContainer}>
-          {chipLabels.map((label) => (
-            <TouchableOpacity
-              key={label}
-              style={[
-                styles.chip,
-                selectedChip === label && styles.chipSelected,
-              ]}
-              onPress={() => setSelectedChip(label)}
-            >
-              <Text
-                style={[
-                  styles.chipText,
-                  selectedChip === label && styles.chipTextSelected,
-                ]}
-              >
-                {label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        {/* Empty state */}
+        {!hasAny && (
+          <TouchableOpacity
+            onPress={() => openBottomSheet(images.length)}
+            style={[styles.emptyTile, { height: THUMB_SIZE * 1.6 }]}
+          >
+            <Icon name="add" size={32} />
+            <Text style={styles.addTileText}>Add photos</Text>
+          </TouchableOpacity>
+        )}
 
-        {/* Image Preview Grid */}
-        <View style={styles.imageGrid}>
-          {currentImages.map((image, index) => (
-            <View key={index} style={styles.imageWrapper}>
-              <Image source={{ uri: image.uri }} style={styles.image} />
+        {/* Grid of ALL photos (equal size) */}
+        {hasAny && (
+          <>
+            <Text style={styles.gridTitle}>Uploaded Photos ({images.length})</Text>
+            <View style={styles.grid}>
+              {images.map((img, idx) => (
+                <View
+                  key={`${img.uri}-${idx}`}
+                  style={[styles.thumb, { width: THUMB_SIZE, height: THUMB_SIZE }]}
+                >
+                  <TouchableOpacity
+                    activeOpacity={0.85}
+                    onPress={() => openBottomSheet(idx)}
+                    style={StyleSheet.absoluteFill}
+                  >
+                    <Image source={{ uri: img.uri }} style={styles.thumbImage} />
+                  </TouchableOpacity>
+
+                  <View style={styles.thumbActions}>
+                    <TouchableOpacity
+                      style={styles.iconBtn}
+                      onPress={() => openBottomSheet(idx)}
+                    >
+                      <Icon name="edit" size={16} color="#000" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.iconBtn}
+                      onPress={() => handleDelete(idx)}
+                    >
+                      <Icon name="delete" size={16} color={theme.colors.error} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ))}
+
+              {/* Add tile at the end */}
               <TouchableOpacity
-                style={styles.deleteIcon}
-                onPress={() => handleDeleteImage(index)}                
+                onPress={() => openBottomSheet(images.length)}
+                style={[styles.thumbAdd, { width: THUMB_SIZE, height: THUMB_SIZE }]}
               >
-                <Icon name="delete" size={20} color={theme.colors.error} />
+                <Icon name="add" size={28} color="#111827" />
+                <Text style={styles.addTileText}>Add</Text>
               </TouchableOpacity>
             </View>
-          ))}
+          </>
+        )}
 
-          {/* Add Image Block */}
-          <TouchableOpacity
-            style={styles.addBlock}
-            onPress={() => openBottomSheet(currentImages.length)}
-          >
-            <Icon name="add" size={32} color={theme.colors.primary} />
-            <Text style={styles.addText}>Add Image</Text>
-            <Text style={styles.sizeText}>( Max. size 5 MB )</Text>
-          </TouchableOpacity>
-        </View>
+        {/* Optional: keep the original add button too */}
+        <TouchableOpacity
+          style={styles.addMoreBtn}
+          onPress={() => openBottomSheet(images.length)}
+        >
+          <Text style={styles.addMoreText}>+ Add more photo</Text>
+        </TouchableOpacity>
+        <TextInputComponent
+          placeholder="Max Occupancy"
+          value={roomData.maxOccupancy}
+          onChangeText={(v) => updateRoomData({ maxOccupancy: parseInt(v) })}
+          label="Price of Room"
+          keyboardType="numeric"
+        />
       </ScrollView>
 
       <View style={styles.buttonContainer}>
         <DefaultButtonComponent
           title="Continue"
           backgroundColor={theme.colors.primary}
-          onPress={() =>
-            navigation.navigate('SuccessScreen', {
-              header: 'Category Created',
-              nextScreen: 'AppStack',
-              nextScreenParams: { screen: 'RoomCategoryCreateScreen' },
-              navigation,
-              icon: createIcon,
-            })
-          }
+          disabled={!hasAny}
+          onPress={() => {
+            // handleSubmit()
+            navigation.replace('CategoryCreateSuccessScreen', {
+              roomCategoryId: 1, // adjust to your API
+            });
+
+            console.log("roomData", roomData)
+          }}
         />
       </View>
 
-      {/* Bottom Sheet */}
       <BottomSheetComponent
         isVisible={isBottomSheetVisible}
         onClose={closeBottomSheet}
@@ -183,7 +280,7 @@ const RoomPhotoScreen = ({ navigation }) => {
           <Icon name="photo-camera" size={20} color="#000" />
           <Text style={styles.optionText}>Camera</Text>
         </TouchableOpacity>
-        <View style={{ height: 1, backgroundColor: '#ccc', marginVertical: 5 }} />
+        <View style={styles.divider} />
         <TouchableOpacity style={styles.option} onPress={handleGallery}>
           <Icon name="photo-library" size={20} color="#000" />
           <Text style={styles.optionText}>Gallery</Text>
@@ -195,84 +292,97 @@ const RoomPhotoScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: H_PADDING,
+    paddingBottom: 8,
+    gap: 14,
   },
-  chipContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 10,
-  },
-  chip: {
+
+  // Empty state
+  emptyTile: {
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: '#fff',
-  },
-  chipSelected: {
-    backgroundColor: theme.colors.primary,
-  },
-  chipText: {
-    color: '#000',
-    fontWeight: '500',
-  },
-  chipTextSelected: {
-    color: '#fff',
-  },
-  imageGrid: {
-    gap: 15,
-  },
-  imageWrapper: {
-    position: 'relative',
-    width: '100%',
-    height: 180,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 12,
-    justifyContent: 'center',
+    borderColor: '#E5E7EB',
+    backgroundColor: '#FFF',
     alignItems: 'center',
-    overflow: 'hidden',
+    justifyContent: 'center',
+    gap: 8,
   },
-  image: {
+
+  gridTitle: {
+    marginTop: 6,
+    marginBottom: 6,
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111827',
+  },
+  grid: {
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    columnGap: GRID_GAP,
+    rowGap: GRID_GAP,
+  },
+  thumb: {
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#F3F4F6',
+  },
+  thumbImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
-  deleteIcon: {
+  thumbActions: {
     position: 'absolute',
-    top: 10,
-    right: 10,
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 4,
-    elevation:3
+    top: 6,
+    right: 6,
+    flexDirection: 'row',
+    gap: 6,
   },
-  addBlock: {
-    height: 180,
+  iconBtn: {
+    backgroundColor: '#fff',
+    borderRadius: 999,
+    padding: 6,
+  },
+  thumbAdd: {
     borderRadius: 12,
-    backgroundColor: '#f5f5f5',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
-    gap: 5,
+    gap: 6,
+    backgroundColor: '#FFF',
   },
-  addText: {
-    fontWeight: '500',
-    fontSize: 16,
-    color: '#333',
-  },
-  sizeText: {
+  addTileText: {
     fontSize: 12,
-    color: 'gray',
+    color: '#111827',
+    fontWeight: '600',
+  },
+
+  addMoreBtn: {
+    alignSelf: 'flex-start',
+    backgroundColor: theme.colors.primary,
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    marginTop: 12,
+  },
+  addMoreText: {
+    color: '#fff',
+    fontWeight: '600',
   },
   option: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 15,
+    padding: 16,
   },
   optionText: {
-    fontSize: 18,
+    fontSize: 16,
     marginLeft: 10,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#e5e7eb',
   },
   buttonContainer: {
     padding: 16,

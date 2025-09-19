@@ -42,6 +42,9 @@ import BottomTabStack from './TabStack';
 import AccountInfoScreen from '../screens/account/AccountInfoScreen';
 import BasicHotelDetailScreen from '../screens/account/BasicHotelDetailScreen';
 import CreateNewPinScreen from '../../common/auth/CreateNewPinScreen';
+import { RoomCreationDataProvider } from '../context/RoomCreationContext';
+import { RoomDataProvider } from '../context/CreatCategoryContext';
+import CategoryCreateSuccessScreen from '../screens/room/create/CategoryCreateSuccessScreen';
 
 
 
@@ -51,55 +54,64 @@ const AppStack = () => {
   const hiddenHeaderOptions = { headerShown: false };
 
   return (
-    <Stack.Navigator>
-      <Stack.Screen name='TabStack' component={BottomTabStack} options={hiddenHeaderOptions} />
-      <Stack.Screen name='Home' component={HomeScreen} options={{ headerTitle: 'Welcome To YoYo' }} />
-      <Stack.Screen name='Unauthorized' component={UnauthorizedScreen} options={hiddenHeaderOptions} />
-      <Stack.Screen name='AccountInfo' component={AccountInfoScreen} options={hiddenHeaderOptions} />
-      <Stack.Screen name='BasicHotelDetail' component={BasicHotelDetailScreen} options={hiddenHeaderOptions} />  
-      {/* Room */}
-      <Stack.Screen name="RoomDetailScreen" component={RoomDetailScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomCategoryCreateScreen' component={RoomCategoryCreateScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomFacilityCreateScreen' component={RoomFacilityCreateScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomBasicFeatureScreen' component={RoomBasicFeatureScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomBedroomDetailScreen' component={RoomBedroomDetailScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomViewScreen' component={RoomViewScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomRuleScreen' component={RoomRuleScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='RoomPhotoScreen' component={RoomPhotoScreen} options={hiddenHeaderOptions}/>
-      {/* Booking */}
-      <Stack.Screen name='BookingDetailScreen' component={BookingDetailScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='SuccessScreen' component={SuccessScreenComponent} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='SearchScreen' component={SearchScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='BookingRoomCategoryScreen' component={BookingRoomCategoryScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='BookingRoomListScreen' component={BookingRoomListScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='CreateBookingScreen' component={CreateBookingScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='BookingCancelScreen' component={BookingCancelScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='QRScanScreen' component={QRScanScreen} options={hiddenHeaderOptions}/>
-      {/* Payment */}
-      <Stack.Screen name='PaymentScreen' component={PaymentScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='CheckInStatusScreen' component={CheckInStatusScreen} options={hiddenHeaderOptions}/>
-      {/* Account */}
-      <Stack.Screen name='LanguageSettingScreen' component={LanguageSettingsScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='FacilitySettingScreen' component={FacilitySettingScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='ManageRoleScreen' component={ManageRoleScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='AddUserScreen' component={AddUserScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='EditUserScreen' component={EditUserScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='UpdatePasswordScreen' component={UpdatePasswordScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='BasicDetailScreen' component={BasicDetailScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='UploadPictureScreen' component={UploadPictureScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='WalletScreen' component={WalletScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='AddBankAccountScreen' component={AddBankAccountScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='WithdrawScreen' component={WithdrawScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='OTPScreen' component={OTPScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='WithdrawSuccessScreen' component={WithdrawSuccessScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='ManageDiscountScreen' component={ManageDiscountScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='BookingCancelSettingScreen' component={BookingCancelSettingScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='AddOnPriceFeatureSettingScreen' component={AddOnPriceFeatureSettingScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='HistoryScreen' component={HistoryScreen} options={hiddenHeaderOptions}/>
-      <Stack.Screen name='CreateNewPin' component={CreateNewPinScreen} options={hiddenHeaderOptions}/>
+    <RoomCreationDataProvider>
+      <RoomDataProvider>
 
-    </Stack.Navigator>
-  );
+        <Stack.Navigator>
+          <Stack.Screen name='TabStack' component={BottomTabStack} options={hiddenHeaderOptions} />
+          <Stack.Screen name='Home' component={HomeScreen} options={{ headerTitle: 'Welcome To YoYo' }} />
+          <Stack.Screen name='Unauthorized' component={UnauthorizedScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='AccountInfo' component={AccountInfoScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='BasicHotelDetail' component={BasicHotelDetailScreen} options={hiddenHeaderOptions} />
+          {/* Room */}
+          <Stack.Screen name="RoomDetailScreen" component={RoomDetailScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='RoomCategoryCreateScreen' component={RoomCategoryCreateScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='RoomFacilityCreateScreen' component={RoomFacilityCreateScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='RoomBasicFeatureScreen' component={RoomBasicFeatureScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='RoomBedroomDetailScreen' component={RoomBedroomDetailScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='RoomViewScreen' component={RoomViewScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='RoomRuleScreen' component={RoomRuleScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='RoomPhotoScreen' component={RoomPhotoScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='CategoryCreateSuccessScreen' component={CategoryCreateSuccessScreen} options={hiddenHeaderOptions} />
+
+          {/* Booking */}
+          <Stack.Screen name='BookingDetailScreen' component={BookingDetailScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='SuccessScreen' component={SuccessScreenComponent} options={hiddenHeaderOptions} />
+          <Stack.Screen name='SearchScreen' component={SearchScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='BookingRoomCategoryScreen' component={BookingRoomCategoryScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='BookingRoomListScreen' component={BookingRoomListScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='CreateBookingScreen' component={CreateBookingScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='BookingCancelScreen' component={BookingCancelScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='QRScanScreen' component={QRScanScreen} options={hiddenHeaderOptions} />
+          {/* Payment */}
+          <Stack.Screen name='PaymentScreen' component={PaymentScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='CheckInStatusScreen' component={CheckInStatusScreen} options={hiddenHeaderOptions} />
+          {/* Account */}
+          <Stack.Screen name='LanguageSettingScreen' component={LanguageSettingsScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='FacilitySettingScreen' component={FacilitySettingScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='ManageRoleScreen' component={ManageRoleScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='AddUserScreen' component={AddUserScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='EditUserScreen' component={EditUserScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='UpdatePasswordScreen' component={UpdatePasswordScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='BasicDetailScreen' component={BasicDetailScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='UploadPictureScreen' component={UploadPictureScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='WalletScreen' component={WalletScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='AddBankAccountScreen' component={AddBankAccountScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='WithdrawScreen' component={WithdrawScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='OTPScreen' component={OTPScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='WithdrawSuccessScreen' component={WithdrawSuccessScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='ManageDiscountScreen' component={ManageDiscountScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='BookingCancelSettingScreen' component={BookingCancelSettingScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='AddOnPriceFeatureSettingScreen' component={AddOnPriceFeatureSettingScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='HistoryScreen' component={HistoryScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='CreateNewPin' component={CreateNewPinScreen} options={hiddenHeaderOptions} />
+
+        </Stack.Navigator>
+      </RoomDataProvider>
+
+    </RoomCreationDataProvider>
+  )
+
 };
 
 export default AppStack;

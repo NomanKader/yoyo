@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -11,20 +11,20 @@ import {
   BackHandler,
   Alert
 } from 'react-native';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import CustomInput from '../../apartment/components/Input/CustomInput';
 import CustomAlert from '../alert/CustomAlert';
-import {Login} from '../service/AuthService';
-import {AuthContext} from '../../../App';
+import { Login } from '../service/AuthService';
+import { AuthContext } from '../../../App';
 
 const screenWidth = Dimensions.get('window').width;
 
 export default function LoginScreen() {
   const navigation = useNavigation();
-  const {setIsAuthenticated, setUserRole} = useContext(AuthContext);
+  const { setIsAuthenticated, setUserRole } = useContext(AuthContext);
 
   const [username, setUsername] = useState('oceanadmain');
   const [pin, setPin] = useState('1234');
@@ -34,39 +34,41 @@ export default function LoginScreen() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const isValid = username.trim() !== '' && pin.length === 4;
-  useFocusEffect(() => {
-    const backAction = () => {
-      Alert.alert(
-        'Exit App',
-        'Are you sure you want to exit?',
-        [
-          {
-            text: 'Cancel',
-            onPress: () => null,
-            style: 'cancel',
-          },
-          {
-            text: 'YES',
-            onPress: () => BackHandler.exitApp(), // 👈 Exits the app
-          },
-        ],
-        { cancelable: false }
+  useFocusEffect(
+    useCallback(() => {
+      const backAction = () => {
+        Alert.alert(
+          'Exit App',
+          'Are you sure you want to exit?',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => null,
+              style: 'cancel',
+            },
+            {
+              text: 'YES',
+              onPress: () => BackHandler.exitApp(), // 👈 Exits the app
+            },
+          ],
+          { cancelable: false }
+        );
+        return true; // prevent default back behavior
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
       );
-      return true; // prevent default back behavior
-    };
-  
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction
-    );
-  
-    return () => backHandler.remove();
-  }, []);
+
+      return () => backHandler.remove();
+    }, [])
+  )
   const handleLogin = async () => {
     setLoading(true);
 
     try {
-      const response = await Login({username, password: pin});
+      const response = await Login({ username, password: pin });
 
       if (response.success) {
         await AsyncStorage.setItem('token', response.data?.access_token || '');
@@ -85,7 +87,7 @@ export default function LoginScreen() {
         // );
         navigation.reset({
           index: 0,
-          routes: [{name: 'SelectProperty'}],
+          routes: [{ name: 'SelectProperty' }],
         });
       } else {
         setErrorMessage(response.message || 'Login failed');
@@ -157,11 +159,11 @@ export default function LoginScreen() {
           (!isValid || loading) && styles.loginButtonDisabled,
         ]}>
         {loading ? (
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <ActivityIndicator
               size="small"
               color="#fff"
-              style={{marginRight: 8}}
+              style={{ marginRight: 8 }}
             />
             <Text style={styles.loginText}>Logging in...</Text>
           </View>

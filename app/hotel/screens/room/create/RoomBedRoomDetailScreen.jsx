@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -14,30 +14,35 @@ import StepAppBarComponent from '../../../components/AppBar/StepAppBarComponent'
 import { CommonStyles } from '../../../style/CommonStyles';
 import CheckBoxComponent from '../../../components/Checkbox/CheckboxComponent';
 import { GetAllAmenities } from '../../../services/FacilitiesAndAmentitiesService';
+import { RoomCreationDataContext } from '../../../context/RoomCreationContext';
+import { useRoomData } from '../../../context/CreatCategoryContext';
 
 export default function RoomBedroomDetailScreen({ navigation }) {
   const [features, setFeatures] = useState({});
   const [featureOptions, setFeatureOptions] = useState([]);
+  const { roomCreationData } = useContext(RoomCreationDataContext);
+  const { roomData, updateRoomData } = useRoomData()
 
+  // 1) When building options, keep both ids
   useEffect(() => {
     const fetchAmenities = async () => {
       try {
-        const response = await GetAllAmenities({ languageId: 1, hotelId: 1 });
-        if (response) {
-          const bedroomFeatures = response?.data?.data?.filter(
-            item => item.amenityTypeName === 'BedRoom'
-          );
+        const bedroomFeatures = roomCreationData.amenities?.filter(
+          item => item.amenityTypeName === 'BedRoom'
+        ) ?? [];
 
-          const initialFeatures = {};
-          const formattedOptions = bedroomFeatures.map(item => {
-            initialFeatures[item.id] = false;
-            return { label: item.amenityName, value: item.id };
-          });
+        const initialFeatures = {};
+        const formattedOptions = bedroomFeatures.map(item => {
+          initialFeatures[item.id] = false; // checkbox uses amenity "id"
+          return {
+            label: item.amenityName,
+            value: item.id,                 // amenity id (for UI state)
+            toHotelId: item.amenityToHotelId, // <-- we need this to save
+          };
+        });
 
-          console.log("BedRoom Features:", formattedOptions);
-          setFeatureOptions(formattedOptions);
-          setFeatures(initialFeatures);
-        }
+        setFeatureOptions(formattedOptions);
+        setFeatures(initialFeatures);
       } catch (error) {
         console.error('Error fetching amenities:', error);
       }
@@ -45,6 +50,41 @@ export default function RoomBedroomDetailScreen({ navigation }) {
 
     fetchAmenities();
   }, []);
+
+
+  // 2) Merge Bedroom picks into existing amenities (don’t wipe Basic Feature)
+  useEffect(() => {
+    if (!featureOptions.length) return;
+
+    // Selected amenity *ids* on this screen
+    const selectedIds = Object.keys(features)
+      .filter(k => features[k])
+      .map(Number);
+
+    // Map amenity id -> amenityToHotelId
+    const idToHotelId = new Map(featureOptions.map(o => [o.value, o.toHotelId]));
+
+    // Convert selected amenity ids to amenityToHotelIds
+    const selectedHotelIds = selectedIds
+      .map(id => idToHotelId.get(id))
+      .filter(id => id != null);
+
+    // All Bedroom amenityToHotelIds (so we can replace only this subset)
+    const bedroomHotelIds = new Set(featureOptions.map(o => o.toHotelId));
+
+    updateRoomData(prev => {
+      const prevAmenities = Array.isArray(prev.amenities) ? prev.amenities : [];
+
+      // keep everything NOT from Bedroom
+      const kept = prevAmenities.filter(a => !bedroomHotelIds.has(a.amenityToHotelId));
+
+      // add current Bedroom selections (de-dup)
+      const add = Array.from(new Set(selectedHotelIds)).map(id => ({ amenityToHotelId: id }));
+
+      return { ...prev, amenities: [...kept, ...add] };
+    });
+  }, [features, featureOptions, updateRoomData]);
+
 
   const areAllSelected = Object.values(features).every(Boolean);
 
@@ -101,10 +141,13 @@ export default function RoomBedroomDetailScreen({ navigation }) {
           <DefaultButtonComponent
             title="Proceed"
             backgroundColor={theme.colors.primary}
-            onPress={() =>
+            onPress={() => {
               navigation.navigate('AppStack', {
                 screen: 'RoomViewScreen',
               })
+              console.log("erre", roomData)
+            }
+
             }
           />
         </View>

@@ -3,15 +3,18 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { CommonStyles } from '../../style/CommonStyles';
 import backIcon from '../../assets/icons/backIcon.png';
 
-const StepAppBarComponent = ({currentStep,navigation}) => {
-  return (    
+const StepAppBarComponent = ({ currentStep, navigation, onBackPress }) => {
+  return (
     <View style={CommonStyles.room.step}>
-      <TouchableOpacity onPress={()=>navigation.goBack()}>
+      <TouchableOpacity onPress={() => {
+        navigation.goBack()
+        if (onBackPress) onBackPress()
+      }}>
         <Image
           source={backIcon} // Use appBarIcon for back icon
           style={CommonStyles.appBarIcon}   // Style for both icons
         />
-      </TouchableOpacity>      
+      </TouchableOpacity>
       <View style={CommonStyles.room.stepContainer}>
         <Text style={CommonStyles.room.stepText}>Step {currentStep} of 8</Text>
       </View>

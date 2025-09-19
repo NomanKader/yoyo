@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -17,21 +17,25 @@ import TypoPriceComponent from '../../../components/Typography/TypoPriceComponen
 import DropdownPickerComponent from '../../../components/Dropdown/DropdownPickerComponent';
 import DividerComponent from '../../../components/Divider/DividerComponent';
 import { GetAllFacilities } from '../../../services/FacilitiesAndAmentitiesService';
+import { RoomCreationDataContext } from '../../../context/RoomCreationContext';
+import LoadingModalComponent from '../../../../common/components/LoadingModalComponent';
+import { useRoomData } from '../../../context/CreatCategoryContext';
 
 export default function RoomFacilityCreateScreen({ route, navigation }) {
-  const { breakfastIncluded } = route.params;
+  const { includesBreakfast } = route.params;
+  const { roomData, updateRoomData } = useRoomData();
+
   const [open, setOpen] = useState(false);
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const [extraBedCount, setExtraBedCount] = useState(1);
   const [facilityOptions, setFacilityOptions] = useState([]);
+  const { roomCreationData } = useContext(RoomCreationDataContext)
 
-  // Fetch facilities
   useEffect(() => {
     const fetchFacilities = async () => {
+      console.log("facitlite", roomCreationData.facilities)
       try {
-        const response = await GetAllFacilities({ languageId: 1, hotelId: 1 });
-        const rawFacilityData = response.data.data;
-        const mappedFacilities = rawFacilityData.map(item => ({
+        const mappedFacilities = roomCreationData.facilities.map(item => ({
           label: item.facilityName,
           value: item.facilityToHotelId.toString(),
           price: item.price,
@@ -45,7 +49,14 @@ export default function RoomFacilityCreateScreen({ route, navigation }) {
     fetchFacilities();
   }, []);
 
-  // Dynamic calculation for extra bed price
+  useEffect(() => {
+    updateRoomData({
+      facilities: selectedFacilities.map((id) => ({
+        facilityToHotelId: Number(id),
+      })),
+    });
+  }, [selectedFacilities, updateRoomData]);
+
   const calculateTotalPrice = () => {
     const extraBedFacility = facilityOptions.find(
       f => f.label.toLowerCase() === 'extra bed'
@@ -54,6 +65,7 @@ export default function RoomFacilityCreateScreen({ route, navigation }) {
     const count = parseInt(extraBedCount, 10);
     return isNaN(count) || count <= 0 ? 0 : count * unitPrice;
   };
+
 
   return (
     <SafeAreaView style={CommonStyles.scrollViewContainer}>
@@ -87,7 +99,7 @@ export default function RoomFacilityCreateScreen({ route, navigation }) {
             />
           </View>
 
-          {breakfastIncluded && (
+          {includesBreakfast && (
             <>
               <TypoPriceComponent label="Breakfast" price="30,000 MMK" />
               <View style={CommonStyles.dividerView}>
@@ -114,8 +126,8 @@ export default function RoomFacilityCreateScreen({ route, navigation }) {
                   <View style={CommonStyles.room.inputContainer}>
                     <TextInputComponent
                       placeholder="Enter number of extra beds"
-                      value={extraBedCount}
-                      onChangeText={setExtraBedCount}
+                      value={roomData.extraBedLimit}
+                      onChangeText={(v) => updateRoomData({ extraBedLimit: parseInt(v) })}
                       label="How many extra beds are allowed?"
                       keyboardType="number-pad"
                     />
@@ -138,10 +150,12 @@ export default function RoomFacilityCreateScreen({ route, navigation }) {
           <DefaultButtonComponent
             title="Proceed"
             backgroundColor={theme.colors.primary}
-            onPress={() =>
+            onPress={() => {
               navigation.navigate('AppStack', {
                 screen: 'RoomBasicFeatureScreen',
               })
+              console.log("eoom", roomData)
+            }
             }
           />
         </View>
