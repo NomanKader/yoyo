@@ -10,6 +10,7 @@ import {
   PermissionsAndroid,
   Alert,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -23,65 +24,77 @@ import BottomSheetComponent from '../../../components/BottomSheet/BottomSheetCom
 import { useRoomData } from '../../../context/CreatCategoryContext';
 import { CreateRoomCategory } from '../../../services/RoomService';
 import TextInputComponent from '../../../components/TextInput/TextInputComponent';
+import { ImageUpload, RemoveImage } from '../../../../common/service/ImageFileService';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const pickerOpts = { mediaType: 'photo', quality: 0.9, includeBase64: true };
+const BASE_IMAGE_URL = 'https://www.12zay.com/easyclickup/upload/hotel/images/';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const H_PADDING = 20;
-const GRID_GAP = 10;
-const COLS = 3;
-const THUMB_SIZE = Math.floor(
-  (SCREEN_WIDTH - H_PADDING * 2 - GRID_GAP * (COLS - 1)) / COLS
-);
 
 const RoomPhotoScreen = ({ navigation }) => {
   const { roomData, updateRoomData } = useRoomData();
 
-  const [images, setImages] = useState([]); // [{ uri, base64, fileName, type, fileSize }]
+  const [images, setImages] = useState([]); // uploaded image names
   const [editingIndex, setEditingIndex] = useState(null);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const hasAny = images.length > 0;
 
   const openBottomSheet = (index) => {
-    setEditingIndex(index); // if index is existing item => replace, else add new
+    setEditingIndex(index);
     setIsBottomSheetVisible(true);
   };
   const closeBottomSheet = () => setIsBottomSheetVisible(false);
 
-  const pickDone = (response) => {
-    if (!response?.assets?.length) {
-      closeBottomSheet();
-      return;
-    }
-    const a = response.assets[0];
+  const pickDone = async (response) => {
+    if (!response?.assets?.length) return closeBottomSheet();
 
-    if (a.fileSize && a.fileSize > MAX_FILE_SIZE) {
+    const image = response.assets[0];
+
+    if (image.fileSize && image.fileSize > MAX_FILE_SIZE) {
       Alert.alert('File too large', 'Please select a photo up to 5 MB.');
-      closeBottomSheet();
-      return;
+      return closeBottomSheet();
     }
 
-    const item = {
-      uri: a.uri,
-      base64: a.base64 || '',
-      fileName: a.fileName || `photo_${Date.now()}.jpg`,
-      type: a.type || 'image/jpeg',
-      fileSize: a.fileSize,
-    };
+    const fileName = image.fileName || image.uri?.split('/').pop();
+    const fileType =
+      image.type ||
+      `image/${(fileName?.split('.').pop() || 'jpeg').toLowerCase()}`;
 
-    setImages((prev) => {
-      const next = [...prev];
-      if (editingIndex != null && editingIndex < next.length) {
-        next[editingIndex] = item; // replace existing
-      } else {
-        next.push(item); // add new
-      }
-      return next;
+    const formData = new FormData();
+    formData.append('myFile', {
+      uri: image.uri || image.path,
+      type: fileType,
+      name: fileName,
     });
+    formData.append('usage', 0);
 
-    closeBottomSheet();
+    try {
+      closeBottomSheet();
+      setUploading(true);
+      const uploadResponse = await ImageUpload(formData);
+
+      if (uploadResponse?.success) {
+        setImages((prev) => {
+          const next = [...prev];
+          if (editingIndex != null && editingIndex < next.length) {
+            next[editingIndex] = uploadResponse.data?.name;
+          } else {
+            next.push(uploadResponse.data?.name);
+          }
+          return next;
+        });
+      }
+    } catch (error) {
+      console.error('Upload failed:', error);
+      Alert.alert('Upload failed', 'Something went wrong while uploading.');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleGallery = () => launchImageLibrary(pickerOpts, pickDone);
@@ -106,27 +119,28 @@ const RoomPhotoScreen = ({ navigation }) => {
 
   const handleCamera = async () => {
     const ok = await requestCameraPermission();
-    if (!ok) return;
-    launchCamera(pickerOpts, pickDone);
+    if (ok) launchCamera(pickerOpts, pickDone);
   };
 
-  const handleDelete = (index) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
-  };
+  const handleDelete = async(index) => {
+    try {
+      const response = await RemoveImage(images[index]);
+      if (response?.success) {
+        console.log('Image removed:', response);
+        setImages((prev) => prev.filter((_, i) => i !== index));
+
+      } else {
+        console.warn('Failed to remove image:', response.message);
+      }
+    } catch (error) {
+      console.error('Image delete error:', error);
+    }
+
+  }
 
   const handleSubmit = async () => {
     if (!hasAny) {
-      Alert.alert('Add a photo', 'Please upload at least one photo.');
-      return;
-    }
-
-    const roomCategoryPhotos = images
-      .filter((i) => !!i.base64)
-      .map((i) => i.base64);
-
-    if (roomCategoryPhotos.length === 0) {
-      Alert.alert('No image data', 'Selected images have no base64 content.');
-      return;
+      return Alert.alert('Add a photo', 'Please upload at least one photo.');
     }
 
     const postBody = {
@@ -145,129 +159,117 @@ const RoomPhotoScreen = ({ navigation }) => {
       includesBreakfast: !!roomData?.includesBreakfast,
       isExtraBedAllowed: roomData?.isExtraBedAllowed,
       extraBedLimit: roomData?.extraBedLimit,
-      roomCategoryPhotos, // string[]
+      roomCategoryPhotos: images,
       amenities: roomData?.amenities,
       facilities: roomData?.facilities,
       roomBedType: [
         {
           bedTypeId: roomData.bedTypeId,
-          isExtraBed: roomData.isExtraBed
-        }
-      ]
+          isExtraBed: roomData.isExtraBed,
+        },
+      ],
     };
-    console.log("body", JSON.stringify(postBody))
 
     try {
+      setSubmitting(true);
       const response = await CreateRoomCategory({
         languageId: 1,
         hotelId: 1,
         body: postBody,
       });
-      console.log('Create category response', response);
-      // navigation.navigate('SuccessScreen', {...});
+
+      if (response.success) {
+        navigation.replace('CategoryCreateSuccessScreen', {
+          roomCategoryId: 1,
+        });
+      }
     } catch (error) {
       console.log('Create category error', error);
       Alert.alert('Error', 'Failed to create category. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <SafeAreaView style={CommonStyles.scrollViewContainer}>
-      <StepAppBarComponent title="Add Photos" currentStep={8} navigation={navigation} />
+      <StepAppBarComponent
+        title="Add Photos"
+        currentStep={8}
+        navigation={navigation}
+      />
 
-      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={CommonStyles.header}>Add Photos</Text>
         <Text style={CommonStyles.subHeader}>
           Please upload at least one photo for this category to be created.
         </Text>
 
-        {/* Empty state */}
-        {!hasAny && (
+        {/* Photos List */}
+        <View style={{ gap: 14, marginTop: 10 }}>
+          {images.map((image, idx) => (
+            <View key={idx} style={styles.verticalCard}>
+              <Image
+                source={{ uri: `${BASE_IMAGE_URL}${image}` }}
+                style={styles.verticalImage}
+              />
+              <View style={styles.cardActions}>
+                <TouchableOpacity
+                  style={styles.iconBtn}
+                  onPress={() => openBottomSheet(idx)}
+                  disabled={uploading || submitting}
+                >
+                  <Icon name="edit" size={18} color="#000" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.iconBtn}
+                  onPress={() => handleDelete(idx)}
+                  disabled={uploading || submitting}
+                >
+                  <Icon name="delete" size={18} color={theme.colors.error} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
+
+          {/* Add photo card */}
           <TouchableOpacity
             onPress={() => openBottomSheet(images.length)}
-            style={[styles.emptyTile, { height: THUMB_SIZE * 1.6 }]}
+            style={styles.addVerticalCard}
+            disabled={uploading || submitting}
           >
-            <Icon name="add" size={32} />
-            <Text style={styles.addTileText}>Add photos</Text>
+            {uploading ? (
+              <ActivityIndicator size="small" color={theme.colors.primary} />
+            ) : (
+              <>
+                <Icon name="add" size={32} color={theme.colors.primary} />
+                <Text style={styles.addTileText}>Add photo</Text>
+              </>
+            )}
           </TouchableOpacity>
-        )}
+        </View>
 
-        {/* Grid of ALL photos (equal size) */}
-        {hasAny && (
-          <>
-            <Text style={styles.gridTitle}>Uploaded Photos ({images.length})</Text>
-            <View style={styles.grid}>
-              {images.map((img, idx) => (
-                <View
-                  key={`${img.uri}-${idx}`}
-                  style={[styles.thumb, { width: THUMB_SIZE, height: THUMB_SIZE }]}
-                >
-                  <TouchableOpacity
-                    activeOpacity={0.85}
-                    onPress={() => openBottomSheet(idx)}
-                    style={StyleSheet.absoluteFill}
-                  >
-                    <Image source={{ uri: img.uri }} style={styles.thumbImage} />
-                  </TouchableOpacity>
-
-                  <View style={styles.thumbActions}>
-                    <TouchableOpacity
-                      style={styles.iconBtn}
-                      onPress={() => openBottomSheet(idx)}
-                    >
-                      <Icon name="edit" size={16} color="#000" />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.iconBtn}
-                      onPress={() => handleDelete(idx)}
-                    >
-                      <Icon name="delete" size={16} color={theme.colors.error} />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              ))}
-
-              {/* Add tile at the end */}
-              <TouchableOpacity
-                onPress={() => openBottomSheet(images.length)}
-                style={[styles.thumbAdd, { width: THUMB_SIZE, height: THUMB_SIZE }]}
-              >
-                <Icon name="add" size={28} color="#111827" />
-                <Text style={styles.addTileText}>Add</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
-
-        {/* Optional: keep the original add button too */}
-        <TouchableOpacity
-          style={styles.addMoreBtn}
-          onPress={() => openBottomSheet(images.length)}
-        >
-          <Text style={styles.addMoreText}>+ Add more photo</Text>
-        </TouchableOpacity>
         <TextInputComponent
           placeholder="Max Occupancy"
           value={roomData.maxOccupancy}
-          onChangeText={(v) => updateRoomData({ maxOccupancy: parseInt(v) })}
-          label="Price of Room"
+          onChangeText={(v) =>
+            updateRoomData({ maxOccupancy: parseInt(v, 10) })
+          }
+          label="Max Occupancy"
           keyboardType="numeric"
+          editable={!uploading && !submitting}
         />
       </ScrollView>
 
       <View style={styles.buttonContainer}>
         <DefaultButtonComponent
-          title="Continue"
+          title={submitting ? 'Submitting...' : 'Continue'}
           backgroundColor={theme.colors.primary}
-          disabled={!hasAny}
-          onPress={() => {
-            // handleSubmit()
-            navigation.replace('CategoryCreateSuccessScreen', {
-              roomCategoryId: 1, // adjust to your API
-            });
-
-            console.log("roomData", roomData)
-          }}
+          disabled={!hasAny || uploading || submitting}
+          onPress={handleSubmit}
         />
       </View>
 
@@ -276,12 +278,20 @@ const RoomPhotoScreen = ({ navigation }) => {
         onClose={closeBottomSheet}
         title="Choose Option"
       >
-        <TouchableOpacity style={styles.option} onPress={handleCamera}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={handleCamera}
+          disabled={uploading || submitting}
+        >
           <Icon name="photo-camera" size={20} color="#000" />
           <Text style={styles.optionText}>Camera</Text>
         </TouchableOpacity>
         <View style={styles.divider} />
-        <TouchableOpacity style={styles.option} onPress={handleGallery}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={handleGallery}
+          disabled={uploading || submitting}
+        >
           <Icon name="photo-library" size={20} color="#000" />
           <Text style={styles.optionText}>Gallery</Text>
         </TouchableOpacity>
@@ -296,79 +306,44 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     gap: 14,
   },
-
-  // Empty state
-  emptyTile: {
-    borderRadius: 16,
+  verticalCard: {
+    width: '100%',
+    borderRadius: 14,
+    overflow: 'hidden',
+    backgroundColor: '#F9FAFB',
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    backgroundColor: '#FFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
   },
-
-  gridTitle: {
-    marginTop: 6,
-    marginBottom: 6,
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
-  },
-  grid: {
+  verticalImage: {
     width: '100%',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    columnGap: GRID_GAP,
-    rowGap: GRID_GAP,
-  },
-  thumb: {
-    borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: '#F3F4F6',
-  },
-  thumbImage: {
-    width: '100%',
-    height: '100%',
+    height: 180,
     resizeMode: 'cover',
   },
-  thumbActions: {
+  cardActions: {
     position: 'absolute',
-    top: 6,
-    right: 6,
+    top: 10,
+    right: 10,
     flexDirection: 'row',
-    gap: 6,
+    gap: 8,
   },
   iconBtn: {
     backgroundColor: '#fff',
     borderRadius: 999,
     padding: 6,
   },
-  thumbAdd: {
-    borderRadius: 12,
+  addVerticalCard: {
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 6,
     backgroundColor: '#FFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    gap: 8,
   },
   addTileText: {
     fontSize: 12,
     color: '#111827',
-    fontWeight: '600',
-  },
-
-  addMoreBtn: {
-    alignSelf: 'flex-start',
-    backgroundColor: theme.colors.primary,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    marginTop: 12,
-  },
-  addMoreText: {
-    color: '#fff',
     fontWeight: '600',
   },
   option: {

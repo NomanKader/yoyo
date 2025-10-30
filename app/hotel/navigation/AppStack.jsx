@@ -45,6 +45,8 @@ import CreateNewPinScreen from '../../common/auth/CreateNewPinScreen';
 import { RoomCreationDataProvider } from '../context/RoomCreationContext';
 import { RoomDataProvider } from '../context/CreatCategoryContext';
 import CategoryCreateSuccessScreen from '../screens/room/create/CategoryCreateSuccessScreen';
+import RoomListScreen from '../screens/room/RoomListScreen';
+import CreateNewRoomScreen from '../screens/room/create/CreateNewRoomScreen';
 
 
 
@@ -64,6 +66,8 @@ const AppStack = () => {
           <Stack.Screen name='AccountInfo' component={AccountInfoScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='BasicHotelDetail' component={BasicHotelDetailScreen} options={hiddenHeaderOptions} />
           {/* Room */}
+          <Stack.Screen name="RoomListScreen" component={RoomListScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name="CreateNewRoom" component={CreateNewRoomScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name="RoomDetailScreen" component={RoomDetailScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='RoomCategoryCreateScreen' component={RoomCategoryCreateScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='RoomFacilityCreateScreen' component={RoomFacilityCreateScreen} options={hiddenHeaderOptions} />

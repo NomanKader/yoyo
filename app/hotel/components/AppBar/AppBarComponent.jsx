@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -11,8 +11,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import theme from '../../style/colors';
 import backIcon from '../../assets/icons/backIcon.png';
 import qrCode from '../../assets/icons/qrCode.png'; // Import the QR code image
-import {CommonStyles} from '../../style/CommonStyles';
-import {RoomContext} from '../../context/RoomContext';
+import { CommonStyles } from '../../style/CommonStyles';
+import { RoomContext } from '../../context/RoomContext';
 
 const AppBarComponent = ({
   title,
@@ -21,69 +21,75 @@ const AppBarComponent = ({
   type,
   showBackIcon = false,
   onPressBack,
+  onAddIconPress
 }) => {
   return (
-<View style={styles.container}>
-  <View style={styles.header}>
-    {/* Left Section */}
-    <View style={styles.leftSection}>
-      {showBackIcon && (
-        <TouchableOpacity onPress={onPressBack} style={styles.backButton}>
-          <Image source={backIcon} style={styles.backIconImage} />
-        </TouchableOpacity>
-      )}
-    </View>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        {/* Left Section */}
+        <View style={styles.leftSection}>
+          {showBackIcon && (
+            <TouchableOpacity onPress={onPressBack} style={styles.backButton}>
+              <Image source={backIcon} style={styles.backIconImage} />
+            </TouchableOpacity>
+          )}
+        </View>
 
-    {/* Title */}
-    {showBackIcon ? (
-      <View style={styles.centerTitle}>
-        <Text style={styles.headerText}>{title}</Text>
-      </View>
-    ) : (
-      <View style={styles.leftAlignedTitle}>
-        <Text style={styles.headerText}>{title}</Text>
-      </View>
-    )}
+        {/* Title */}
+        {showBackIcon ? (
+          <View style={styles.centerTitle}>
+            <Text style={styles.headerText}>{title}</Text>
+          </View>
+        ) : (
+          <View style={styles.leftAlignedTitle}>
+            <Text style={styles.headerText}>{title}</Text>
+          </View>
+        )}
 
-    {/* Right Icons */}
-    <View style={styles.iconContainer}>
-      {title === 'Bookings' && (
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={() =>
-            navigation.navigate('AppStack', { screen: 'QRScanScreen' })
-          }
-        >
-          <Image source={qrCode} style={styles.iconImage} />
-        </TouchableOpacity>
-      )}
-      <TouchableOpacity
-        style={styles.iconButton}
-        onPress={() =>
-          navigation.navigate('AppStack', {
-            screen: 'SearchScreen',
-            params: { searchData: searchData, type: type },
-          })
-        }
-      >
-        <Icon name="search" size={15} color={theme.icon.primary} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.iconButton}
-        onPress={() =>
-          navigation.navigate('AppStack', {
-            screen:
-              title === 'Bookings'
-                ? 'BookingRoomCategoryScreen'
-                : 'RoomCategoryCreateScreen',
-          })
-        }
-      >
-        <Icon name="plus" size={15} color={theme.icon.primary} />
-      </TouchableOpacity>
+        {/* Right Icons */}
+        <View style={styles.iconContainer}>
+          {title === 'Bookings' && (
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() =>
+                navigation.navigate('AppStack', { screen: 'QRScanScreen' })
+              }
+            >
+              <Image source={qrCode} style={styles.iconImage} />
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() =>
+              navigation.navigate('AppStack', {
+                screen: 'SearchScreen',
+                params: { searchData: searchData, type: type },
+              })
+            }
+          >
+            <Icon name="search" size={15} color={theme.icon.primary} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => {
+              if (onAddIconPress) {
+                onAddIconPress();
+              } else {
+                navigation.navigate("AppStack", {
+                  screen:
+                    title === "Bookings"
+                      ? "BookingRoomCategoryScreen"
+                      : "RoomCategoryCreateScreen",
+                });
+              }
+            }}
+
+          >
+            <Icon name="plus" size={15} color={theme.icon.primary} />
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
-  </View>
-</View>
 
   );
 };

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, Dimensions, StyleSheet } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { BASE_IMAGE_URL } from '../../../common/service/HttpService';
 
 const { width: viewportWidth } = Dimensions.get('window');
 
 const CarouselComponent = ({ data, setShowLoading }) => {
+  console.log("datelenght",data.length)
   const [activeSlide, setActiveSlide] = useState(0);
   const [loadedImages, setLoadedImages] = useState(0);
 
@@ -16,11 +18,12 @@ const CarouselComponent = ({ data, setShowLoading }) => {
   }, [loadedImages, data.length, setShowLoading]);
 
   const renderItem = ({ item }) => {
+    const imageUri = item.url ? item.url : `${BASE_IMAGE_URL}${item.photoName}`;
     return (
       <View style={styles.slide}>
-        <Image 
-          source={{ uri: item.url }} 
-          style={styles.image} 
+        <Image
+          source={{ uri: imageUri }}
+          style={styles.image}
           onLoadEnd={() => setLoadedImages(loadedImages + 1)}
         />
       </View>
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
   image: {
     width: 330,
     height: 200,
-    
+
   },
   paginationContainer: {
     paddingVertical: 10

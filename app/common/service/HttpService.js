@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import { navigate } from '../navigation/NavigationService';
 
-const API_BASE_URL = 'https://www.12zay.com/axtrahoteladminapi/api';
+const API_BASE_URL = 'http://www.12zay.com/axtrahoteladminapi/api';
+export const BASE_IMAGE_URL = 'http://www.12zay.com/easyclickup/upload/hotel/images/';
 
 const techForgeAPI = axios.create({
   baseURL: API_BASE_URL,

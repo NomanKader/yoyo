@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { CommonStyles } from '../../style/CommonStyles';
 import backIcon from '../../assets/icons/backIcon.png';
 
-const StepAppBarComponent = ({ currentStep, navigation, onBackPress }) => {
+const StepAppBarComponent = ({ currentStep, navigation, onBackPress,maxStep = 8 }) => {
   return (
     <View style={CommonStyles.room.step}>
       <TouchableOpacity onPress={() => {
@@ -16,7 +16,7 @@ const StepAppBarComponent = ({ currentStep, navigation, onBackPress }) => {
         />
       </TouchableOpacity>
       <View style={CommonStyles.room.stepContainer}>
-        <Text style={CommonStyles.room.stepText}>Step {currentStep} of 8</Text>
+        <Text style={CommonStyles.room.stepText}>Step {currentStep} of {maxStep}</Text>
       </View>
     </View>
   );

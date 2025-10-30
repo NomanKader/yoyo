@@ -69,9 +69,8 @@ export default function RoomCategoryCreateScreen({ navigation }) {
     const unit = sizeUnit || "Sqm";
     const combined = val ? `${val} ${unit}` : "";
 
-    if (roomData?.roomSize !== combined) {
-      updateRoomData({ roomSize: combined });
-    }
+    updateRoomData({ roomSize: sizeValue });
+    
   }, [sizeValue, sizeUnit, roomData?.roomSize, updateRoomData]);
 
 
@@ -114,42 +113,44 @@ export default function RoomCategoryCreateScreen({ navigation }) {
           </Text>
 
           {/* Room Type -> roomTypeId */}
-          <View style={CommonStyles.room.inputContainer}>
-            <Text style={styles.label}>Room Type</Text>
-            <DropdownPickerComponent
-              open={openCategory}
-              value={roomData.roomTypeId}
-              items={categoryOptions}
-              setOpen={setOpenCategory}
-              setValue={handleSetRoomTypeId}
-              setItems={setCategoryOptions}
-              multiple={false}
-              placeholder="Select room category"
-              style={styles.input}
-              dropDownContainerStyle={styles.dropdown}
-            />
-          </View>
+          <ScrollView showsVerticalScrollIndicator={false}> 
 
-          <View>
-            <TextInputComponent
-              placeholder="Category Name"
-              value={roomData.description}
-              onChangeText={(v) => updateRoomData({ description: v })}
-              label="Category Name"
-            />
-          </View>
+            <View style={CommonStyles.room.inputContainer}>
+              <Text style={styles.label}>Room Type</Text>
+              <DropdownPickerComponent
+                open={openCategory}
+                value={roomData.roomTypeId}
+                items={categoryOptions}
+                setOpen={setOpenCategory}
+                setValue={handleSetRoomTypeId}
+                setItems={setCategoryOptions}
+                multiple={false}
+                placeholder="Select room category"
+                style={styles.input}
+                dropDownContainerStyle={styles.dropdown}
+              />
+            </View>
 
-          {/* Price -> pricePerNight */}
-          <View>
-            <TextInputComponent
-              placeholder="Price of room"
-              value={roomData.pricePerNight}
-              onChangeText={(v) => updateRoomData({ pricePerNight: parseInt(v) })}
-              label="Price of Room"
-              keyboardType="numeric"
-            />
-          </View>
-          {/* <View>
+            <View>
+              <TextInputComponent
+                placeholder="Category Name"
+                value={roomData.description}
+                onChangeText={(v) => updateRoomData({ description: v })}
+                label="Category Name"
+              />
+            </View>
+
+            {/* Price -> pricePerNight */}
+            <View>
+              <TextInputComponent
+                placeholder="Price of room"
+                value={roomData.pricePerNight}
+                onChangeText={(v) => updateRoomData({ pricePerNight: parseInt(v) })}
+                label="Price of Room"
+                keyboardType="numeric"
+              />
+            </View>
+            {/* <View>
             <TextInputComponent
               placeholder="Room Size"
               value={roomData.roomSize}
@@ -158,66 +159,67 @@ export default function RoomCategoryCreateScreen({ navigation }) {
               keyboardType="numeric"
             />
           </View> */}
-          <TextInputWithDropdown
-            label="Room Size"
-            value={sizeValue}
-            onChangeText={setSizeValue}
-            dropdownValue={sizeUnit}
-            setDropdownValue={setSizeUnit}
-            dropdownData={[
-              { label: "Sqm", value: "Sqm" },
-              { label: "Sqft", value: "Sqft" },
-            ]}
-          />
-
-
-          <View>
-            <Text style={styles.label}>Bed Type</Text>
-            <DropdownPickerComponent
-              open={openBedTypeCategory}
-              value={roomData.bedTypeId}
-              items={bedTypeOptions}
-              setOpen={setOpenBedTypeCategory}
-              setValue={handleSetRoomBedTypeId}
-              setItems={setCategoryOptions}
-              multiple={false}
-              placeholder="Select bed type"
-              style={styles.input}
-              dropDownContainerStyle={styles.dropdown}
-            />
-          </View>
-          {roomData.bedTypeId && (
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-              <Text style={[styles.label, { marginBottom: 0, marginEnd: 10 }]}>IsExtraBed?</Text>
-              <Switch
-                value={!!roomData.isExtraBed}
-                onValueChange={(val) => {
-                  updateRoomData({ isExtraBed: val })
-                  updateRoomData({ isExtraBedAllowed: val })
-                }}
+            <View>
+              <Text style={styles.label}>Bed Type</Text>
+              <DropdownPickerComponent
+                open={openBedTypeCategory}
+                value={roomData.bedTypeId}
+                items={bedTypeOptions}
+                setOpen={setOpenBedTypeCategory}
+                setValue={handleSetRoomBedTypeId}
+                setItems={setCategoryOptions}
+                multiple={false}
+                placeholder="Select bed type"
+                style={styles.input}
+                dropDownContainerStyle={styles.dropdown}
               />
             </View>
-          )}
-          <FullWidthCheckboxComponent
-            value={roomData.includesBreakfast}
-            onChange={(val) => updateRoomData({ includesBreakfast: val })}
-          />
+            <TextInputWithDropdown
+              label="Room Size"
+              value={sizeValue}
+              onChangeText={setSizeValue}
+              dropdownValue={sizeUnit}
+              setDropdownValue={setSizeUnit}
+              dropdownData={[
+                { label: "Sqm", value: "Sqm" },
+                { label: "Sqft", value: "Sqft" },
+              ]}
+            />
+
+            {roomData.bedTypeId && (
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                <Text style={[styles.label, { marginBottom: 0, marginEnd: 10 }]}>IsExtraBed?</Text>
+                <Switch
+                  value={!!roomData.isExtraBed}
+                  onValueChange={(val) => {
+                    updateRoomData({ isExtraBed: val })
+                    updateRoomData({ isExtraBedAllowed: val })
+                  }}
+                />
+              </View>
+            )}
+            <FullWidthCheckboxComponent
+              value={roomData.includesBreakfast}
+              onChange={(val) => updateRoomData({ includesBreakfast: val })}
+            />
+          </ScrollView>
+
+          <View style={styles.buttonContainer}>
+            <DefaultButtonComponent
+              title="Proceed"
+              backgroundColor={theme.colors.primary}
+              onPress={() => {
+                navigation.navigate("RoomFacilityCreateScreen", {
+                  includesBreakfast: roomData.includesBreakfast, // optional
+                })
+                console.log("roomdata", roomData)
+              }
+
+              }
+            />
+          </View>
         </ScrollView>
 
-        <View style={styles.buttonContainer}>
-          <DefaultButtonComponent
-            title="Proceed"
-            backgroundColor={theme.colors.primary}
-            onPress={() => {
-              navigation.navigate("RoomFacilityCreateScreen", {
-                includesBreakfast: roomData.includesBreakfast, // optional
-              })
-              console.log("roomdata", roomData)
-            }
-
-            }
-          />
-        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

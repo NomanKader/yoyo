@@ -1,16 +1,20 @@
-import React, { useCallback, useContext, useLayoutEffect, useRef, useState } from "react";
-import { View, BackHandler } from "react-native";
+import React, { useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { FlatList, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 
 import ListSkeletonComponent from "../../components/Skeleton/ListSkeletonComponent";
 import { CommonStyles } from "../../style/CommonStyles";
 import AppBarComponent from "../../components/AppBar/AppBarComponent";
 import DividerComponent from "../../components/Divider/DividerComponent";
-import RoomService from "../../services/RoomService";
+import RoomService, { GetAllRoomCategory } from "../../services/RoomService";
 import RoomListComponent from "../../components/List/RoomListComponent";
 import { LanguageContext } from "../../../hotel/context/LanguageContext";
 import _handleListService from "../../helper/HandleListService";
 import { RoomContext } from "../../context/RoomContext";
+import RoomCategoryListComponent from "../../components/List/RoomCategoryListComponent";
+import { useTranslation } from "react-i18next";
+
+
 
 export default function RoomCategoryListScreen({ navigation }) {
   const [showLoading, setShowLoading] = useState(false);
@@ -18,71 +22,32 @@ export default function RoomCategoryListScreen({ navigation }) {
 
   const { type, setType } = useContext(RoomContext);
   const { language, translate } = useContext(LanguageContext);
+  const { t } = useTranslation();
+  useEffect(() => {
+    const fetchRoomList = async () => {
+      setShowLoading(true);
+      try {
+        const response = await GetAllRoomCategory(1, 1);
+        console.log("response", response);
+        if (response.success) {
+          setRoomData(response?.data?.roomCategories || []);
 
-  const mountedRef = useRef(true);
-
-  useFocusEffect(
-    useCallback(() => {
-      mountedRef.current = true;
-      console.log("Language", language);
-      console.log("Translate", translate);
-
-      const fetchRoomList = async () => {
-        setShowLoading(true);
-        try {
-          await RoomService.GetRoomCategory(setRoomData);
-        } finally {
-          if (mountedRef.current) setShowLoading(false);
         }
-      };
-
-      fetchRoomList();
-
-      const onHardwareBack = () => {
-        if (type === "list") {
-          RoomService.GetRoomCategory(setRoomData);
-          setType("category");
-          return true; 
-        }
-        return false; 
-      };
-
-      const sub = BackHandler.addEventListener("hardwareBackPress", onHardwareBack);
-
-      return () => {
-        mountedRef.current = false;
-        sub.remove();
-      };
-    }, [language, translate, type, setType])
-  );
-
-  useLayoutEffect(() => {
-    const parent = navigation.getParent();
-    parent?.setOptions({ tabBarStyle: { display: type === "list" ? "none" : "flex" } });
-
-    return () => {
-      parent?.setOptions({ tabBarStyle: undefined });
+      } finally {
+        setShowLoading(false)
+      }
     };
-  }, [navigation, type]);
-
-  const handleBackPress = useCallback(() => {
-    if (type === "list") {
-      RoomService.GetRoomCategory(setRoomData);
-      setType("category");
-      return;
-    }
-    navigation.goBack?.();
-  }, [type, navigation, setType]);
+    fetchRoomList()
+  }, [])
 
   return (
     <View style={CommonStyles.room.container}>
       <AppBarComponent
-        title={translate?.room?.Rooms}
+        title={t('roomCategory')}
         navigation={navigation}
         searchData={roomData}
         type={type}
         showBackIcon={type === "list"}
-        onPressBack={handleBackPress}
       />
       <DividerComponent />
       {showLoading ? (
@@ -91,21 +56,27 @@ export default function RoomCategoryListScreen({ navigation }) {
           <ListSkeletonComponent />
         </View>
       ) : (
-        <RoomListComponent
+        // <RoomListComponent
+        //   data={roomData}
+        //   navigation={navigation}
+        //   type={type}
+        //   onPress={() =>
+        //     _handleListService(
+        //       type,
+        //       setType,
+        //       navigation,
+        //       RoomService,
+        //       setRoomData,
+        //       () => navigation.navigate("AppStack", { screen: "RoomDetailScreen" })
+        //     )
+        //   }
+        // />
+        <FlatList
           data={roomData}
-          navigation={navigation}
-          type={type}
-          onPress={() =>
-            _handleListService(
-              type,
-              setType,
-              navigation,
-              RoomService,
-              setRoomData,
-              () => navigation.navigate("AppStack", { screen: "RoomDetailScreen" })
-            )
-          }
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <RoomCategoryListComponent item={item} navigation={navigation} />}
         />
+
       )}
     </View>
   );

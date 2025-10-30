@@ -1,10 +1,11 @@
-import axios from "axios";
+import HttpService from '../../common/service/HttpService';
 import constants from "../config/constants";
+import axios from 'axios';
 
 const GetLanguageListAPI = async (setLanguages, setLoading) => {
   try {
-    const response = await axios.get(
-      'https://www.12zay.com/instaposadminapi/api/language/getAllLanguages',
+    const response = await HttpService.get(
+      '/language/getAllLanguages',
       {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36',

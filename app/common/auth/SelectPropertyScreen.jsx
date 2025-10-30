@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -8,12 +8,12 @@ import {
   Image,
   BackHandler
 } from 'react-native';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import HeaderComponent from '../../apartment/components/Divider/HeaderComponent';
 import hotelIcon from '../assets/hotel.png';
 import apartmentIcon from '../assets/apartment.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -35,19 +35,21 @@ export default function SelectPropertyScreen() {
     apartments: [],
   });
   // write backhandler
-  useFocusEffect(() => {
-    const backAction = () => {
-      navigation.navigate('Login') // 👈 This goes to the previous screen
-      return true; // prevent default behavior (exit app)
-    };
+  useFocusEffect(
+    useCallback(() => {
+      const backAction = () => {
+        navigation.navigate('Login'); // 👈 Go to previous screen
+        return true; // prevent default back behavior
+      };
 
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction
-    );
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
 
-    return () => backHandler.remove(); 
-  }, []);
+      return () => backHandler.remove();
+    }, []) // 👈 dependency here (not outside useFocusEffect)
+  );
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {

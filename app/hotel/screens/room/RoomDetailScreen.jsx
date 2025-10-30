@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Image,
   View,
@@ -13,31 +13,35 @@ import BookingSkeletonComponent from '../../components/Skeleton/BookingSkeletonC
 import CauroselComponent from '../../components/Caurosel/CauroselComponent';
 import { GetBookingAPI } from '../../services/BookingService';
 import CarouselSkeletonComponent from '../../components/Skeleton/CauroselSkeletonComponent';
-import {CommonStyles} from '../../style/CommonStyles';
+import { CommonStyles } from '../../style/CommonStyles';
 import BookingListComponent from '../../components/List/BookingListComponent';
 import RoomService from '../../services/RoomService';
 import RoomBottomSheetComponent from '../../components/BottomSheet/RoomBottomSheetComponent';
 import DividerComponent from '../../components/Divider/DividerComponent';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import InfoCardComponent from '../../components/Card/InfoCardComponent';
 import roomInfoData from '../../config/roomInfoData';
 import DefaultButtonComponent from '../../components/Button/DefaultButtonComponent';
 import theme from '../../style/colors';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
 
-export default function RoomDetailScreen({navigation}) {
+export default function RoomDetailScreen({ navigation, route }) {
+  const { room } = route?.params || []
+  console.log("room", room)
   const [data, setData] = useState([]);
   const [showLoading, setShowLoading] = useState(false);
   const [roomCategory, setRoomCategory] = useState([]);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
 
   useEffect(() => {
-    GetBookingAPI(setData);
+    if (room?.roomPhotos) {
+      setData(room.roomPhotos);
+    }
     RoomService.GetRoomCategory(setRoomCategory);
-  }, []);
+  }, [room]);
 
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={CommonStyles.scrollViewContainer}>
         {/* Conditionally render the overlay */}
         {isBottomSheetVisible && (
@@ -48,7 +52,7 @@ export default function RoomDetailScreen({navigation}) {
             />
           </View>
         )}
-        <DetailAppBarComponent title={"Room Details"} onMorePress={()=>setIsBottomSheetVisible(true)} navigation={navigation}/>
+        <DetailAppBarComponent title={"Room Details"} onMorePress={() => setIsBottomSheetVisible(true)} navigation={navigation} />
 
         {data.length === 0 ? (
           <View>
@@ -71,12 +75,12 @@ export default function RoomDetailScreen({navigation}) {
             {/* Detail */}
             <ScrollView showsVerticalScrollIndicator={false}>
               {roomInfoData.map((item, index) => (
-                <View key={index} style={{marginTop: 30}}>
+                <View key={index} style={{ marginTop: 30 }}>
                   <InfoCardComponent title={item.title} value={item.value} />
                 </View>
               ))}
             </ScrollView>
-            <View style={{marginTop: 10}}>
+            <View style={{ marginTop: 10 }}>
               <DefaultButtonComponent
                 title={'Edit Room'}
                 backgroundColor={theme.colors.primary}

@@ -34,5 +34,8 @@
     "transactionHistory": "Transaction History",
     "faq": "FAQ",
     "manageBookings":"Manage Bookings"
-  }
+  },
+
+    "roomCategory":"Room Category"
+
 }
