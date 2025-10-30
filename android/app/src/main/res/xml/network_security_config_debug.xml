@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Debug config: allow cleartext for development (Metro bundler, emulator, device) -->
+    <base-config cleartextTrafficPermitted="true" />
+
+    <!-- Still explicitly allow the production API domains as well -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">www.12zay.com</domain>
+        <domain includeSubdomains="true">12zay.com</domain>
+    </domain-config>
+</network-security-config>
