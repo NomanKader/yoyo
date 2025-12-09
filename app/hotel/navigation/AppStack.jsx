@@ -47,6 +47,10 @@ import { RoomDataProvider } from '../context/CreatCategoryContext';
 import CategoryCreateSuccessScreen from '../screens/room/create/CategoryCreateSuccessScreen';
 import RoomListScreen from '../screens/room/RoomListScreen';
 import CreateNewRoomScreen from '../screens/room/create/CreateNewRoomScreen';
+import CreateReservationScreen from '../screens/booking/CreateReservationScreen';
+import CheckoutScreen from '../screens/booking/CheckOutScreen';
+import AddOnSettingScreen from '../screens/account/AddOnSettingScreen';
+import RoomCategoryAddOnScreen from '../screens/room/create/RoomCategoryAddOnScreen';
 
 
 
@@ -71,6 +75,7 @@ const AppStack = () => {
           <Stack.Screen name="RoomDetailScreen" component={RoomDetailScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='RoomCategoryCreateScreen' component={RoomCategoryCreateScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='RoomFacilityCreateScreen' component={RoomFacilityCreateScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='RoomCategoryAddOnScreen' component={RoomCategoryAddOnScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='RoomBasicFeatureScreen' component={RoomBasicFeatureScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='RoomBedroomDetailScreen' component={RoomBedroomDetailScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='RoomViewScreen' component={RoomViewScreen} options={hiddenHeaderOptions} />
@@ -84,7 +89,11 @@ const AppStack = () => {
           <Stack.Screen name='SearchScreen' component={SearchScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='BookingRoomCategoryScreen' component={BookingRoomCategoryScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='BookingRoomListScreen' component={BookingRoomListScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='CreateReservationScreen' component={CreateReservationScreen} options={hiddenHeaderOptions} />
+
           <Stack.Screen name='CreateBookingScreen' component={CreateBookingScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} options={hiddenHeaderOptions} />
+
           <Stack.Screen name='BookingCancelScreen' component={BookingCancelScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='QRScanScreen' component={QRScanScreen} options={hiddenHeaderOptions} />
           {/* Payment */}
@@ -107,6 +116,7 @@ const AppStack = () => {
           <Stack.Screen name='ManageDiscountScreen' component={ManageDiscountScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='BookingCancelSettingScreen' component={BookingCancelSettingScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='AddOnPriceFeatureSettingScreen' component={AddOnPriceFeatureSettingScreen} options={hiddenHeaderOptions} />
+          <Stack.Screen name='AddOnSettingScreen' component={AddOnSettingScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='HistoryScreen' component={HistoryScreen} options={hiddenHeaderOptions} />
           <Stack.Screen name='CreateNewPin' component={CreateNewPinScreen} options={hiddenHeaderOptions} />
 

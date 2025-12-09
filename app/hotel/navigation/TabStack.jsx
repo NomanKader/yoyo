@@ -30,7 +30,7 @@ const CustomPlusButton = ({ onPress }) => (
     onPress={onPress}
     style={{
       top: -25,
-      left: '10%',
+      left: '20%',
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: theme.colors.primary,

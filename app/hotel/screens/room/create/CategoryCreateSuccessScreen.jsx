@@ -12,12 +12,38 @@ import theme from '../../../style/colors';
 import { CommonStyles } from '../../../style/CommonStyles';
 import DefaultButtonComponent from '../../../components/Button/DefaultButtonComponent';
 
+
 const CategoryCreateSuccessScreen = ({ navigation, route }) => {
   const roomCategoryId = route?.params?.roomCategoryId;
 
   const goAddRoom = () => {
-    // TODO: change 'CreateRoomScreen' to your actual route
-    navigation.navigate('CreateRoomScreen', { roomCategoryId });
+    navigation.reset({
+      index: 0, // HotelTabStack active
+      routes: [
+        {
+          name: 'HotelTabStack',
+          state: {
+            index: 0, // TabScreen is active in HotelTabStack
+            routes: [
+              {
+                name: 'TabScreen', // Tab navigator
+                state: {
+                  index: 3, // Room tab index
+                  routes: [
+                    { name: 'Dashboard' },
+                    { name: 'Booking' },
+                    { name: 'Plus' },
+                    { name: 'Room' }, // active tab
+                    { name: 'Account' },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    });
+
   };
 
   return (

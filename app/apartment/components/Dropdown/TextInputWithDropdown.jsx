@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Text, TextInput, StyleSheet} from 'react-native';
-import {Dropdown} from 'react-native-element-dropdown';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { Dropdown } from 'react-native-element-dropdown';
 
 const TextInputWithDropdown = ({
   label,
@@ -9,7 +9,7 @@ const TextInputWithDropdown = ({
   dropdownValue,
   setDropdownValue,
   dropdownData,
-  placeholer = 'Enter Size',
+  placeholder = 'Enter Size',   // ✅ fixed
   position = 'end',
   bgColor = '#fff',
   editable = true,
@@ -21,7 +21,7 @@ const TextInputWithDropdown = ({
         {position === 'front' && (
           <Dropdown
             disabled={!editable}
-            style={[styles.dropdown, {backgroundColor: bgColor}]}
+            style={[styles.dropdown, { backgroundColor: bgColor }]}
             data={dropdownData}
             labelField="label"
             valueField="value"
@@ -33,9 +33,9 @@ const TextInputWithDropdown = ({
 
         <TextInput
           editable={editable}
-          style={[styles.textInput, {backgroundColor: bgColor}]}
+          style={[styles.textInput, { backgroundColor: bgColor }]}
           keyboardType="numeric"
-          placeholder={placeholer}
+          placeholder={placeholder}    // ✅ fixed
           value={value}
           onChangeText={onChangeText}
         />
@@ -63,6 +63,7 @@ const TextInputWithDropdown = ({
     </View>
   );
 };
+
 
 export default TextInputWithDropdown;
 

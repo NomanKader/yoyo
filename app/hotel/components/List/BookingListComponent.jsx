@@ -3,45 +3,55 @@ import { View, Text, FlatList, Image, StyleSheet, Pressable } from 'react-native
 import DividerComponent from '../Divider/DividerComponent';
 import theme from '../../style/colors';
 import { LanguageContext } from '../../context/LanguageContext';
+import { BASE_IMAGE_URL } from '../../../common/service/HttpService';
 
 const RoomListComponent = ({ data, navigation, type, onPress }) => {
-  console.log("Typ",type);
+  console.log("Typ", type);
   const { translate } = useContext(LanguageContext);
 
   // Function to get status-specific styles
-  const getStatusStyle = (status) => {
-    console.log("Status",status);
-    switch (status) {
-      case 'Unpaid':
-        return { color: theme.colors.error, backgroundColor: 'transparent' };
-      case 'Paid':
-        return { color: theme.colors.info, backgroundColor: 'transparent' };
-      default:
-        return {
-          color: status === 'Occupied'?"#19B791":status=="Vacant"?"#FF8B33":"white",
-          backgroundColor: status === 'Occupied'
-            ? '#EAFAF6'
-            : status === 'Vacant'
-            ? '#FFF4EC'
-            : 'grey',
-        };
+  const getStatusStyle = (purchased) => {
+    if (purchased === true) {
+      return {
+        text: "Purchased",
+        color: "#19B791",
+        backgroundColor: "#E9FBF3"
+      };
     }
+
+    if (purchased === false) {
+      return {
+        text: "Not Purchased",
+        color: "#FF3B30",
+        backgroundColor: "#FFECEC"
+      };
+    }
+
+    // fallback
+    return {
+      text: "",
+      color: "grey",
+      backgroundColor: "#E0E0E0"
+    };
   };
+
 
   const renderItem = ({ item }) => {
     const isCategory = type === 'category';
-    const statusStyle = getStatusStyle(item.roomStatus);
+    const statusStyle = getStatusStyle(item.purchased);
+    const formatDateForDisplay = (date) =>
+      `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
 
     const roomStatus = isCategory
       ? `${item.numberOfRooms} ${translate?.room.Rooms}`
       : translate?.room[item.roomStatus] || item.roomStatus;
 
     return (
-      <Pressable onPress={() => onPress()}>
+      <Pressable onPress={() => onPress(item)}>
         <View style={styles.card}>
           <View style={styles.thumbnail}>
             <Image
-              source={{ uri: item.roomPhoto }}
+              source={{ uri: `${BASE_IMAGE_URL}${item.roomPhotos[0].photoName}` }}
               style={styles.image}
             />
           </View>
@@ -55,16 +65,17 @@ const RoomListComponent = ({ data, navigation, type, onPress }) => {
               ) : (
                 <>
                   <Text style={styles.title}>{item.roomNumber}</Text>
-                  <Text style={styles.subtitle}>{item.roomCategory}</Text>
+                  <Text style={styles.subtitle}>{item.guestName}</Text>
                 </>
               )}
             </View>
             <View style={styles.statusContainer}>
-              <View style={[styles.status, { backgroundColor: statusStyle.backgroundColor }]}>
-                <Text style={{ color: statusStyle.color }}>
-                  {roomStatus}
-                </Text>
-              </View>
+              <Text style={{ color: theme.colors.dateColor }}>
+                {formatDateForDisplay(new Date(item.checkInDate))}
+              </Text>
+              <Text style={{ color: statusStyle.color }}>
+                Paid
+              </Text>
             </View>
           </View>
         </View>
@@ -110,7 +121,7 @@ const styles = StyleSheet.create({
     borderRadius: 27.5, // Half of the height (55 / 2)
   },
   details: {
-    flex: 1,    
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -120,12 +131,12 @@ const styles = StyleSheet.create({
     width: 180,
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 5,    
+    marginBottom: 5,
   },
   subtitle: {
     fontSize: 18,
-    color: 'grey',  
-    width:200     
+    color: 'grey',
+    width: 200
   },
   statusContainer: {
     justifyContent: 'center',

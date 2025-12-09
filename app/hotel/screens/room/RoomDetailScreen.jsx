@@ -64,22 +64,30 @@ export default function RoomDetailScreen({ navigation, route }) {
           <>
             <View style={styles.headerView}>
               <CauroselComponent data={data} setShowLoading={setShowLoading} />
-              <Text style={CommonStyles.header}>Room 402</Text>
+              <Text style={CommonStyles.header}>Room {room?.roomNumber}</Text>
               <Text style={CommonStyles.subHeader}>
-                Standard Rooms . 0.00 Kyats
+                {room?.roomCategoryName}
               </Text>
             </View>
             <View style={CommonStyles.dividerView}>
               <DividerComponent />
             </View>
             {/* Detail */}
+            {/* Detail Info */}
             <ScrollView showsVerticalScrollIndicator={false}>
-              {roomInfoData.map((item, index) => (
+              {[
+                { title: 'Room Status', value: room?.status === 1 ? 'Vacant' : 'Occupied' },
+                { title: 'Room Category', value: room?.roomCategoryName || 'N/A' },
+                { title: 'Room No', value: room?.roomNumber || 'N/A' },
+                { title: 'Room Price', value: room?.price ? `${room.price} Kyats` : '0.00 Kyats' },
+                { title: 'No Of Bookings', value: room?.totalBookings?.toString() || '0' },
+              ].map((item, index) => (
                 <View key={index} style={{ marginTop: 30 }}>
                   <InfoCardComponent title={item.title} value={item.value} />
                 </View>
               ))}
             </ScrollView>
+
             <View style={{ marginTop: 10 }}>
               <DefaultButtonComponent
                 title={'Edit Room'}

@@ -237,32 +237,30 @@ const CreateNewRoomScreen = ({ navigation, route }) => {
                         disabled={submitting}
                     />
                 </View>
-
-                <BottomSheetComponent
-                    isVisible={isBottomSheetVisible}
-                    onClose={closeBottomSheet}
-                    title="Choose Option"
-                >
-                    <TouchableOpacity
-                        style={styles.option}
-                        onPress={handleCamera}
-                        disabled={uploading || submitting}
-                    >
-                        <Icon name="photo-camera" size={20} color="#000" />
-                        <Text style={styles.optionText}>Camera</Text>
-                    </TouchableOpacity>
-                    <View style={styles.divider} />
-                    <TouchableOpacity
-                        style={styles.option}
-                        onPress={handleGallery}
-                        disabled={uploading || submitting}
-                    >
-                        <Icon name="photo-library" size={20} color="#000" />
-                        <Text style={styles.optionText}>Gallery</Text>
-                    </TouchableOpacity>
-                </BottomSheetComponent>
             </ScrollView>
-
+            <BottomSheetComponent
+                isVisible={isBottomSheetVisible}
+                onClose={closeBottomSheet}
+                title="Choose Option"
+            >
+                <TouchableOpacity
+                    style={styles.option}
+                    onPress={handleCamera}
+                    disabled={uploading || submitting}
+                >
+                    <Icon name="photo-camera" size={20} color="#000" />
+                    <Text style={styles.optionText}>Camera</Text>
+                </TouchableOpacity>
+                <View style={styles.divider} />
+                <TouchableOpacity
+                    style={styles.option}
+                    onPress={handleGallery}
+                    disabled={uploading || submitting}
+                >
+                    <Icon name="photo-library" size={20} color="#000" />
+                    <Text style={styles.optionText}>Gallery</Text>
+                </TouchableOpacity>
+            </BottomSheetComponent>
         </SafeAreaView>
     );
 };

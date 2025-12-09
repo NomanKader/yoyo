@@ -1,73 +1,77 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const SelectTabComponent = () => {
-  const [selectedTab, setSelectedTab] = useState('Ongoing');
+const TAB_ITEMS = [
+  { key: 'ongoing', label: 'Ongoing' },
+  { key: 'checkin', label: 'Check-in' },
+  { key: 'completed', label: 'Completed' },
+];
+
+const SelectTabComponent = ({ selectedKey, onSelect }) => {
+  const [activeTab, setActiveTab] = useState(selectedKey || 'ongoing');
+
+  useEffect(() => {
+    if (selectedKey) {
+      setActiveTab(selectedKey);
+    }
+  }, [selectedKey]);
+
+  const handlePress = (key) => {
+    setActiveTab(key);
+    if (onSelect) onSelect(key);
+  };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={[
-          styles.tab,
-          selectedTab === 'Ongoing' ? styles.selectedTab : styles.unselectedTab,
-        ]}
-        onPress={() => setSelectedTab('Ongoing')}
-      >
-        <Text style={[
-          styles.tabText,
-          selectedTab === 'Ongoing' ? styles.selectedTabText : styles.unselectedTabText,
-        ]}>
-          Ongoing
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.tab,
-          selectedTab === 'Completed' ? styles.selectedTab : styles.unselectedTab,
-        ]}
-        onPress={() => setSelectedTab('Completed')}
-      >
-        <Text style={[
-          styles.tabText,
-          selectedTab === 'Completed' ? styles.selectedTabText : styles.unselectedTabText,
-        ]}>
-          Completed
-        </Text>
-      </TouchableOpacity>
+      {TAB_ITEMS.map((tab) => {
+        const isActive = activeTab === tab.key;
+        return (
+          <TouchableOpacity
+            key={tab.key}
+            style={[styles.tab, isActive ? styles.selectedTab : styles.unselectedTab]}
+            activeOpacity={0.8}
+            onPress={() => handlePress(tab.key)}
+          >
+            <Text style={[styles.tabText, isActive ? styles.selectedTabText : styles.unselectedTabText]}>
+              {tab.label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };
 
+export default SelectTabComponent;
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#F4F4F4', // Container background color
-    borderRadius: 8,
-    padding: 4, // Padding around the tabs
+    backgroundColor: '#F4F4F4',
+    borderRadius: 12,
+    padding: 4,
   },
   tab: {
     flex: 1,
-    paddingVertical: 12,
-    justifyContent: 'center',
+    paddingVertical: 10,
+    borderRadius: 10,
     alignItems: 'center',
-    borderRadius: 8,
   },
   selectedTab: {
-    backgroundColor: '#ffffff', // Background for selected tab
+    backgroundColor: '#FFFFFF',
+    elevation: 1,
   },
   unselectedTab: {
-    backgroundColor: 'transparent', // Transparent background for unselected tab
+    backgroundColor: 'transparent',
   },
   tabText: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 14,
+    fontWeight: '600',
   },
   selectedTabText: {
-    color: '#000000', // Text color for selected tab
+    color: '#000',
   },
   unselectedTabText: {
-    color: '#888888', // Text color for unselected tab
+    color: '#888',
   },
 });
-
-export default SelectTabComponent;

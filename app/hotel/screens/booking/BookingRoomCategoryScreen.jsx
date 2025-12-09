@@ -1,38 +1,74 @@
-import { View } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import DetailAppBarComponent from '../../components/AppBar/DetailAppBarComponent';
 import { CommonStyles } from '../../style/CommonStyles';
 import DividerComponent from '../../components/Divider/DividerComponent';
 import ListSkeletonComponent from '../../components/Skeleton/ListSkeletonComponent';
-import RoomListComponent from '../../components/List/BookingListComponent';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { LanguageContext } from '../../context/LanguageContext';
-import RoomService from '../../services/RoomService';
-import _handleListService from '../../helper/HandleListService';
+import { GetAllRoomCategory } from '../../services/RoomService';
+import CustomDatePicker from '../../components/DatePicker/CustomDatePicker';
+import BookingRoomCategoryListComponent from '../../components/List/BookingRoomCategoryListComponent';
 
 export default function BookingRoomCategoryScreen({ navigation }) {
   const [showLoading, setShowLoading] = useState(false);
   const [roomData, setRoomData] = useState([]);
-  const [type, setType] = useState('category');
   const { language } = useContext(LanguageContext);
   const { translate } = useContext(LanguageContext);
+  const [checkInDate, setCheckInDate] = useState(null);   // store as Date
+  const [checkOutDate, setCheckOutDate] = useState(null); // store as Date
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    console.log('Language', language);
-    console.log('Translate', translate);
-    const fetchRoomList = async () => {
-      setShowLoading(true);
-      setTimeout(() => {
-        RoomService.GetRoomCategory(setRoomData);
-        setShowLoading(false);
-      }, 3000);
-    };
-    fetchRoomList();
+  const fetchRoomList = useCallback(async () => {
+    setShowLoading(true);
+    try {
+      const response = await GetAllRoomCategory(1, 1);
+      if (response.success) {
+        setRoomData(response?.data?.roomCategories || []);
+      }
+    } finally {
+      setShowLoading(false);
+    }
   }, []);
 
+  useEffect(() => {
+    fetchRoomList();
+  }, [fetchRoomList]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const response = await GetAllRoomCategory(1, 1);
+      if (response.success) {
+        setRoomData(response?.data?.roomCategories || []);
+      }
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   return (
-    <View style={CommonStyles.scrollViewContainer}>
-      <DetailAppBarComponent title={'Choose Room Type'} navigation={navigation} />
+    <View style={{ flex: 1, marginHorizontal: 20, backgroundColor: 'white' }}>
+      <DetailAppBarComponent title={'Choose Booking'} navigation={navigation} />
       <DividerComponent />
+
+      <View style={{ gap: 10, marginTop: 10 }}>
+        <View style={{ gap: 5 }}>
+          <Text style={CommonStyles.infoLabel}>Check In Date</Text>
+          <CustomDatePicker
+            value={checkInDate}
+            onChange={setCheckInDate}
+            placeholder="Select check-in date"
+          />
+        </View>
+        <View style={{ gap: 5 }}>
+          <Text style={CommonStyles.infoLabel}>Check Out Date</Text>
+          <CustomDatePicker
+            value={checkOutDate}
+            onChange={setCheckOutDate}
+            placeholder="Select check-out date"
+          />
+        </View>
+      </View>
 
       {showLoading ? (
         <View>
@@ -40,21 +76,24 @@ export default function BookingRoomCategoryScreen({ navigation }) {
           <ListSkeletonComponent />
         </View>
       ) : (
-        <View style={{ flex: 1, marginHorizontal: -30 }}>
-          <RoomListComponent
+        <View style={{ flex: 1 }}>
+          <Text style={[CommonStyles.infoLabel, { marginTop: 20 }]}>
+            Select Room Category
+          </Text>
+          <FlatList
             data={roomData}
-            navigation={navigation}
-            type={type}
-            onPress={() =>
-              _handleListService(
-                type,
-                setType,
-                navigation,
-                RoomService,
-                setRoomData,
-                () => navigation.navigate('AppStack', { screen: 'CreateBookingScreen' })
-              )
-            }
+            style={{ marginHorizontal: -16 }}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <BookingRoomCategoryListComponent
+                item={item}
+                navigation={navigation}
+                checkInDate={checkInDate}
+                checkOutDate={checkOutDate}
+              />
+            )}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
           />
         </View>
       )}

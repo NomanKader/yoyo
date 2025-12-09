@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,14 +11,14 @@ import theme from '../../style/colors';
 import RoundButtonComponent from '../Button/RoundButtonComponent';
 import successIllustration from '../../assets/images/successIllustration.png';
 import DefaultButtonComponent from '../Button/DefaultButtonComponent';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import animation from '../../../common/assets/animation.json';
 
 // Get the screen width
-const {width: screenWidth} = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get('window');
 
-const SuccessScreenComponent = ({route}) => {
+const SuccessScreenComponent = ({ route }) => {
   // Extract parameters from route.params
   const navigation = useNavigation();
   const {
@@ -32,11 +32,7 @@ const SuccessScreenComponent = ({route}) => {
     color,
   } = route.params;
   useEffect(() => {
-    const backAction = () => {
-      navigation.goBack();
-      return true;
-    };
-
+    const backAction = () => true; // Block back press
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       backAction,
@@ -44,37 +40,45 @@ const SuccessScreenComponent = ({route}) => {
 
     return () => backHandler.remove();
   }, []);
+
+  useEffect(() => {
+    navigation.setOptions({
+      gestureEnabled: false,     
+      headerBackVisible: false,  
+      headerLeft: () => null,    
+    });
+  }, [navigation]);
   return (
     <View
       style={[
         styles.container,
-        isShowingIllustration && {backgroundColor: theme.colors.info},
+        isShowingIllustration && { backgroundColor: theme.colors.info },
       ]}>
-        {icon!== null ? (
-      <Image
-        source={icon}
-        style={styles.icon}
+      {icon !== null ? (
+        <Image
+          source={icon}
+          style={styles.icon}
         />
-        ):(
-      <LottieView
-      source={animation}
-      autoPlay
-      loop={true}
-      style={styles.icon}
-    />
-        )}
+      ) : (
+        <LottieView
+          source={animation}
+          autoPlay
+          loop={true}
+          style={styles.icon}
+        />
+      )}
 
       <Text
         style={[
           styles.header,
-          isShowingIllustration && {color: theme.colors.textLight},
+          isShowingIllustration && { color: theme.colors.textLight },
         ]}>
         {header}
       </Text>
       <Text
         style={[
           styles.subHeader,
-          isShowingIllustration && {color: theme.colors.textLight},
+          isShowingIllustration && { color: theme.colors.textLight },
         ]}>
         {subheader}
       </Text>
@@ -109,12 +113,12 @@ const SuccessScreenComponent = ({route}) => {
               if (buttonText === 'Back to home') {
                 navigation.reset({
                   index: 0,
-                  routes: [{name: 'TabScreen'}],
+                  routes: [{ name: 'TabScreen' }],
                 });
               } else {
                 navigation.reset({
                   index: 0,
-                  routes: [{name: nextScreen, params: nextScreenParams}],
+                  routes: [{ name: nextScreen, params: nextScreenParams }],
                 });
               }
             }}

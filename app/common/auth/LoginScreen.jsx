@@ -172,14 +172,13 @@ export default function LoginScreen() {
         )}
       </TouchableOpacity>
 
-      <Text style={styles.signupText}>
-        Don’t have an account?{' '}
-        <Text
-          style={styles.signupLink}
-          onPress={() => navigation.navigate('TypeOfProperty')}>
-          Sign Up
-        </Text>
-      </Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
+        <Text style={styles.signupText}>Don’t have an account? </Text>
+        <TouchableOpacity  onPress={() => navigation.navigate('TypeOfProperty')}>
+          <Text style={[styles.signupText,styles.signupLink]}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
+
     </View>
   );
 }

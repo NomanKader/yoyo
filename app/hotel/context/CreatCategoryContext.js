@@ -22,7 +22,8 @@ const initialRoomData = {
   amenities: [],
   facilities: [],
   bedTypeId:"",
-  isExtraBed:false
+  isExtraBed:false,
+  addOns:[],
 };
 
 export const RoomDataContext = createContext({

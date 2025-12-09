@@ -28,7 +28,7 @@ import { ImageUpload, RemoveImage } from '../../../../common/service/ImageFileSe
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const pickerOpts = { mediaType: 'photo', quality: 0.9, includeBase64: true };
-const BASE_IMAGE_URL = 'https://www.12zay.com/easyclickup/upload/hotel/images/';
+const BASE_IMAGE_URL = 'http://www.12zay.com/easyclickup/upload/hotel/images/';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const H_PADDING = 20;
@@ -162,6 +162,7 @@ const RoomPhotoScreen = ({ navigation }) => {
       roomCategoryPhotos: images,
       amenities: roomData?.amenities,
       facilities: roomData?.facilities,
+      addOns: roomData?.addOns,
       roomBedType: [
         {
           bedTypeId: roomData.bedTypeId,

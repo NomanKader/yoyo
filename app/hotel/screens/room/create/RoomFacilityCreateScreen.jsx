@@ -152,7 +152,7 @@ export default function RoomFacilityCreateScreen({ route, navigation }) {
             backgroundColor={theme.colors.primary}
             onPress={() => {
               navigation.navigate('AppStack', {
-                screen: 'RoomBasicFeatureScreen',
+                screen: 'RoomCategoryAddOnScreen',
               })
               console.log("eoom", roomData)
             }
